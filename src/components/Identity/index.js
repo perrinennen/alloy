@@ -12,6 +12,8 @@ governing permissions and limitations under the License.
 
 import { defer } from "../../utils";
 import processIdSyncs from "./processIdSyncs";
+import createEvent from "../DataCollector/createEvent";
+import createCustomerIDsHash from "./createCustomerIDsHash";
 
 const ECID_NAMESPACE = "ECID";
 
@@ -28,6 +30,40 @@ const createIdentity = ({ config, logger, cookie }) => {
   let ecid = getEcid();
   let responseRequested = false;
   let deferredForEcid;
+  let network;
+  let lifecycle;
+  const customerIDs = {};
+  const getCustomerIDs = () => customerIDs;
+  const makeServerCall = event => {
+    const payload = network.createPayload();
+    payload.addEvent(event);
+    const responsePromise = Promise.resolve()
+      .then(() => {
+        return lifecycle.onBeforeDataCollection(payload, responsePromise);
+      })
+      .then(() => {
+        return network.sendRequest(payload, true);
+      });
+
+    return responsePromise;
+  };
+  const setCustomerIDs = options => {
+    const event = createEvent();
+    const isViewStart = options.type === "viewStart";
+    Object.keys(options.customerIDs).forEach(key => {
+      customerIDs[key] = options.customerIDs[key];
+    });
+    event.mergeMeta(options.customerIDs);
+    const customerIDsHash = createCustomerIDsHash(customerIDs);
+    const hasSynced = customerIDsHash === cookie.get("CIDH");
+    event.mergeMeta({ hasSynced });
+    if (!hasSynced) {
+      cookie.set("CIDH", customerIDsHash);
+    }
+    return lifecycle
+      .onBeforeEvent(event, options, isViewStart)
+      .then(() => makeServerCall(event));
+  };
 
   const onBeforeEvent = event => {
     if (!ecid && !responseRequested) {
@@ -91,12 +127,17 @@ const createIdentity = ({ config, logger, cookie }) => {
 
   return {
     lifecycle: {
+      onComponentsRegistered(tools) {
+        ({ lifecycle, network } = tools);
+      },
       onBeforeEvent,
       onBeforeDataCollection,
       onResponse
     },
     commands: {
-      getEcid
+      getEcid,
+      setCustomerIDs,
+      getCustomerIDs
     }
   };
 };
