@@ -25,9 +25,28 @@ button {
 li, button {
   display: inline-block;
   margin-right: 20px;
-  font-size: 120%;
 }
 
 #root {
   padding: 10px;
+}
+
+.demo li {
+  display: list-item;
+  padding: 3px 0;
+}
+
+.demo p {
+  font-size: 110%;
+  text-decoration: underline;
+  margin: 25px 0;
+}
+
+.demo {
+  margin-bottom: 300px;
+  font-size: 18px;
+}
+
+.demo h3 {
+  margin: 40px 0;
 }

@@ -28,7 +28,7 @@
       !function(n,o){o.forEach(function(o){n[o]||((n.__alloyNS=n.__alloyNS||
       []).push(o),n[o]=function(){var u=arguments;return new Promise(
       function(i,l){n[o].q.push([i,l,u])})},n[o].q=[])})}
-      (window,["alloy", "organizationTwo"]);
+      (window,["alloy"]);
     </script>
     <script src="alloy.js" async></script>
 
@@ -54,7 +54,14 @@
         data: {
           "type": "page-view",
           "url": location.href,
-          "name": location.pathname.substring(1) || "home"
+          "name": location.pathname.substring(1) || "home",
+          "commerce": {
+            "order": {
+              "purchaseID": "123",
+              "purchaseOrderNumber": "Order999",
+              "priceTotal": 500
+            }
+          }
         }
       }).then(function(data) {
         console.log("Sandbox: View start event has completed.", data);
@@ -75,13 +82,13 @@
       });
 
       // For Testing multiple instances
-      organizationTwo("configure", {
-        // edgeDomain: "edgegateway.azurewebsites.net",
-        propertyId: 8888888,
-        imsOrgId: "53A16ACB5CC1D3760A495C99@AdobeOrg",
-        logEnabled: true,
-	clickCollectionEnabled: false
-      });
+      // organizationTwo("configure", {
+      //   // edgeDomain: "edgegateway.azurewebsites.net",
+      //   propertyId: 8888888,
+      //   imsOrgId: "53A16ACB5CC1D3760A495C99@AdobeOrg",
+      //   logEnabled: true,
+	    //   clickCollectionEnabled: false
+      // });
     </script>
   </head>
   <body>

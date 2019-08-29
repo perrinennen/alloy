@@ -27,6 +27,16 @@ const createDataCollector = ({ config, logger }) => {
     payload.mergeMeta({
       gateway: {
         imsOrgId
+      },
+      collect: {
+        imsToken:
+          "eyJhbGciOiJSUzI1NiJ9.ew0KICAgICJleHAiOiAxNTY3MjY4Mjg3LA0KICAgICJpc3MiOiAiNTNBMTZBQ0I1Q0MxRDM3NjBBNDk1Qzk5QEFkb2JlT3JnIiwNCiAgICAic3ViIjogIjVEQkUxMzk3NUQ2N0Q0OUUwQTQ5NUU2NkB0ZWNoYWNjdC5hZG9iZS5jb20iLA0KICAgICJodHRwczovL2ltcy1uYTEuYWRvYmVsb2dpbi5jb20vcy9lbnRfZGF0YXNlcnZpY2VzX3NkayI6IHRydWUsDQogICAgImF1ZCI6ICJodHRwczovL2ltcy1uYTEuYWRvYmVsb2dpbi5jb20vYy9jY2I5OGI5YjNiYTk0MjI4YWNkY2M4YTE1MTAyZmI4NSINCn0.EQm6vX8ILNLliOEFM6KDS_3ploMbiKlk5plI1JT6iCrCnKArymBYgf9oWtlln_9oEmrfdpqtYsBDz0i66-D1rGpLGyvqj3ibpD3Tx6TANNrZTtnE4QqxWMimdwmsl749K9hhzAU1dK7mdHcVEZyOFbQsoSVz4nknQsf6GBuDI5LhUH7R44qxe8U1ZPrUZQAldmAVTL9IBUrDl7WGrF4krmGhhXMf26nBOHMADhEg6CLlTWQCRB_0Up9MwNq1BLuItFDtBGHEiJqMvJ7q3kE4J_4UmHQhqhAYpGj-l8iTmnwXxkfehZKME2L3tB6s2aRkRD448HEPHr8rfeAM4gVL8w",
+        inletUrl:
+          "https://dcs.adobedc.net/collection/b58b430c896bc3272c557e3a8a5f4b6f99b3cf06053a2aa51d8a8af2b0b816f4",
+        datasetId: "5d4bef1132fd4a144e56f4f4",
+        schemaId:
+          "https://ns.adobe.com/atag/schemas/8e930c6afcecfc24e6758278178e8680",
+        synchronousValidation: true
       }
     });
 

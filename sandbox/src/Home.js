@@ -51,14 +51,42 @@ function HomeWithHistory({ history }) {
       <div>
         <section>  
           <div className="container">
-            <h2>Some awesome default content</h2>
+            <h2>Some Awesome Default Content - Might get replaced by a Personalization Offer.</h2>
             <br/>
           </div>
         </section>
 
         <section> 
           <div>
-            <h1>Alloy: Getting Started</h1>
+            <h2>Getting Started</h2>
+
+            <section className="demo">
+              <p>Alloy is designed with some of the following goals in mind:</p>
+
+              <ul>
+                <li>Ease of implementation.</li>
+                <li>Performance.</li>
+                <li>Privacy.</li>
+                <li>Solution Agnostic.</li>
+              </ul>
+
+              <p>Comparing Alloy to AAM + AA + T + ECID:</p>
+              
+              <ul>
+                <li>Single library & Launch extension vs 4.</li>
+                <li>Alloy is ~80% smaller in kb size.</li>
+                <li>Alloy's Script Evaluation by the browser is 64% faster.</li>
+                <li>Alloy + Konductor allow you to collect data to Platform and Experience Cloud Solutions, retrieve a visitor ID, Destinations and Personalization offers in one server call.</li>
+              </ul>
+
+              <h3>Today's demo:</h3>
+              <ul>
+                <li>Send data to Adobe Experience Platform.</li>
+                <li>Receive and Render a Personalization Offer.</li>
+                <li>Receive and Trigger Audience Destinations.</li>
+              </ul>
+            </section>
+            
             <h3>Installation</h3>
             <p>
             The first step in implemented the Adobe Experience Platform SDK is to copy and paste the following
