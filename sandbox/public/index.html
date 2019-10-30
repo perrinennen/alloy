@@ -59,13 +59,15 @@
           // Demonstrates overriding automatically collected data
           device: {
             screenHeight: 1
+          },
+          web: {
+            webPageDetails: {
+              URL: "http://localhost:3000/cart"
+            },
+            webReferrer: {
+              URL: "http://localhost:3000/cart"
+            }
           }
-        },
-        data: {
-          nonXdmKey: "nonXdmValue",
-          // The following prop is a trait set in Audience Manager to
-          // return destinations.
-          name: "home"
         }
       }).then(function(data) {
         console.log("Sandbox: View start event has completed.", data);

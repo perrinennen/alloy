@@ -28,7 +28,10 @@ export default ({ createEvent, optIn, lifecycle, network, config }) => {
         },
         // TODO: We should connect this to a new `debug` config.
         collect: {
-          synchronousValidation: true
+          synchronousValidation: true,
+          datasetId: "5db865ad86c04218a91f2185",
+          schemaId:
+            "https://ns.adobe.com/atag/schemas/ec93478f46500c25dc13dc1141091fdb"
         }
       });
 

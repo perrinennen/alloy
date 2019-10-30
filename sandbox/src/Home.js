@@ -1,24 +1,24 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
 
-let previousPath;
+// let previousPath;
 function HomeWithHistory({ history }) {
-  history.listen(loc => {
-    if (loc.pathname !== previousPath) {
-      const instanceName = loc.pathname.includes("orgTwo")
-        ? "organizationTwo"
-        : "alloy";
-      window[instanceName]("event", {
-        viewStart: true,
-        xdm: {
-          eventType: "page-view",
-          url: window.location.href,
-          name: loc.pathname.substring(1)
-        }
-      });
-    }
-    previousPath = loc.pathname;
-  });
+  // history.listen(loc => {
+  //   if (loc.pathname !== previousPath) {
+  //     const instanceName = loc.pathname.includes("orgTwo")
+  //       ? "organizationTwo"
+  //       : "alloy";
+  //     window[instanceName]("event", {
+  //       viewStart: true,
+  //       xdm: {
+  //         eventType: "page-view",
+  //         url: window.location.href,
+  //         name: loc.pathname.substring(1)
+  //       }
+  //     });
+  //   }
+  //   previousPath = loc.pathname;
+  // });
 
   const visitDoc = ev => {
     window.alloy("event", {

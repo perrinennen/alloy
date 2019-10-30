@@ -21,6 +21,7 @@ import EventMerge from "./EventMerge";
 import OptIn from "./OptIn";
 import LargePayload from "./LargePayload";
 import DualTag from "./DualTag";
+import Cart from "./Cart";
 
 function BasicExample() {
   return (
@@ -35,6 +36,9 @@ function BasicExample() {
           </li>
           <li>
             <Link to="/links">Links</Link>
+          </li>
+          <li>
+            <Link to="/cart">Cart</Link>
           </li>
           <li>
             <Link to="/eventMerge">Event-Merge</Link>
@@ -60,6 +64,7 @@ function BasicExample() {
         <Route path="/optIn" component={OptIn} />
         <Route path="/largePayload" component={LargePayload} />
         <Route path="/DualTag" component={DualTag} />
+        <Route path="/Cart" component={Cart} />
       </div>
     </Router>
   );
