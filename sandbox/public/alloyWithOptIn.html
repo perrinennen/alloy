@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="theme-color" content="#000000" />
+    <link rel="stylesheet" href="css/index.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self' *.demdex.net;
+            script-src 'self' 'unsafe-inline' assets.adobedtm.com cdn.tt.omtrdc.net;
+            style-src 'self' 'unsafe-inline' cdn.tt.omtrdc.net;
+            img-src * data:;
+            connect-src 'self' unifiedjslab.tt.omtrdc.net *.demdex.net http://localhost:8080 https://alpha.konductor.adobedc.net https://beta.adobedc.net https://edgegateway.azurewebsites.net konductor-qe.apps-exp-edge-npe-va6.experience-edge.adobeinternal.net"
+    />
+
+    <title>Mock website hosting Alloy</title>
+
+    <!-- prettier-ignore -->
+    <script>
+      !function(e,a,n,t){var i=e.head;if(i){
+      if (a) return;
+      var o=e.createElement("style");
+      o.id="alloy-prehiding",o.innerText=n,i.appendChild(o),
+      setTimeout(function(){o.parentNode&&o.parentNode.removeChild(o)},t)}}
+      (document, document.location.href.indexOf("mboxEdit") !== -1, ".personalization-container { opacity: 0 !important }", 3000);
+    </script>
+
+    <!-- prettier-ignore -->
+    <script>
+      !function(n,o){o.forEach(function(o){n[o]||((n.__alloyNS=n.__alloyNS||
+      []).push(o),n[o]=function(){var u=arguments;return new Promise(
+      function(i,l){n[o].q.push([i,l,u])})},n[o].q=[])})}
+      (window,["alloy", "organizationTwo"]);
+    </script>
+    <script src="alloy.js" async></script>
+
+    <script>
+      alloy("configure", {
+        // edgeDomain: "edgegateway.azurewebsites.net",
+        // edgeDomain:
+        //   "konductor-qe.apps-exp-edge-npe-va6.experience-edge.adobeinternal.net",
+        // optInEnabled: true,
+        configId: "9999999",
+        imsOrgId: "53A16ACB5CC1D3760A495C99@AdobeOrg",
+        // errorsEnabled: false,
+        logEnabled: true,
+        prehidingStyle: ".personalization-container { opacity: 0 !important }",
+        idSyncContainerId: 81,
+        optInEnabled: true
+      });
+
+      alloy("event", {
+        viewStart: true,
+        xdm: {
+          _myorg: {
+            url: location.href,
+            name: location.pathname.substring(1) || "home"
+          },
+          // Demonstrates overriding automatically collected data
+          device: {
+            screenHeight: 1
+          }
+        },
+        data: {
+          nonXdmKey: "nonXdmValue",
+          // The following prop is a trait set in Audience Manager to
+          // return destinations.
+          name: "home"
+        }
+      }).then(function(data) {
+        console.log("Sandbox: View start event has completed.", data);
+      });
+
+      alloy("setCustomerIds", {
+        emailHash: {
+          id: "me@gmail.com",
+          authenticatedState: "ambiguous",
+          hash: true, //TODO: document customer ID hashing syntax
+          primary: true
+        },
+        crm: {
+          id: "1234",
+          authenticatedState: "ambiguous"
+        }
+      }).then(function() {
+        console.log("Sandbox: Set customer IDs event has completed.");
+      });
+
+      alloy("syncIdsByUrl", {
+        idSyncs: [
+          {
+            type: "url",
+            id: 500,
+            spec: {
+              url:
+                "https://idsync.rlcdn.com/365868.gif?partner_uid=79653899615727305204290942296930013270",
+              hideReferrer: false,
+              ttlMinutes: 120
+            }
+          }
+        ]
+      }).then(function(result) {
+        console.log("syncIdsByUrl result", result);
+      });
+    </script>
+  </head>
+  <body>
+    <div id="root">
+      <div>
+        <ul>
+          <li>
+            <a href="/">Home</a>
+          </li>
+          <li>
+            <a href="/optIn">OptIn</a>
+          </li>
+          <li>
+            <a href="/links">Links</a>
+          </li>
+          <li>
+            <a href="/eventMerge">Event-Merge</a>
+          </li>
+          <li>
+            <a href="/largePayload">Large Payload</a>
+          </li>
+          <li>
+            <a href="/orgTwo">Multiple Orgs</a>
+          </li>
+          <li>
+            <a href="/DualTag">DualTag</a>
+          </li>
+          <li>
+            <a href="/legacy.html">legacy</a>
+          </li>
+          <li>
+            <a href="/alloyWithOptIn.html">Alloy OptIn</a>
+          </li>
+          <li>
+            <a href="/legacyOptIn.html">Legacy OptIn</a>
+          </li>
+        </ul>
+        <hr />
+      </div>
+    </div>
+
+    <h2>Alloy with OptIn</h2>
+  </body>
+</html>

@@ -1,12 +1,17 @@
 import { cookieJar } from "../../utils";
-import { EXPERIENCE_CLOUD_ID } from "./constants/cookieNames";
+import { EXPERIENCE_CLOUD_ID, LEGACY_OPTIN } from "./constants/cookieNames";
 
-export default (imsOrgId, migrateIds) => {
-  if (!migrateIds) {
-    return {
-      getEcidFromAmcvCookie() {},
-      createAmcvCookie() {}
-    };
+export default (imsOrgId, migrateIds, optInEnabled, optIn) => {
+  if (optInEnabled) {
+    const storedOptIn = cookieJar.get(LEGACY_OPTIN);
+    if (storedOptIn) {
+      const optInstatus = Object.values(JSON.parse(storedOptIn)).every(
+        val => val
+      );
+      if (optInstatus) {
+        optIn.setPurposes("all");
+      }
+    }
   }
   return {
     getEcidFromAmcvCookie(identityCookieJar) {

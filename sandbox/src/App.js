@@ -51,6 +51,12 @@ function BasicExample() {
           <li>
             <a href="/legacy.html">legacy</a>
           </li>
+          <li>
+            <a href="/alloyWithOptIn.html">Alloy OptIn</a>
+          </li>
+          <li>
+            <a href="/legacyOptIn.html">Legacy OptIn</a>
+          </li>
         </ul>
 
         <hr />

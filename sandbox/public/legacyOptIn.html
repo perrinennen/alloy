@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Opt In</title>
+
+    <link rel="stylesheet" href="css/index.css" />
+    <script src="js/consent-manager-mock.js"></script>
+    <script src="js/visitorapi.min.js"></script>
+    <script src="js/init-visitor.js"></script>
+    <script src="js/at.min.js"></script>
+    <script src="js/dil-iab.js"></script>
+    <script src="js/__cmp.js"></script>
+    <script>
+      __cmp.configure({
+        timeout: 5000
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="root">
+      <div>
+        <ul>
+          <li>
+            <a href="/">Home</a>
+          </li>
+          <li>
+            <a href="/optIn">OptIn</a>
+          </li>
+          <li>
+            <a href="/links">Links</a>
+          </li>
+          <li>
+            <a href="/eventMerge">Event-Merge</a>
+          </li>
+          <li>
+            <a href="/largePayload">Large Payload</a>
+          </li>
+          <li>
+            <a href="/orgTwo">Multiple Orgs</a>
+          </li>
+          <li>
+            <a href="/DualTag">DualTag</a>
+          </li>
+          <li>
+            <a href="/legacy.html">Legacy</a>
+          </li>
+          <li>
+            <a href="/alloyWithOptIn.html">Alloy OptIn</a>
+          </li>
+          <li>
+            <a href="/legacyOptIn.html">Legacy OptIn</a>
+          </li>
+        </ul>
+        <hr />
+      </div>
+
+      <section class="target-ui">
+        <h3>Default Banner that will get replaced by a Target campaign.</h3>
+      </section>
+
+      <section class="choose-ui">
+        <h4><b>Choose UI style:</b></h4>
+        <span class="btnGlobalUI">Global Opt In</span>&nbsp;-&nbsp;
+        <span class="btnWizardUI">Wizard</span>&nbsp;-&nbsp;
+        <span class="btnMultipleUI">Multiple Choice</span>
+      </section>
+
+      <section class="consent-ui">
+        <div class="global">
+          <fieldset class="global-consent">
+            <legend>Global Consent</legend>
+            <button class="btnGive">Give Consent for EVERYTHING!</button>
+            <button class="btnDeny">Deny Consent for EVERYTHING!</button>
+          </fieldset>
+        </div>
+
+        <div class="wizard">
+          <fieldset>
+            <legend>Wizard UI</legend>
+            <div class="w screen1">
+              <h3>
+                Adobe Analytics: Important to track the website's metrics and
+                more.
+              </h3>
+              <button class="btnAgreeOne">Consent to Analytics</button>
+              <button class="btnDenyOne">Deny Consent to Analytics</button>
+            </div>
+            <div class="w screen2">
+              <h3>Adobe Target: Receive a personalized experience!</h3>
+              <button class="btnAgreeTwo">Consent to Target</button>
+              <button class="btnDenyTwo">Deny Consent to Target</button>
+            </div>
+            <div class="w screen3">
+              <h3>
+                ID Service: Identifies your device and connects you to the
+                ecosystem.
+              </h3>
+              <button class="btnAgreeThree">Consent to ID Service</button>
+              <button class="btnDenyThree">Deny Consent to ID Service</button>
+            </div>
+            <div class="w screen4">
+              <h3>Adobe Audience Manager: Send custom data.</h3>
+              <button class="btnAgreeFour">Consent to Audience Manager</button>
+              <button class="btnDenyFour">
+                Deny Consent to Audience Manager
+              </button>
+            </div>
+            <div class="w screen99">
+              <button class="btnWizard">Submit your Opt In selections</button>
+            </div>
+          </fieldset>
+        </div>
+
+        <div class="multiple">
+          <form class="multiple-form">
+            <fieldset>
+              <legend>Multiple Choice:</legend>
+              <label>
+                <input type="checkbox" name="aa" />
+                Analytics
+              </label>
+              <label>
+                <input type="checkbox" name="ecid" />
+                ID Service
+              </label>
+              <label>
+                <input type="checkbox" name="target" />
+                Target
+              </label>
+              <label>
+                <input type="checkbox" name="aam" />
+                Audience Manager
+              </label>
+              <button class="btnSubmitPermissions">Submit Permissions</button>
+              <label class="loading">loading...</label>
+            </fieldset>
+          </form>
+        </div>
+      </section>
+
+      <section class="visitor-ui">
+        <button class="btnGetMid">Get MID</button>
+        <button class="btnGetUuid">Get UUID</button>
+        <button class="btnDeleteCookies">Clear all cookies</button>
+        <span class="msg"
+          >COMING SOON: Support setting pre-opt in permissions to allow tags to
+          trigger before obtaining Opt In.</span
+        >
+        <div class="mid"></div>
+        <div class="uuid"></div>
+      </section>
+    </div>
+    <script src="js/AppMeasurement-Opt-In.js"></script>
+    <script src="js/s_code.js"></script>
+    <script src="js/init-ui.js"></script>
+  </body>
+</html>

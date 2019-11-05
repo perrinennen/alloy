@@ -20,8 +20,8 @@ export default (
 ) => {
   let deferredForEcid;
   let alreadyQueriedForIdSyncs = false;
-  const { migrateIds, imsOrgId } = config;
-  const migration = createMigration(imsOrgId, migrateIds);
+  const { migrateIds, imsOrgId, optInEnabled } = config;
+  const migration = createMigration(imsOrgId, migrateIds, optInEnabled, optIn);
 
   // TODO: Fetch from server if ECID is not available.
   const getEcid = () => {

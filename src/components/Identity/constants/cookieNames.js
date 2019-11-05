@@ -14,3 +14,4 @@ export const CUSTOMER_ID_HASH = "CIDH";
 export const EXPERIENCE_CLOUD_ID = "ECID";
 export const ID_SYNC_TIMESTAMP = "idSyncTimestamp";
 export const ID_SYNC_CONTROL = "idSyncControl";
+export const LEGACY_OPTIN = "adobeujs-optin";
