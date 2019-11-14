@@ -12,6 +12,43 @@
 		<link rel="stylesheet" href="css/owl.carousel.css" />
 		<link rel="stylesheet" href="css/custom.css" />
 		<link rel="stylesheet" href="css/index.css" />
+
+		<!-- prettier-ignore -->
+		<script>
+		!function(n,o){o.forEach(function(o){n[o]||((n.__alloyNS=n.__alloyNS||
+		[]).push(o),n[o]=function(){var u=arguments;return new Promise(
+		function(i,l){n[o].q.push([i,l,u])})},n[o].q=[])})}
+		(window,["alloy"]);
+		</script>
+		<script src="alloy.js" async></script>
+
+		<script>
+			alloy("configure", {
+				edgeDomain: "https://firstparty.alloyio.com/",
+				// optInEnabled: true,
+				configId: "9999999",
+				imsOrgId: "53A16ACB5CC1D3760A495C99@AdobeOrg",
+				debugEnabled: true,
+				prehidingStyle: ".personalization-container { opacity: 0 !important }",
+				idSyncContainerId: 81,
+				idMigrationEnabled: true,
+				datasetId: "5db865ad86c04218a91f2185",
+				schemaId: "https://ns.adobe.com/atag/schemas/ec93478f46500c25dc13dc1141091fdb"
+			});
+
+			alloy("event", {
+				viewStart: true,
+				xdm: {
+					device: {
+						screenHeight: 1
+					},
+					eventMergeId: "novdemo"
+				}
+			}).then(function(data) {
+				console.log("Sandbox: View start event has completed.", data);
+			});
+		</script>
+
 	</head>
 	<body class="light-page">
 		<div id="wrap">
@@ -53,8 +90,8 @@
 			</nav><header id="header-text" class="pt-75 pb-75 pt-lg-200 pb-lg-200 text-center dark">
     			<div class="container">
         			<div class="row">
-            			<div class="col-12">
-                			<h1 class=""><strong>Alloy</strong></h1>
+            			<div class="col-12 personalization-container">
+                			<h1><strong>Alloy</strong></h1>
                 			<h2 class="mb-50 mb-md-100"><strong>AEP Web SDK</strong></h2>
                 			<a href="photography.html" class="btn btn-secondary btn-lg">Visit the Photography Page</a>
             			</div>
