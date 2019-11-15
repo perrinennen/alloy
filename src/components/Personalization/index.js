@@ -67,6 +67,12 @@ const createPersonalization = ({ config, logger, eventManager }) => {
           // If NOT isViewStart disable personalization
           event.mergeQuery({ personalization: { enabled: false } });
         } else {
+          // TODO: Remove once Konductor is fixed.
+          event.mergeQuery({
+            personalization: {
+              enabled: true
+            }
+          });
           event.expectResponse();
 
           // For viewStart we try to hide the personalization containers
