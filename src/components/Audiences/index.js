@@ -20,8 +20,8 @@ const createAudiences = ({ config, logger }) => {
         if (isViewStart) {
           event.mergeQuery({
             activation: {
-              urlsEnabled: config.urlDestinationsEnabled,
-              cookiesEnabled: config.cookieDestinationsEnabled
+              url: config.urlDestinationsEnabled,
+              cookie: config.cookieDestinationsEnabled
             }
           });
           event.expectResponse();
