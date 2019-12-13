@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Alloy Test Page</title>
+    <!-- prettier-ignore -->
+    <script>
+        !function(n,o){o.forEach(function(o){n[o]||((n.__alloyNS=n.__alloyNS||
+        []).push(o),n[o]=function(){var u=arguments;return new Promise(
+        function(i,l){n[o].q.push([i,l,u])})},n[o].q=[])})}
+        (window,["alloy"]);
+    </script>
+    <script>
+      alloy("configure", {
+        debugEnabled: true,
+        configId: "9999999",
+        orgId: "53A16ACB5CC1D3760A495C99@AdobeOrg",
+      });
+	alloy("debug",{enabled:true});
+	alloy("getLibraryInfo");
+	alloy("setCustomerIds");
+	alloy("event");
+    </script>
+    <script src="/dist/standalone/alloy.min.js" async></script>
+  </head>
+
+  <body id="body">
+	  <h1>Loading alloy after queueing up some commands.</h1>
+  </body>
+</html>
