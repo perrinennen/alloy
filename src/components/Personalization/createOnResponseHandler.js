@@ -10,19 +10,12 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-export default ({
-  modules,
-  logger,
-  extractDecisions,
-  executeDecisions,
-  showContainers,
-  executeActions
-}) => {
+export default ({ extractDecisions, executeDecisions, showContainers }) => {
   return ({ renderDecisions, response }) => {
     const [renderableDecisions, decisions] = extractDecisions(response);
 
     if (renderDecisions) {
-      executeDecisions(renderableDecisions, modules, logger, executeActions);
+      executeDecisions(renderableDecisions);
       showContainers();
       return { decisions };
     }

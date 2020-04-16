@@ -15,7 +15,7 @@ import createComponent from "./createComponent";
 import { initDomActionsModules, executeActions } from "./dom-actions";
 import createCollect from "./createCollect";
 import extractDecisions from "./extractDecisions";
-import executeDecisions from "./executeDecisions";
+import createExecuteDecisions from "./createExecuteDecisions";
 import { hideContainers, showContainers } from "./flicker";
 import createOnResponseHandler from "./createOnResponseHandler";
 import collectClicks from "./dom-actions/clicks/collectClicks";
@@ -26,13 +26,15 @@ const createPersonalization = ({ config, logger, eventManager }) => {
   const collect = createCollect(eventManager);
   const clickStorage = [];
   const modules = initDomActionsModules(collect, clickStorage.push);
-  const onResponseHandler = createOnResponseHandler({
+  const executeDecisions = createExecuteDecisions({
     modules,
     logger,
+    executeActions
+  });
+  const onResponseHandler = createOnResponseHandler({
     extractDecisions,
     executeDecisions,
-    showContainers,
-    executeActions
+    showContainers
   });
 
   return createComponent({

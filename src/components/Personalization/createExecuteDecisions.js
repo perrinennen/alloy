@@ -18,10 +18,12 @@ const buildActions = decision => {
   return decision.items.map(item => assign({}, item.data, { meta }));
 };
 
-export default (decisions, modules, logger, executeActions) => {
-  decisions.forEach(decision => {
-    const actions = buildActions(decision);
+export default ({ modules, logger, executeActions }) => {
+  return decisions => {
+    decisions.forEach(decision => {
+      const actions = buildActions(decision);
 
-    executeActions(actions, modules, logger);
-  });
+      executeActions(actions, modules, logger);
+    });
+  };
 };
