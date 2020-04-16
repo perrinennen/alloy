@@ -12,14 +12,44 @@ governing permissions and limitations under the License.
 
 import { string } from "../../utils/validation";
 import createComponent from "./createComponent";
-import onResponseHandler from "./onResponseHandler";
+import { initDomActionsModules, executeActions } from "./dom-actions";
+import createCollect from "./createCollect";
+import extractDecisions from "./extractDecisions";
+import executeDecisions from "./executeDecisions";
+import { hideContainers, showContainers } from "./flicker";
+import createOnResponseHandler from "./createOnResponseHandler";
+import collectClicks from "./dom-actions/clicks/collectClicks";
+import { hasScopes, isAuthoringModeEnabled, getDecisionScopes } from "./utils";
+import { mergeMeta, mergeQuery, createQueryDetails } from "./event";
 
 const createPersonalization = ({ config, logger, eventManager }) => {
+  const collect = createCollect(eventManager);
+  const clickStorage = [];
+  const modules = initDomActionsModules(collect, clickStorage.push);
+  const onResponseHandler = createOnResponseHandler({
+    modules,
+    logger,
+    extractDecisions,
+    executeDecisions,
+    showContainers,
+    executeActions
+  });
+
   return createComponent({
     config,
     logger,
     eventManager,
-    onResponseHandler
+    onResponseHandler,
+    clickStorage,
+    collectClicks,
+    hideContainers,
+    showContainers,
+    hasScopes,
+    isAuthoringModeEnabled,
+    getDecisionScopes,
+    mergeMeta,
+    mergeQuery,
+    createQueryDetails
   });
 };
 
