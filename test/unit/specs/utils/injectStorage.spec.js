@@ -25,10 +25,10 @@ describe("injectStorage", () => {
   ].forEach(({ storageProperty, windowProperty }) => {
     describe(storageProperty, () => {
       describe("setItem", () => {
-        it("sets item", () => {
+        test("sets item", () => {
           const window = {
             [windowProperty]: {
-              setItem: jasmine.createSpy().and.returnValue(true)
+              setItem: jest.fn(() => true)
             }
           };
           const storage = injectStorage(window)("example.");
@@ -37,26 +37,28 @@ describe("injectStorage", () => {
             "com.adobe.alloy.example.foo",
             "bar"
           );
-          expect(result).toBeTrue();
+          expect(result).toBe(true);
         });
 
-        it("returns false if an error occurs setting item", () => {
+        test("returns false if an error occurs setting item", () => {
           const window = {
             [windowProperty]: {
-              setItem: jasmine.createSpy().and.throwError()
+              setItem: jest.fn(() => {
+                throw new Error();
+              })
             }
           };
           const storage = injectStorage(window)("example.");
           const result = storage[storageProperty].setItem("foo", "bar");
-          expect(result).toBeFalse();
+          expect(result).toBe(false);
         });
       });
 
       describe("getItem", () => {
-        it("gets item", () => {
+        test("gets item", () => {
           const window = {
             [windowProperty]: {
-              getItem: jasmine.createSpy().and.returnValue("abc")
+              getItem: jest.fn(() => "abc")
             }
           };
           const storage = injectStorage(window)("example.");
@@ -67,10 +69,12 @@ describe("injectStorage", () => {
           expect(result).toBe("abc");
         });
 
-        it("returns null if an error occurs while getting item", () => {
+        test("returns null if an error occurs while getting item", () => {
           const window = {
             [windowProperty]: {
-              getItem: jasmine.createSpy().and.throwError()
+              getItem: jest.fn(() => {
+                throw new Error();
+              })
             }
           };
           const storage = injectStorage(window)("example.");

@@ -13,8 +13,10 @@ governing permissions and limitations under the License.
 import addEcidToPayload from "../../../../../src/components/Identity/addEcidToPayload";
 
 describe("Identity:addEcidToPayload", () => {
-  it("adds ECID to payload", () => {
-    const payload = jasmine.createSpyObj("payload", ["addIdentity"]);
+  test("adds ECID to payload", () => {
+    const payload = {
+      addIdentity: jest.fn()
+    };
     addEcidToPayload(payload, "user@adobe");
     expect(payload.addIdentity).toHaveBeenCalledWith("ECID", {
       id: "user@adobe"

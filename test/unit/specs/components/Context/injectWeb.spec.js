@@ -10,7 +10,7 @@ describe("Context::injectWeb", () => {
     }
   };
 
-  it("works", () => {
+  test("works", () => {
     const xdm = {};
     injectWeb(window)(xdm);
     expect(xdm).toEqual({

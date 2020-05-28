@@ -16,13 +16,13 @@ import {
 } from "../../../../../../../src/components/Personalization/dom-actions/dom/helperForEq";
 
 describe("Personalization::DOM::helperForEq::isNotEqSelector", () => {
-  it("should match when no eq", () => {
+  test("should match when no eq", () => {
     const selector = "#id";
 
     expect(isNotEqSelector(selector)).toEqual(true);
   });
 
-  it("should not match when eq", () => {
+  test("should not match when eq", () => {
     const selector = "#id:eq(0)";
 
     expect(isNotEqSelector(selector)).toEqual(false);
@@ -30,13 +30,13 @@ describe("Personalization::DOM::helperForEq::isNotEqSelector", () => {
 });
 
 describe("Personalization::DOM::helperForEq::splitWithEq", () => {
-  it("should split when no eq", () => {
+  test("should split when no eq", () => {
     const selector = "#id";
 
     expect(splitWithEq(selector)).toEqual(["#id"]);
   });
 
-  it("should split when eq", () => {
+  test("should split when eq", () => {
     const selector = "#id:eq(0)";
 
     expect(splitWithEq(selector)).toEqual(["#id", "0"]);

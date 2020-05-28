@@ -19,20 +19,20 @@ describe("memoize", () => {
 
     beforeEach(() => {
       let iterator = 0;
-      getId = jasmine.createSpy().and.callFake(() => {
+      getId = jest.fn(() => {
         iterator += 1;
         return iterator;
       });
       memoizedGetId = memoize(getId);
     });
 
-    it("only calls function once when no arguments are passed", () => {
+    test("only calls function once when no arguments are passed", () => {
       expect(memoizedGetId()).toBe(1);
       expect(memoizedGetId()).toBe(1);
       expect(getId).toHaveBeenCalledTimes(1);
     });
 
-    it("calls function each time first argument is different", () => {
+    test("calls function each time first argument is different", () => {
       const obj1 = {};
       const obj2 = {};
       expect(memoizedGetId(obj1, "foo")).toBe(1);
@@ -48,14 +48,14 @@ describe("memoize", () => {
 
     beforeEach(() => {
       let iterator = 0;
-      getId = jasmine.createSpy().and.callFake(() => {
+      getId = jest.fn(() => {
         iterator += 1;
         return iterator;
       });
       memoizedGetId = memoize(getId, (a, b, c) => c);
     });
 
-    it("calls function each time computed key is different", () => {
+    test("calls function each time computed key is different", () => {
       const obj1 = { foo: "bar" };
       const obj2 = { baz: "qux" };
 

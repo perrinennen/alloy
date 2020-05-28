@@ -13,25 +13,25 @@ governing permissions and limitations under the License.
 import getEcidFromResponse from "../../../../../src/components/Identity/getEcidFromResponse";
 
 describe("Identity::getEcidFromResponse", () => {
-  it("does not return ECID if ECID does not exist in response", () => {
-    const response = jasmine.createSpyObj("response", {
-      getPayloadsByType: [
+  test("does not return ECID if ECID does not exist in response", () => {
+    const response = {
+      getPayloadsByType: jest.fn(() => [
         {
           namespace: {
             code: "other"
           },
           id: "user123"
         }
-      ]
-    });
+      ])
+    };
 
     expect(getEcidFromResponse(response)).toBeUndefined();
     expect(response.getPayloadsByType).toHaveBeenCalledWith("identity:result");
   });
 
-  it("returns ECID if ECID exists in response", () => {
-    const response = jasmine.createSpyObj("response", {
-      getPayloadsByType: [
+  test("returns ECID if ECID exists in response", () => {
+    const response = {
+      getPayloadsByType: jest.fn(() => [
         {
           namespace: {
             code: "other"
@@ -44,8 +44,8 @@ describe("Identity::getEcidFromResponse", () => {
           },
           id: "user@adobe"
         }
-      ]
-    });
+      ])
+    };
 
     expect(getEcidFromResponse(response)).toBe("user@adobe");
     expect(response.getPayloadsByType).toHaveBeenCalledWith("identity:result");

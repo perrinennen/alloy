@@ -13,20 +13,20 @@ governing permissions and limitations under the License.
 import createNode from "../../../../../src/utils/dom/createNode";
 
 describe("DOM::createNode", () => {
-  it("should createNode with tag only", () => {
+  test("should createNode with tag only", () => {
     const element = createNode("DIV");
 
     expect(element.tagName).toEqual("DIV");
   });
 
-  it("should createNode with tag and attrs", () => {
+  test("should createNode with tag and attrs", () => {
     const element = createNode("DIV", { id: "create" });
 
     expect(element.tagName).toEqual("DIV");
     expect(element.id).toEqual("create");
   });
 
-  it("should createNode with tag, child", () => {
+  test("should createNode with tag, child", () => {
     const element = createNode("DIV", {}, {}, [createNode("p")]);
 
     expect(element.tagName).toEqual("DIV");

@@ -27,14 +27,16 @@ describe("Personalization::onResponseHandler", () => {
   let showContainers;
 
   beforeEach(() => {
-    extractDecisions = jasmine
-      .createSpy("extractDecisions")
-      .and.returnValue([renderableDecisions, decisions, unprocessedDecisions]);
-    executeDecisions = jasmine.createSpy("executeDecisions");
-    showContainers = jasmine.createSpy("showContainers");
+    extractDecisions = jest.fn(() => [
+      renderableDecisions,
+      decisions,
+      unprocessedDecisions
+    ]);
+    executeDecisions = jest.fn();
+    showContainers = jest.fn();
   });
 
-  it("should execute DOM ACTION decisions and return rest of decisions when renderDecisions is true", () => {
+  test("should execute DOM ACTION decisions and return rest of decisions when renderDecisions is true", () => {
     const expectedResult = {
       decisions
     };
@@ -53,7 +55,7 @@ describe("Personalization::onResponseHandler", () => {
     expect(result).toEqual(expectedResult);
   });
 
-  it("should not trigger executeDecisions, but should return all decisions when renderDecisions is false", () => {
+  test("should not trigger executeDecisions, but should return all decisions when renderDecisions is false", () => {
     const expectedResult = {
       decisions: unprocessedDecisions
     };

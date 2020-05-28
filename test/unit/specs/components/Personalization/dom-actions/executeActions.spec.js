@@ -13,9 +13,12 @@ governing permissions and limitations under the License.
 import executeActions from "../../../../../../src/components/Personalization/dom-actions/executeActions";
 
 describe("Personalization::executeActions", () => {
-  it("should execute actions", () => {
-    const actionSpy = jasmine.createSpy().and.returnValue(Promise.resolve(1));
-    const logger = jasmine.createSpyObj("logger", ["error", "log"]);
+  test("should execute actions", () => {
+    const actionSpy = jest.fn(() => Promise.resolve(1));
+    const logger = {
+      error: jest.fn(),
+      log: jest.fn()
+    };
     logger.enabled = true;
     const actions = [{ type: "foo" }];
     const modules = {
@@ -25,14 +28,17 @@ describe("Personalization::executeActions", () => {
     return executeActions(actions, modules, logger).then(result => {
       expect(result).toEqual([1]);
       expect(actionSpy).toHaveBeenCalled();
-      expect(logger.log.calls.count()).toEqual(1);
+      expect(logger.log.mock.calls.length).toEqual(1);
       expect(logger.error).not.toHaveBeenCalled();
     });
   });
 
-  it("should not invoke logger.log when logger is not enabled", () => {
-    const actionSpy = jasmine.createSpy().and.returnValue(Promise.resolve(1));
-    const logger = jasmine.createSpyObj("logger", ["error", "log"]);
+  test("should not invoke logger.log when logger is not enabled", () => {
+    const actionSpy = jest.fn(() => Promise.resolve(1));
+    const logger = {
+      error: jest.fn(),
+      log: jest.fn()
+    };
     logger.enabled = false;
     const actions = [{ type: "foo" }];
     const modules = {
@@ -41,24 +47,32 @@ describe("Personalization::executeActions", () => {
     return executeActions(actions, modules, logger).then(result => {
       expect(result).toEqual([1]);
       expect(actionSpy).toHaveBeenCalled();
-      expect(logger.log.calls.count()).toEqual(0);
+      expect(logger.log.mock.calls.length).toEqual(0);
       expect(logger.error).not.toHaveBeenCalled();
     });
   });
 
-  it("should throw error when execute actions fails", () => {
-    const logger = jasmine.createSpyObj("logger", ["error", "log"]);
+  test("should throw error when execute actions fails", () => {
+    const logger = {
+      error: jest.fn(),
+      log: jest.fn()
+    };
     logger.enabled = true;
     const actions = [{ type: "foo" }];
     const modules = {
-      foo: jasmine.createSpy().and.throwError("foo's error")
+      foo: jest.fn(() => {
+        throw new Error("foo's error");
+      })
     };
 
     expect(() => executeActions(actions, modules, logger)).toThrowError();
   });
 
-  it("should log nothing when there are no actions", () => {
-    const logger = jasmine.createSpyObj("logger", ["error", "log"]);
+  test("should log nothing when there are no actions", () => {
+    const logger = {
+      error: jest.fn(),
+      log: jest.fn()
+    };
     const actions = [];
     const modules = {};
 
@@ -69,8 +83,11 @@ describe("Personalization::executeActions", () => {
     });
   });
 
-  it("should throw error when there are no actions types", () => {
-    const logger = jasmine.createSpyObj("logger", ["error", "log"]);
+  test("should throw error when there are no actions types", () => {
+    const logger = {
+      error: jest.fn(),
+      log: jest.fn()
+    };
     logger.enabled = true;
     const actions = [{ type: "foo1" }];
     const modules = {

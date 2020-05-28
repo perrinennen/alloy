@@ -23,28 +23,28 @@ import {
 } from "../../../../../../../src/components/Personalization/dom-actions/dom/selectNodesWithEq";
 
 describe("Personalization::DOM::escapeIdentifiersInSelector", () => {
-  it("should escape when digits only for ID selector", () => {
+  test("should escape when digits only for ID selector", () => {
     const result = escapeIdentifiersInSelector("#123 > #foo div.345");
 
     expect(result).toEqual("#\\31 23 > #foo div.\\33 45");
     expect(document.querySelector(result)).toEqual(null);
   });
 
-  it("should escape when digits only for class selector", () => {
+  test("should escape when digits only for class selector", () => {
     const result = escapeIdentifiersInSelector(".123");
 
     expect(result).toEqual(".\\31 23");
     expect(document.querySelector(result)).toEqual(null);
   });
 
-  it("should escape when hyphen and digits ID selector", () => {
+  test("should escape when hyphen and digits ID selector", () => {
     const result = escapeIdentifiersInSelector("#-123");
 
     expect(result).toEqual("#-\\31 23");
     expect(document.querySelector(result)).toEqual(null);
   });
 
-  it("should escape when hyphen and digits class selector", () => {
+  test("should escape when hyphen and digits class selector", () => {
     const result = escapeIdentifiersInSelector(".-123");
 
     expect(result).toEqual(".-\\31 23");
@@ -53,13 +53,13 @@ describe("Personalization::DOM::escapeIdentifiersInSelector", () => {
 });
 
 describe("Personalization::DOM::parseSelector", () => {
-  it("should parse selector when no eq", () => {
+  test("should parse selector when no eq", () => {
     const result = parseSelector("#test");
 
     expect(result[0]).toEqual({ sel: "#test" });
   });
 
-  it("should parse selector when eq", () => {
+  test("should parse selector when eq", () => {
     const result = parseSelector(
       "HTML > BODY > DIV.wrapper:eq(0) > HEADER.header:eq(0) > DIV.pagehead:eq(0) > P:nth-of-type(1)"
     );
@@ -76,7 +76,7 @@ describe("Personalization::DOM::selectNodesWithEq", () => {
     selectNodes(".eq").forEach(removeNode);
   });
 
-  it("should select when no eq", () => {
+  test("should select when no eq", () => {
     appendNode(document.body, createNode("DIV", { id: "noEq", class: "eq" }));
 
     const result = selectNodesWithEq("#noEq");
@@ -85,7 +85,7 @@ describe("Personalization::DOM::selectNodesWithEq", () => {
     expect(result[0].id).toEqual("noEq");
   });
 
-  it("should select when eq and just one element", () => {
+  test("should select when eq and just one element", () => {
     const content = `
       <div class="b">
         <div class="c">first</div>
@@ -107,7 +107,7 @@ describe("Personalization::DOM::selectNodesWithEq", () => {
     expect(result[0].textContent).toEqual("first");
   });
 
-  it("should select when eq and multiple elements", () => {
+  test("should select when eq and multiple elements", () => {
     const content = `
       <div class="b">
         <div class="c">first</div>
@@ -133,7 +133,7 @@ describe("Personalization::DOM::selectNodesWithEq", () => {
     expect(result[2].textContent).toEqual("third");
   });
 
-  it("should select when eq and no elements", () => {
+  test("should select when eq and no elements", () => {
     appendNode(document.body, createNode("DIV", { id: "abc", class: "eq" }));
 
     const result = selectNodesWithEq("#abc:eq(0) > div.foo");
@@ -141,7 +141,7 @@ describe("Personalization::DOM::selectNodesWithEq", () => {
     expect(result.length).toEqual(0);
   });
 
-  it("should select when eq and eq greater than number of nodes", () => {
+  test("should select when eq and eq greater than number of nodes", () => {
     appendNode(document.body, createNode("DIV", { id: "abc", class: "eq" }));
 
     const result = selectNodesWithEq("#abc:eq(1)");
@@ -149,7 +149,7 @@ describe("Personalization::DOM::selectNodesWithEq", () => {
     expect(result.length).toEqual(0);
   });
 
-  it("should show eq vs nth-of-child difference", () => {
+  test("should show eq vs nth-of-child difference", () => {
     const content = `
       <div>
         <p>first</p>
@@ -172,7 +172,7 @@ describe("Personalization::DOM::selectNodesWithEq", () => {
     expect(resultWitNthChild.length).toEqual(2);
   });
 
-  it("should show throw errors", () => {
+  test("should show throw errors", () => {
     appendNode(document.body, createNode("DIV", { id: "abc", class: "eq" }));
 
     const selectors = [

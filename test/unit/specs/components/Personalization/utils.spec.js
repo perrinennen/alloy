@@ -17,7 +17,7 @@ import {
 } from "../../../../../src/components/Personalization/utils";
 
 describe("Personalization::utils", () => {
-  it("returns true if authoring mode is enabled", () => {
+  test("returns true if authoring mode is enabled", () => {
     const doc = {
       location: {
         href: "http://foo.com?mboxEdit=1"
@@ -26,7 +26,7 @@ describe("Personalization::utils", () => {
     expect(isAuthoringModeEnabled(doc)).toEqual(true);
   });
 
-  it("returns false if authoring mode is disabled", () => {
+  test("returns false if authoring mode is disabled", () => {
     const doc = {
       location: {
         href: "http://foo.com"
@@ -35,7 +35,7 @@ describe("Personalization::utils", () => {
     expect(isAuthoringModeEnabled(doc)).toEqual(false);
   });
 
-  it("returns true if it has scopes", () => {
+  test("returns true if it has scopes", () => {
     expect(hasScopes(["foo"])).toEqual(true);
     expect(hasScopes([])).toEqual(false);
     expect(hasScopes(null)).toEqual(false);
@@ -43,7 +43,7 @@ describe("Personalization::utils", () => {
     expect(hasScopes("foo")).toEqual(false);
   });
 
-  it("returns decisions scopes", () => {
+  test("returns decisions scopes", () => {
     expect(getDecisionScopes(true, [])).toEqual(["__view__"]);
     expect(getDecisionScopes(false, [])).toEqual([]);
     expect(getDecisionScopes(false, ["foo"])).toEqual(["foo"]);

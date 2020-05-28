@@ -23,13 +23,13 @@ describe("Personalization::DOM::getElementById", () => {
     selectNodes("#fooById").forEach(removeNode);
   });
 
-  it("should return the node if exists", () => {
+  test("should return the node if exists", () => {
     appendNode(document.head, createNode("style", { id: "fooById" }));
 
     expect(getElementById("fooById")).not.toBeNull();
   });
 
-  it("should return array when nodes are NOT present", () => {
+  test("should return array when nodes are NOT present", () => {
     expect(getElementById("fooById")).toBeNull();
   });
 });

@@ -39,14 +39,14 @@ describe("getEcidFromVisitor", () => {
   });
 
   describe("Visitor does not exist", () => {
-    it("should return promise resolved with undefined", () => {
+    test("should return promise resolved with undefined", () => {
       const getEcidFromVisitor = injectGetEcidFromVisitor({ logger, orgId });
-      return expectAsync(getEcidFromVisitor()).toBeResolvedTo(undefined);
+      return expect(getEcidFromVisitor()).resolves.toBeUndefined();
     });
   });
 
   describe("Visitor exists; awaitVisitorOptIn resolves the promise", () => {
-    it("should return promise resolved with ecid123", () => {
+    test("should return promise resolved with ecid123", () => {
       window.Visitor = Visitor;
       const awaitVisitorOptIn = () => {
         return Promise.resolve();
@@ -57,12 +57,12 @@ describe("getEcidFromVisitor", () => {
         orgId,
         awaitVisitorOptIn
       });
-      return expectAsync(getEcidFromVisitor()).toBeResolvedTo("ecid123");
+      return expect(getEcidFromVisitor()).resolves.toBe("ecid123");
     });
   });
 
   describe("Visitor exists; awaitVisitorOptIn rejects the promise", () => {
-    it("should return promise rejected with undefined", () => {
+    test("should return promise rejected with undefined", () => {
       window.Visitor = Visitor;
       const awaitVisitorOptIn = () => {
         return Promise.reject();
@@ -73,7 +73,7 @@ describe("getEcidFromVisitor", () => {
         orgId,
         awaitVisitorOptIn
       });
-      return expectAsync(getEcidFromVisitor()).toBeRejectedWith(undefined);
+      return expect(getEcidFromVisitor()).rejects.toBeUndefined();
     });
   });
 });

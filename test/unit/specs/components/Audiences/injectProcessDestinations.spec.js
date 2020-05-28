@@ -7,17 +7,18 @@ describe("Audiences::injectProcessDestinations", () => {
   let processDestinations;
 
   beforeEach(() => {
-    fireReferrerHideableImage = jasmine
-      .createSpy()
-      .and.returnValue(Promise.resolve());
-    logger = jasmine.createSpyObj("logger", ["log", "error"]);
+    fireReferrerHideableImage = jest.fn(() => Promise.resolve());
+    logger = {
+      log: jest.fn(),
+      error: jest.fn()
+    };
     processDestinations = injectProcessDestinations({
       fireReferrerHideableImage,
       logger
     });
   });
 
-  it("sets cookie destinations", () => {
+  test("sets cookie destinations", () => {
     const destinations = [
       {
         type: "url",
@@ -55,8 +56,8 @@ describe("Audiences::injectProcessDestinations", () => {
     });
   });
 
-  it("calls fireReferrerHideableImage for all destinations of type URL and logs results", () => {
-    fireReferrerHideableImage.and.callFake(({ url }) => {
+  test("calls fireReferrerHideableImage for all destinations of type URL and logs results", () => {
+    fireReferrerHideableImage.mockImplementation(({ url }) => {
       return url === "http://test.zyx" ? Promise.resolve() : Promise.reject();
     });
     return processDestinations([
@@ -102,7 +103,7 @@ describe("Audiences::injectProcessDestinations", () => {
       );
     });
   });
-  it("doesn't return a value", () => {
+  test("doesn't return a value", () => {
     const destinations = [
       {
         type: "url",
@@ -113,8 +114,6 @@ describe("Audiences::injectProcessDestinations", () => {
         }
       }
     ];
-    return expectAsync(processDestinations(destinations)).toBeResolvedTo(
-      undefined
-    );
+    return expect(processDestinations(destinations)).resolves.toBeUndefined();
   });
 });

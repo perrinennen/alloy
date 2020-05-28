@@ -15,7 +15,7 @@ describe("Personalization::actions::appendHtml", () => {
     cleanUpDomChanges("appendHtml");
   });
 
-  it("should append personalized content", () => {
+  test("should append personalized content", () => {
     const modules = initDomActionsModules();
     const { appendHtml } = modules;
     const content = `<li>1</li>`;

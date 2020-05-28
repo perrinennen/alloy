@@ -18,7 +18,7 @@ describe("Context::injectDevice", () => {
     return xdm;
   };
 
-  it("handles the happy path", () => {
+  test("handles the happy path", () => {
     window.screen.orientation = { type: "landscape-primary" };
     expect(run()).toEqual({
       device: {
@@ -29,7 +29,7 @@ describe("Context::injectDevice", () => {
     });
   });
 
-  it("handles portrait orientation type", () => {
+  test("handles portrait orientation type", () => {
     window.screen.orientation = { type: "portrait-secondary" };
     expect(run()).toEqual({
       device: {
@@ -40,7 +40,7 @@ describe("Context::injectDevice", () => {
     });
   });
 
-  it("handles matchMedia queries: portrait", () => {
+  test("handles matchMedia queries: portrait", () => {
     window.matchMedia = query => ({
       matches: query === "(orientation: portrait)"
     });
@@ -53,7 +53,7 @@ describe("Context::injectDevice", () => {
     });
   });
 
-  it("handles matchMedia queries: landscape", () => {
+  test("handles matchMedia queries: landscape", () => {
     window.matchMedia = query => ({
       matches: query === "(orientation: landscape)"
     });
@@ -74,7 +74,7 @@ describe("Context::injectDevice", () => {
     { type: "a-b" },
     { type: null }
   ].forEach(orientation => {
-    it(`handles a bad screen orientation: ${JSON.stringify(
+    test(`handles a bad screen orientation: ${JSON.stringify(
       orientation
     )}`, () => {
       if (orientation !== undefined) {

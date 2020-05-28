@@ -13,18 +13,18 @@ governing permissions and limitations under the License.
 import createConsentRequestPayload from "../../../../../src/components/Privacy/createConsentRequestPayload";
 
 describe("createConsentRequestPayload", () => {
-  it("should not use ID third-party domain when useIdThirdPartyDomain is not called", () => {
+  test("should not use ID third-party domain when useIdThirdPartyDomain is not called", () => {
     const payload = createConsentRequestPayload();
-    expect(payload.getUseIdThirdPartyDomain()).toBeFalse();
+    expect(payload.getUseIdThirdPartyDomain()).toBe(false);
   });
 
-  it("should use ID third-party domain when useIdThirdPartyDomain is called", () => {
+  test("should use ID third-party domain when useIdThirdPartyDomain is called", () => {
     const payload = createConsentRequestPayload();
     payload.useIdThirdPartyDomain();
-    expect(payload.getUseIdThirdPartyDomain()).toBeTrue();
+    expect(payload.getUseIdThirdPartyDomain()).toBe(true);
   });
 
-  it("serializes properly", () => {
+  test("serializes properly", () => {
     const payload = createConsentRequestPayload();
     payload.mergeConfigOverrides({
       testOverride: "testOverrideValue"

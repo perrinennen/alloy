@@ -19,18 +19,18 @@ describe("Personalization::createCollect", () => {
     decisionId: "foo"
   };
   const event = {
-    mergeXdm: jasmine.createSpy()
+    mergeXdm: jest.fn()
   };
 
   beforeEach(() => {
-    eventManager = jasmine.createSpyObj("eventManager", {
-      sendEvent: undefined,
-      createEvent: event
-    });
-    mergeMeta = jasmine.createSpy("mergeMeta").and.returnValue(meta);
+    eventManager = {
+      sendEvent: jest.fn(() => undefined),
+      createEvent: jest.fn(() => event)
+    };
+    mergeMeta = jest.fn(() => meta);
   });
 
-  it("collects and sends event with metadata", () => {
+  test("collects and sends event with metadata", () => {
     const collect = createCollect({ eventManager, mergeMeta });
     collect(meta);
     expect(eventManager.createEvent).toHaveBeenCalled();

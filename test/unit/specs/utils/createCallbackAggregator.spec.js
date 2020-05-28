@@ -19,9 +19,9 @@ describe("createCallbackAggregator", () => {
     callbackAggregator = createCallbackAggregator();
   });
 
-  it("calls all added callbacks and returns a combined promise", () => {
-    const callback1 = jasmine.createSpy("callback1").and.returnValue("foo");
-    const callback2 = jasmine.createSpy("callback2").and.returnValue("bar");
+  test("calls all added callbacks and returns a combined promise", () => {
+    const callback1 = jest.fn(() => "foo");
+    const callback2 = jest.fn(() => "bar");
     callbackAggregator.add(callback1);
     callbackAggregator.add(callback2);
     return callbackAggregator.call("cherry", "tree").then(result => {
@@ -31,14 +31,14 @@ describe("createCallbackAggregator", () => {
     });
   });
 
-  it("doesn't throw errors when there are no callbacks", () => {
+  test("doesn't throw errors when there are no callbacks", () => {
     return callbackAggregator.call("cherry", "tree").then(result => {
       expect(result).toEqual([]);
     });
   });
 
-  it("doesn't throw errors when there are no arguments", () => {
-    const callback = jasmine.createSpy("callback").and.returnValue("foo");
+  test("doesn't throw errors when there are no arguments", () => {
+    const callback = jest.fn(() => "foo");
     callbackAggregator.add(callback);
     return callbackAggregator.call().then(result => {
       expect(result).toEqual(["foo"]);

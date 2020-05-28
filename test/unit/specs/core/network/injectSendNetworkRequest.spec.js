@@ -28,17 +28,17 @@ describe("injectSendNetworkRequest", () => {
   let isRetryableHttpStatusCode;
 
   beforeEach(() => {
-    logger = jasmine.createSpyObj("logger", ["log"]);
+    logger = {
+      log: jest.fn()
+    };
     logger.enabled = true;
-    networkStrategy = jasmine.createSpy().and.returnValue(
+    networkStrategy = jest.fn(() =>
       Promise.resolve({
         status: 200,
         body: responseBodyJson
       })
     );
-    isRetryableHttpStatusCode = jasmine
-      .createSpy("isRetryableHttpStatusCode")
-      .and.returnValue(false);
+    isRetryableHttpStatusCode = jest.fn(() => false);
 
     sendNetworkRequest = injectSendNetworkRequest({
       logger,
@@ -47,28 +47,28 @@ describe("injectSendNetworkRequest", () => {
     });
   });
 
-  it("sends the request", () => {
+  test("sends the request", () => {
     return sendNetworkRequest({
       payload,
       url,
       requestId
     }).then(() => {
       expect(logger.log).toHaveBeenCalledWith(
-        jasmine.stringMatching(/^Request .+: Sending request.$/),
+        expect.stringMatching(/^Request .+: Sending request.$/),
         payload
       );
       expect(networkStrategy).toHaveBeenCalledWith(url, payloadJson);
     });
   });
 
-  it("handles a response with a JSON body", () => {
+  test("handles a response with a JSON body", () => {
     return sendNetworkRequest({
       payload,
       url,
       requestId
     }).then(response => {
       expect(logger.log).toHaveBeenCalledWith(
-        jasmine.stringMatching(
+        expect.stringMatching(
           /^Request .+: Received response with status code 200 and response body:$/
         ),
         responseBody
@@ -81,8 +81,8 @@ describe("injectSendNetworkRequest", () => {
     });
   });
 
-  it("handles a response with a non-JSON body", () => {
-    networkStrategy.and.returnValue(
+  test("handles a response with a non-JSON body", () => {
+    networkStrategy.mockReturnValue(
       Promise.resolve({
         status: 200,
         body: "non-JSON body"
@@ -94,7 +94,7 @@ describe("injectSendNetworkRequest", () => {
       requestId
     }).then(response => {
       expect(logger.log).toHaveBeenCalledWith(
-        jasmine.stringMatching(
+        expect.stringMatching(
           /^Request .+: Received response with status code 200 and response body:$/
         ),
         "non-JSON body"
@@ -107,8 +107,8 @@ describe("injectSendNetworkRequest", () => {
     });
   });
 
-  it("handles a response with an empty body", () => {
-    networkStrategy.and.returnValue(
+  test("handles a response with an empty body", () => {
+    networkStrategy.mockReturnValue(
       Promise.resolve({
         status: 200,
         body: ""
@@ -120,7 +120,7 @@ describe("injectSendNetworkRequest", () => {
       requestId
     }).then(response => {
       expect(logger.log).toHaveBeenCalledWith(
-        jasmine.stringMatching(
+        expect.stringMatching(
           /^Request .+: Received response with status code 200 and no response body\.$/
         ),
         ""
@@ -133,8 +133,8 @@ describe("injectSendNetworkRequest", () => {
     });
   });
 
-  it("rejects the promise when a network error occurs", () => {
-    networkStrategy.and.returnValue(Promise.reject(new Error("networkerror")));
+  test("rejects the promise when a network error occurs", () => {
+    networkStrategy.mockReturnValue(Promise.reject(new Error("networkerror")));
     return sendNetworkRequest({
       payload,
       url,
@@ -148,7 +148,7 @@ describe("injectSendNetworkRequest", () => {
       });
   });
 
-  it("resolves the promise for successful status and valid json", () => {
+  test("resolves the promise for successful status and valid json", () => {
     return sendNetworkRequest({
       payload,
       url,
@@ -162,8 +162,11 @@ describe("injectSendNetworkRequest", () => {
     });
   });
 
-  it(`retries certain status codes until success`, () => {
-    isRetryableHttpStatusCode.and.returnValues(true, true, false);
+  test(`retries certain status codes until success`, () => {
+    isRetryableHttpStatusCode
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(false);
     return sendNetworkRequest({
       payload,
       url,
@@ -178,8 +181,11 @@ describe("injectSendNetworkRequest", () => {
     });
   });
 
-  it(`retries certain status codes until max retries met`, () => {
-    isRetryableHttpStatusCode.and.returnValues(true, true, true);
+  test(`retries certain status codes until max retries met`, () => {
+    isRetryableHttpStatusCode
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(true)
+      .mockReturnValueOnce(true);
     return sendNetworkRequest({
       payload,
       url,

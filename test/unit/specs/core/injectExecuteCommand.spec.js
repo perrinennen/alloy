@@ -18,13 +18,18 @@ describe("injectExecuteCommand", () => {
   let handleError;
 
   beforeEach(() => {
-    logger = jasmine.createSpyObj("logger", ["log", "info", "warn", "error"]);
-    handleError = jasmine.createSpy().and.callFake(error => {
+    logger = {
+      log: jest.fn(),
+      info: jest.fn(),
+      warn: jest.fn(),
+      error: jest.fn()
+    };
+    handleError = jest.fn(error => {
       throw error;
     });
   });
 
-  it("rejects promise if configure is not the first command executed", () => {
+  test("rejects promise if configure is not the first command executed", () => {
     const executeCommand = injectExecuteCommand({
       logger,
       handleError
@@ -38,7 +43,7 @@ describe("injectExecuteCommand", () => {
       });
   });
 
-  it("rejects promise if configure command is executed twice", () => {
+  test("rejects promise if configure command is executed twice", () => {
     const configureCommand = () => Promise.resolve();
     const executeCommand = injectExecuteCommand({
       logger,
@@ -57,7 +62,7 @@ describe("injectExecuteCommand", () => {
       });
   });
 
-  it("rejects promise if command doesn't exist", () => {
+  test("rejects promise if command doesn't exist", () => {
     const componentRegistry = {
       getCommand() {},
       getCommandNames() {
@@ -81,7 +86,7 @@ describe("injectExecuteCommand", () => {
       });
   });
 
-  it("never resolves/rejects promise to any other command after configure fails", () => {
+  test("never resolves/rejects promise to any other command after configure fails", () => {
     const configureCommand = () => Promise.reject();
     const executeCommand = injectExecuteCommand({
       logger,
@@ -90,8 +95,8 @@ describe("injectExecuteCommand", () => {
     });
 
     executeCommand("configure");
-    const thenSpy = jasmine.createSpy();
-    const catchSpy = jasmine.createSpy();
+    const thenSpy = jest.fn();
+    const catchSpy = jest.fn();
     executeCommand("event")
       .then(thenSpy)
       .catch(catchSpy);
@@ -104,10 +109,10 @@ describe("injectExecuteCommand", () => {
     });
   });
 
-  it("reject promise if component command throws error", () => {
-    const runCommandSpy = jasmine
-      .createSpy()
-      .and.throwError(new Error("Unexpected error"));
+  test("reject promise if component command throws error", () => {
+    const runCommandSpy = jest.fn(() => {
+      throw new Error("Unexpected error");
+    });
     const testCommand = {
       run: runCommandSpy
     };
@@ -133,29 +138,22 @@ describe("injectExecuteCommand", () => {
     });
   });
 
-  it("executes component commands", () => {
-    const validateCommandOptionsSpy = jasmine
-      .createSpy()
-      .and.returnValues(
-        "with-result-post-validation-options",
-        "without-result-post-validation-options"
-      );
-    const testCommandWithResult = jasmine.createSpyObj(
-      "testCommandWithResult",
-      {
-        run: { foo: "bar" }
-      }
-    );
-    const testCommandWithoutResult = jasmine.createSpyObj(
-      "testCommandWithoutResult",
-      {
-        run: undefined
-      }
-    );
+  test("executes component commands", () => {
+    const validateCommandOptionsSpy = jest
+      .fn()
+      .mockReturnValueOnce("with-result-post-validation-options")
+      .mockReturnValueOnce("without-result-post-validation-options");
+    const testCommandWithResult = {
+      run: jest.fn(() => ({ foo: "bar" }))
+    };
+    const testCommandWithoutResult = {
+      run: jest.fn()
+    };
     const componentRegistry = {
-      getCommand: jasmine
-        .createSpy("getCommand")
-        .and.returnValues(testCommandWithResult, testCommandWithoutResult),
+      getCommand: jest
+        .fn()
+        .mockReturnValueOnce(testCommandWithResult)
+        .mockReturnValueOnce(testCommandWithoutResult),
       getCommandNames() {
         return ["testCommandWithResult", "testCommandWithoutResult"];
       }
@@ -197,11 +195,9 @@ describe("injectExecuteCommand", () => {
     });
   });
 
-  it("executes the core commands", () => {
-    const configureCommand = jasmine
-      .createSpy()
-      .and.returnValue(Promise.resolve("configureResult"));
-    const setDebugCommand = jasmine.createSpy();
+  test("executes the core commands", () => {
+    const configureCommand = jest.fn(() => Promise.resolve("configureResult"));
+    const setDebugCommand = jest.fn();
     const executeCommand = injectExecuteCommand({
       logger,
       configureCommand,

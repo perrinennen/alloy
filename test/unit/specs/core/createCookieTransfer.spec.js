@@ -21,12 +21,17 @@ describe("createCookieTransfer", () => {
   let cookieTransfer;
 
   beforeEach(() => {
-    payload = jasmine.createSpyObj("payload", ["mergeState"]);
-    cookieJar = jasmine.createSpyObj("cookieJar", ["get", "set"]);
+    payload = {
+      mergeState: jest.fn()
+    };
+    cookieJar = {
+      get: jest.fn(),
+      set: jest.fn()
+    };
   });
 
   describe("cookiesToPayload", () => {
-    it("does not transfer cookies to payload if endpoint is first-party", () => {
+    test("does not transfer cookies to payload if endpoint is first-party", () => {
       cookieTransfer = createCookieTransfer({
         cookieJar,
         orgId,
@@ -39,8 +44,8 @@ describe("createCookieTransfer", () => {
       });
     });
 
-    it("does not set state.entries if there are no qualifying cookies", () => {
-      cookieJar.get.and.returnValue({});
+    test("does not set state.entries if there are no qualifying cookies", () => {
+      cookieJar.get.mockReturnValue({});
       cookieTransfer = createCookieTransfer({
         cookieJar,
         orgId,
@@ -53,8 +58,8 @@ describe("createCookieTransfer", () => {
       });
     });
 
-    it("transfers eligible cookies to payload", () => {
-      cookieJar.get.and.returnValue({
+    test("transfers eligible cookies to payload", () => {
+      cookieJar.get.mockReturnValue({
         kndctr_ABC_CustomOrg_identity: "XYZ@CustomOrg",
         ineligible_cookie: "foo",
         kndctr_ABC_CustomOrg_optIn: "all"
@@ -83,7 +88,7 @@ describe("createCookieTransfer", () => {
   });
 
   describe("responseToCookies", () => {
-    it("transfers state to cookies", () => {
+    test("transfers state to cookies", () => {
       cookieTransfer = createCookieTransfer({
         cookieJar,
         orgId,

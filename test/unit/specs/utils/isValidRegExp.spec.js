@@ -14,12 +14,12 @@ import isValidRegExp from "../../../../src/utils/isValidRegExp";
 
 describe("isValidRegExp", () => {
   ["steel|bronze", "/a/", "/^[a-z0-9+]:///i"].forEach(value => {
-    it(`validates ${value}`, () => {
+    test(`validates ${value}`, () => {
       expect(isValidRegExp(value)).toBe(true);
     });
   });
   ["[", "*"].forEach(value => {
-    it(`rejects ${value}`, () => {
+    test(`rejects ${value}`, () => {
       expect(isValidRegExp(value)).toBe(false);
     });
   });

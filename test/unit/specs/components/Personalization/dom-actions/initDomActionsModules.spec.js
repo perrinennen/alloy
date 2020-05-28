@@ -39,7 +39,7 @@ const buildSet = () => {
 const STANDARD_MODULES = buildSet();
 
 describe("Personalization::turbine::initDomActionsModules", () => {
-  it("should have all the required modules", () => {
+  test("should have all the required modules", () => {
     const result = initDomActionsModules(() => {});
     const keys = Object.keys(result);
 

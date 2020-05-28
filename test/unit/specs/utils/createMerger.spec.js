@@ -13,7 +13,7 @@ governing permissions and limitations under the License.
 import createMerger from "../../../../src/utils/createMerger";
 
 describe("createMerger", () => {
-  it("populates key if key doesn't exist", () => {
+  test("populates key if key doesn't exist", () => {
     const content = {};
     createMerger(content, "fruit")({
       type: "apple"
@@ -25,7 +25,7 @@ describe("createMerger", () => {
     });
   });
 
-  it("deeply merges if key does exist", () => {
+  test("deeply merges if key does exist", () => {
     const content = {
       foods: {
         fruits: {

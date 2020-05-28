@@ -13,7 +13,7 @@ governing permissions and limitations under the License.
 import validateNetworkResponseIsWellFormed from "../../../../../src/core/edgeNetwork/validateNetworkResponseIsWellFormed";
 
 describe("validateNetworkResponseIsWellFormed", () => {
-  it("throws error if no parsed body and HTTP status code is not 204", () => {
+  test("throws error if no parsed body and HTTP status code is not 204", () => {
     expect(() => {
       validateNetworkResponseIsWellFormed({
         statusCode: 200
@@ -23,7 +23,7 @@ describe("validateNetworkResponseIsWellFormed", () => {
     );
   });
 
-  it("throws an error if parsed body does not have handle array", () => {
+  test("throws an error if parsed body does not have handle array", () => {
     expect(() => {
       validateNetworkResponseIsWellFormed({
         statusCode: 200,

@@ -7,20 +7,20 @@ describe("Privacy:injectSendSetConsentRequest", () => {
   let sendSetConsentRequest;
 
   beforeEach(() => {
-    createConsentRequestPayload = jasmine.createSpy(
-      "createConsentRequestPayload"
-    );
-    sendEdgeNetworkRequest = jasmine.createSpy("sendEdgeNetworkRequest");
-    payload = jasmine.createSpyObj("payload", ["setConsent"]);
-    createConsentRequestPayload.and.returnValue(payload);
+    createConsentRequestPayload = jest.fn();
+    sendEdgeNetworkRequest = jest.fn();
+    payload = {
+      setConsent: jest.fn()
+    };
+    createConsentRequestPayload.mockReturnValue(payload);
     sendSetConsentRequest = injectSendSetConsentRequest({
       createConsentRequestPayload,
       sendEdgeNetworkRequest
     });
   });
 
-  it("sets consent level and on payload and sends the request", () => {
-    sendEdgeNetworkRequest.and.returnValue(Promise.resolve());
+  test("sets consent level and on payload and sends the request", () => {
+    sendEdgeNetworkRequest.mockReturnValue(Promise.resolve());
     return sendSetConsentRequest("anything").then(resolvedValue => {
       expect(payload.setConsent).toHaveBeenCalledWith("anything");
       expect(sendEdgeNetworkRequest).toHaveBeenCalledWith({

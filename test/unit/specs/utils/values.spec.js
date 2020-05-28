@@ -13,7 +13,7 @@ governing permissions and limitations under the License.
 import values from "../../../../src/utils/values";
 
 describe("values", () => {
-  it("returns an array of own values from object", () => {
+  test("returns an array of own values from object", () => {
     const obj = {
       a: "w"
     };

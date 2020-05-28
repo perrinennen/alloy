@@ -15,11 +15,11 @@ import isFunction from "../../../../src/utils/isFunction";
 const nonFunctions = [{}, [], new Date(), /abc/, true, false, "text", 123];
 
 describe("isFunction", () => {
-  it("returns true if the value is a function", () => {
+  test("returns true if the value is a function", () => {
     expect(isFunction(() => {})).toBe(true);
   });
 
-  it("returns false if the value is not a function", () => {
+  test("returns false if the value is not a function", () => {
     nonFunctions.forEach(nonFunction => {
       expect(isFunction(nonFunction)).toBe(false);
     });

@@ -30,7 +30,7 @@ const initAnchorState = (window, element, anchorState) => {
 
 describe("ActivityCollector::utils", () => {
   describe("urlStartsWithScheme", () => {
-    it("Returns true for URLs that starts with a scheme", () => {
+    test("Returns true for URLs that starts with a scheme", () => {
       const urlsThatStartsWithScheme = [
         "http://example.com",
         "https://example.com",
@@ -41,7 +41,7 @@ describe("ActivityCollector::utils", () => {
         expect(urlStartsWithScheme(url)).toBe(true);
       });
     });
-    it("Returns false for URLs that does not start with a scheme", () => {
+    test("Returns false for URLs that does not start with a scheme", () => {
       const urlsThatDoesNotStartWithScheme = [
         "example.com",
         "example.txt/http://example",
@@ -54,7 +54,7 @@ describe("ActivityCollector::utils", () => {
     });
   });
   describe("getAbsoluteUrlFromAnchorElement", () => {
-    it("Makes best attempt to constructs absolute URLs", () => {
+    test("Makes best attempt to constructs absolute URLs", () => {
       const window = {
         location: {
           protocol: "",
@@ -95,7 +95,7 @@ describe("ActivityCollector::utils", () => {
     });
   });
   describe("isSupportedAnchorElement", () => {
-    it("Returns true for supported anchor elements", () => {
+    test("Returns true for supported anchor elements", () => {
       const validAnchorElements = [
         {
           href: "http://example.com",
@@ -110,7 +110,7 @@ describe("ActivityCollector::utils", () => {
         expect(isSupportedAnchorElement(element)).toBe(true);
       });
     });
-    it("Returns false for unsupported anchor elements", () => {
+    test("Returns false for unsupported anchor elements", () => {
       const invalidAnchorElements = [
         {},
         {
@@ -136,13 +136,13 @@ describe("ActivityCollector::utils", () => {
     });
   });
   describe("isDownloadLink", () => {
-    it("Returns true if the clicked element has a download attribute", () => {
+    test("Returns true if the clicked element has a download attribute", () => {
       const clickedElement = {
         download: "filename"
       };
       expect(isDownloadLink("", "", clickedElement)).toBe(true);
     });
-    it("Returns true if the link matches the download link qualifying regular expression", () => {
+    test("Returns true if the link matches the download link qualifying regular expression", () => {
       const downloadLinks = [
         "download.pdf",
         "http://example.com/download.zip",
@@ -156,7 +156,7 @@ describe("ActivityCollector::utils", () => {
         );
       });
     });
-    it("Returns false if the link does not match the download link qualifying regular expression", () => {
+    test("Returns false if the link does not match the download link qualifying regular expression", () => {
       const downloadLinks = ["download.mod", "http://example.com/download.png"];
       const downloadLinkQualifier = configValidators.downloadLinkQualifier();
       downloadLinks.forEach(downloadLink => {
@@ -167,7 +167,7 @@ describe("ActivityCollector::utils", () => {
     });
   });
   describe("isExitLink", () => {
-    it("Returns true if the link leads away from the current hostname", () => {
+    test("Returns true if the link leads away from the current hostname", () => {
       const mockWindow = {
         location: {
           hostname: "adobe.com"
@@ -181,7 +181,7 @@ describe("ActivityCollector::utils", () => {
         expect(isExitLink(mockWindow, clickedLink)).toBe(true);
       });
     });
-    it("Returns false if the link leads to the current hostname", () => {
+    test("Returns false if the link leads to the current hostname", () => {
       const mockWindow = {
         location: {
           hostname: "adobe.com"

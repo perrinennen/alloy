@@ -15,8 +15,8 @@ import find from "../../../../src/utils/find";
 const items = ["a", "b", "c"];
 
 describe("find", () => {
-  it("returns item if match found", () => {
-    const predicate = jasmine.createSpy().and.callFake(item => item === "b");
+  test("returns item if match found", () => {
+    const predicate = jest.fn(item => item === "b");
     const result = find(items, predicate);
     expect(predicate).toHaveBeenCalledWith("a", 0, items);
     expect(predicate).toHaveBeenCalledWith("b", 1, items);
@@ -24,8 +24,8 @@ describe("find", () => {
     expect(result).toBe("b");
   });
 
-  it("returns undefined if match not found", () => {
-    const predicate = jasmine.createSpy().and.callFake(item => item === "z");
+  test("returns undefined if match not found", () => {
+    const predicate = jest.fn(item => item === "z");
     const result = find(items, predicate);
     expect(predicate).toHaveBeenCalledWith("a", 0, items);
     expect(predicate).toHaveBeenCalledWith("b", 1, items);

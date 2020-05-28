@@ -13,7 +13,11 @@ governing permissions and limitations under the License.
 import createExecuteDecisions from "../../../../../src/components/Personalization/createExecuteDecisions";
 
 describe("Personalization::createExecuteDecisions", () => {
-  const logger = jasmine.createSpyObj("logger", ["log", "warn", "error"]);
+  const logger = {
+    log: jest.fn(),
+    warn: jest.fn(),
+    error: jest.fn()
+  };
   let executeActions;
   let collect;
 
@@ -73,16 +77,16 @@ describe("Personalization::createExecuteDecisions", () => {
   };
 
   beforeEach(() => {
-    collect = jasmine.createSpy();
+    collect = jest.fn();
   });
 
-  it("should trigger executeActions and collect when provided with an array of actions", () => {
-    executeActions = jasmine
-      .createSpy()
-      .and.returnValues(
-        [{ meta: metas[0] }, { meta: metas[0] }],
-        [{ meta: metas[1], error: "could not render this item" }]
-      );
+  test("should trigger executeActions and collect when provided with an array of actions", () => {
+    executeActions = jest
+      .fn()
+      .mockReturnValueOnce([{ meta: metas[0] }, { meta: metas[0] }])
+      .mockReturnValueOnce([
+        { meta: metas[1], error: "could not render this item" }
+      ]);
     const executeDecisions = createExecuteDecisions({
       modules,
       logger,
@@ -103,8 +107,8 @@ describe("Personalization::createExecuteDecisions", () => {
     });
   });
 
-  it("shouldn't trigger executeActions and collect when provided with empty array of actions", () => {
-    executeActions = jasmine.createSpy().and.callThrough();
+  test("shouldn't trigger executeActions and collect when provided with empty array of actions", () => {
+    executeActions = jest.fn();
     const executeDecisions = createExecuteDecisions({
       modules,
       logger,
@@ -116,12 +120,15 @@ describe("Personalization::createExecuteDecisions", () => {
       expect(collect).not.toHaveBeenCalled();
     });
   });
-  it("should log an error when collect call fails", () => {
+  test("should log an error when collect call fails", () => {
     const error = new Error("test error");
-    collect = jasmine.createSpy().and.throwError("test error");
-    executeActions = jasmine
-      .createSpy()
-      .and.returnValues([{ meta: metas[0] }], [{ meta: metas[1] }]);
+    collect = jest.fn(() => {
+      throw new Error("test error");
+    });
+    executeActions = jest
+      .fn()
+      .mockReturnValueOnce([{ meta: metas[0] }])
+      .mockReturnValueOnce([{ meta: metas[1] }]);
     const executeDecisions = createExecuteDecisions({
       modules,
       logger,
@@ -135,10 +142,11 @@ describe("Personalization::createExecuteDecisions", () => {
     });
   });
 
-  it("should not trigger collect when dom-action click", () => {
-    executeActions = jasmine
-      .createSpy()
-      .and.returnValues([undefined], [undefined]);
+  test("should not trigger collect when dom-action click", () => {
+    executeActions = jest
+      .fn()
+      .mockReturnValueOnce([undefined])
+      .mockReturnValueOnce([undefined]);
     const executeDecisions = createExecuteDecisions({
       modules,
       logger,

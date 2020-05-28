@@ -13,7 +13,7 @@ governing permissions and limitations under the License.
 import getNamespacedCookieName from "../../../../src/utils/getNamespacedCookieName";
 
 describe("getNamespacedCookieName", () => {
-  it("returns namespaced cookie name", () => {
+  test("returns namespaced cookie name", () => {
     const result = getNamespacedCookieName("ABC@CustomOrg", "foo");
     expect(result).toBe("kndctr_ABC_CustomOrg_foo");
   });

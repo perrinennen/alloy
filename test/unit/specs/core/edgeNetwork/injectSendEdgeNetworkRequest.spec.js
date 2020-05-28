@@ -48,8 +48,8 @@ describe("injectSendEdgeNetworkRequest", () => {
     assertLifecycleCall
   }) => {
     const error = new Error("no connection");
-    sendNetworkRequest.and.returnValue(Promise.reject(error));
-    const errorHandler = jasmine.createSpy("errorHandler");
+    sendNetworkRequest.mockReturnValue(Promise.reject(error));
+    const errorHandler = jest.fn();
     sendEdgeNetworkRequest({ payload, action, runOnRequestFailureCallbacks })
       .then(fail)
       .catch(errorHandler);
@@ -73,8 +73,10 @@ describe("injectSendEdgeNetworkRequest", () => {
     assertLifecycleCall
   }) => {
     const error = new Error("Unexpected response.");
-    validateNetworkResponseIsWellFormed.and.throwError(error);
-    const errorHandler = jasmine.createSpy("errorHandler");
+    validateNetworkResponseIsWellFormed.mockImplementation(() => {
+      throw error;
+    });
+    const errorHandler = jest.fn();
     sendEdgeNetworkRequest({ payload, action, runOnRequestFailureCallbacks })
       .then(fail)
       .catch(errorHandler);
@@ -97,7 +99,7 @@ describe("injectSendEdgeNetworkRequest", () => {
     runOnResponseCallbacks,
     assertLifecycleCall
   }) => {
-    const successHandler = jasmine.createSpy("successHandler");
+    const successHandler = jest.fn();
     sendEdgeNetworkRequest({ payload, action, runOnResponseCallbacks }).then(
       successHandler
     );
@@ -114,30 +116,26 @@ describe("injectSendEdgeNetworkRequest", () => {
   };
 
   beforeEach(() => {
-    logger = jasmine.createSpyObj("logger", ["log"]);
-    lifecycle = jasmine.createSpyObj("lifecycle", {
-      onBeforeRequest: Promise.resolve(),
-      onRequestFailure: Promise.resolve(),
-      onResponse: Promise.resolve()
-    });
-    cookieTransfer = jasmine.createSpyObj("cookieTransfer", [
-      "cookiesToPayload",
-      "responseToCookies"
-    ]);
+    logger = {
+      log: jest.fn()
+    };
+    lifecycle = {
+      onBeforeRequest: jest.fn(() => Promise.resolve()),
+      onRequestFailure: jest.fn(() => Promise.resolve()),
+      onResponse: jest.fn(() => Promise.resolve())
+    };
+    cookieTransfer = {
+      cookiesToPayload: jest.fn(),
+      responseToCookies: jest.fn()
+    };
     networkResult = {
       parsedBody: {}
     };
-    sendNetworkRequest = jasmine
-      .createSpy("sendNetworkRequest")
-      .and.returnValue(Promise.resolve(networkResult));
+    sendNetworkRequest = jest.fn(() => Promise.resolve(networkResult));
     response = { type: "response" };
-    createResponse = jasmine
-      .createSpy("createResponse")
-      .and.returnValue(response);
-    processWarningsAndErrors = jasmine.createSpy("processWarningsAndErrors");
-    validateNetworkResponseIsWellFormed = jasmine.createSpy(
-      "validateNetworkResponseIsWellFormed"
-    );
+    createResponse = jest.fn(() => response);
+    processWarningsAndErrors = jest.fn();
+    validateNetworkResponseIsWellFormed = jest.fn();
     sendEdgeNetworkRequest = injectSendEdgeNetworkRequest({
       config,
       logger,
@@ -150,7 +148,7 @@ describe("injectSendEdgeNetworkRequest", () => {
     });
   });
 
-  it("transfers cookies to payload when sending to first-party domain", () => {
+  test("transfers cookies to payload when sending to first-party domain", () => {
     payload.getUseIdThirdPartyDomain = () => false;
     return sendEdgeNetworkRequest({ payload, action }).then(() => {
       expect(cookieTransfer.cookiesToPayload).toHaveBeenCalledWith(
@@ -160,11 +158,11 @@ describe("injectSendEdgeNetworkRequest", () => {
     });
   });
 
-  it("transfers cookies to payload when sending to third-party domain", () => {
+  test("transfers cookies to payload when sending to third-party domain", () => {
     payload.getUseIdThirdPartyDomain = () => false;
     // Ensure that sendEdgeNetworkRequest waits until after
     // lifecycle.onBeforeRequest to determine the endpoint domain.
-    lifecycle.onBeforeRequest.and.callFake(() => {
+    lifecycle.onBeforeRequest.mockImplementation(() => {
       payload.getUseIdThirdPartyDomain = () => true;
       return Promise.resolve();
     });
@@ -176,49 +174,49 @@ describe("injectSendEdgeNetworkRequest", () => {
     });
   });
 
-  it("sends request to first-party domain", () => {
+  test("sends request to first-party domain", () => {
     payload.getUseIdThirdPartyDomain = () => false;
     return sendEdgeNetworkRequest({ payload, action }).then(() => {
       expect(sendNetworkRequest).toHaveBeenCalledWith({
         payload,
-        url: jasmine.stringMatching(
+        url: expect.stringMatching(
           /https:\/\/edge\.example\.com\/ee\/v1\/test-action\?configId=myconfigId&requestId=[0-9a-f-]+/
         ),
-        requestId: jasmine.stringMatching(/^[0-9a-f-]+$/)
+        requestId: expect.stringMatching(/^[0-9a-f-]+$/)
       });
     });
   });
 
-  it("sends request to third-party domain", () => {
+  test("sends request to third-party domain", () => {
     payload.getUseIdThirdPartyDomain = () => false;
     // Ensure that sendEdgeNetworkRequest waits until after
     // lifecycle.onBeforeRequest to determine the endpoint domain.
-    lifecycle.onBeforeRequest.and.callFake(() => {
+    lifecycle.onBeforeRequest.mockImplementation(() => {
       payload.getUseIdThirdPartyDomain = () => true;
       return Promise.resolve();
     });
     return sendEdgeNetworkRequest({ payload, action }).then(() => {
       expect(sendNetworkRequest).toHaveBeenCalledWith({
         payload,
-        url: jasmine.stringMatching(
+        url: expect.stringMatching(
           /https:\/\/adobedc\.demdex\.net\/ee\/v1\/test-action\?configId=myconfigId&requestId=[0-9a-f-]+/
         ),
-        requestId: jasmine.stringMatching(/^[0-9a-f-]+$/)
+        requestId: expect.stringMatching(/^[0-9a-f-]+$/)
       });
     });
   });
 
-  it("calls lifecycle.onBeforeRequest and waits for it to complete before sending request", () => {
+  test("calls lifecycle.onBeforeRequest and waits for it to complete before sending request", () => {
     const deferred = defer();
-    lifecycle.onBeforeRequest.and.returnValue(deferred.promise);
-    const successHandler = jasmine.createSpy("successHandler");
+    lifecycle.onBeforeRequest.mockReturnValue(deferred.promise);
+    const successHandler = jest.fn();
     sendEdgeNetworkRequest({ payload, action }).then(successHandler);
     return flushPromiseChains()
       .then(() => {
         expect(lifecycle.onBeforeRequest).toHaveBeenCalledWith({
           payload,
-          onResponse: jasmine.any(Function),
-          onRequestFailure: jasmine.any(Function)
+          onResponse: expect.any(Function),
+          onRequestFailure: expect.any(Function)
         });
         expect(sendNetworkRequest).not.toHaveBeenCalled();
         deferred.resolve();
@@ -229,9 +227,9 @@ describe("injectSendEdgeNetworkRequest", () => {
       });
   });
 
-  it("when network request fails, calls lifecycle.onRequestFailure, waits for it to complete, then rejects promise", () => {
+  test("when network request fails, calls lifecycle.onRequestFailure, waits for it to complete, then rejects promise", () => {
     const deferred = defer();
-    lifecycle.onRequestFailure.and.returnValue(deferred.promise);
+    lifecycle.onRequestFailure.mockReturnValue(deferred.promise);
     return testRequestFailureHandling({
       assertLifecycleCall(error) {
         expect(lifecycle.onRequestFailure).toHaveBeenCalledWith({ error });
@@ -244,12 +242,10 @@ describe("injectSendEdgeNetworkRequest", () => {
     });
   });
 
-  it("when network request fails, calls lifecycle.onBeforeRequest's onRequestFailure callback, waits for it to complete, then rejects promise", () => {
+  test("when network request fails, calls lifecycle.onBeforeRequest's onRequestFailure callback, waits for it to complete, then rejects promise", () => {
     const deferred = defer();
-    const requestFailureCallback = jasmine
-      .createSpy("requestFailureCallback")
-      .and.returnValue(deferred.promise);
-    lifecycle.onBeforeRequest.and.callFake(({ onRequestFailure }) => {
+    const requestFailureCallback = jest.fn(() => deferred.promise);
+    lifecycle.onBeforeRequest.mockImplementation(({ onRequestFailure }) => {
       onRequestFailure(requestFailureCallback);
       return Promise.resolve();
     });
@@ -266,11 +262,9 @@ describe("injectSendEdgeNetworkRequest", () => {
     });
   });
 
-  it("when network request fails, calls onRequestFailureCallbacks, waits for it to complete, then rejects promise", () => {
+  test("when network request fails, calls onRequestFailureCallbacks, waits for it to complete, then rejects promise", () => {
     const deferred = defer();
-    const runOnRequestFailureCallbacks = jasmine
-      .createSpy("runOnRequestFailureCallbacks")
-      .and.returnValue(deferred.promise);
+    const runOnRequestFailureCallbacks = jest.fn(() => deferred.promise);
     return testRequestFailureHandling({
       runOnRequestFailureCallbacks,
       assertLifecycleCall(error) {
@@ -284,9 +278,9 @@ describe("injectSendEdgeNetworkRequest", () => {
     });
   });
 
-  it("when network response is malformed, calls lifecycle.onRequestFailure, waits for it to complete, then rejects promise", () => {
+  test("when network response is malformed, calls lifecycle.onRequestFailure, waits for it to complete, then rejects promise", () => {
     const deferred = defer();
-    lifecycle.onRequestFailure.and.returnValue(deferred.promise);
+    lifecycle.onRequestFailure.mockReturnValue(deferred.promise);
 
     return testMalformedResponseHandling({
       assertLifecycleCall(error) {
@@ -300,12 +294,10 @@ describe("injectSendEdgeNetworkRequest", () => {
     });
   });
 
-  it("when network response is malformed, calls lifecycle.onBeforeRequest's onRequestFailure callback, waits for it to complete, then rejects promise", () => {
+  test("when network response is malformed, calls lifecycle.onBeforeRequest's onRequestFailure callback, waits for it to complete, then rejects promise", () => {
     const deferred = defer();
-    const requestFailureCallback = jasmine
-      .createSpy("requestFailureCallback")
-      .and.returnValue(deferred.promise);
-    lifecycle.onBeforeRequest.and.callFake(({ onRequestFailure }) => {
+    const requestFailureCallback = jest.fn(() => deferred.promise);
+    lifecycle.onBeforeRequest.mockImplementation(({ onRequestFailure }) => {
       onRequestFailure(requestFailureCallback);
       return Promise.resolve();
     });
@@ -322,11 +314,9 @@ describe("injectSendEdgeNetworkRequest", () => {
     });
   });
 
-  it("when network response is malformed, calls runOnRequestFailureCallbacks, waits for it to complete, then rejects promise", () => {
+  test("when network response is malformed, calls runOnRequestFailureCallbacks, waits for it to complete, then rejects promise", () => {
     const deferred = defer();
-    const runOnRequestFailureCallbacks = jasmine
-      .createSpy("runOnRequestFailureCallbacks")
-      .and.returnValue(deferred.promise);
+    const runOnRequestFailureCallbacks = jest.fn(() => deferred.promise);
     return testMalformedResponseHandling({
       runOnRequestFailureCallbacks,
       assertLifecycleCall(error) {
@@ -340,9 +330,9 @@ describe("injectSendEdgeNetworkRequest", () => {
     });
   });
 
-  it("when network response is well-formed, calls lifecycle.onResponse, waits for it to complete, then resolves promise", () => {
+  test("when network response is well-formed, calls lifecycle.onResponse, waits for it to complete, then resolves promise", () => {
     const deferred = defer();
-    lifecycle.onResponse.and.returnValue(deferred.promise);
+    lifecycle.onResponse.mockReturnValue(deferred.promise);
     return testWellFormedResponseHandling({
       assertLifecycleCall() {
         expect(lifecycle.onResponse).toHaveBeenCalledWith({ response });
@@ -351,12 +341,10 @@ describe("injectSendEdgeNetworkRequest", () => {
     });
   });
 
-  it("when network response is well-formed, calls lifecycle.onBeforeRequest's responseCallback callback, waits for it to complete, then resolves promise", () => {
+  test("when network response is well-formed, calls lifecycle.onBeforeRequest's responseCallback callback, waits for it to complete, then resolves promise", () => {
     const deferred = defer();
-    const responseCallback = jasmine
-      .createSpy("responseCallback")
-      .and.returnValue(deferred.promise);
-    lifecycle.onBeforeRequest.and.callFake(({ onResponse }) => {
+    const responseCallback = jest.fn(() => deferred.promise);
+    lifecycle.onBeforeRequest.mockImplementation(({ onResponse }) => {
       onResponse(responseCallback);
       return Promise.resolve();
     });
@@ -368,11 +356,9 @@ describe("injectSendEdgeNetworkRequest", () => {
     });
   });
 
-  it("when network response is well-formed, calls runOnResponseCallbacks, waits for it to complete, then resolves promise", () => {
+  test("when network response is well-formed, calls runOnResponseCallbacks, waits for it to complete, then resolves promise", () => {
     const deferred = defer();
-    const runOnResponseCallbacks = jasmine
-      .createSpy("runOnResponseCallbacks")
-      .and.returnValue(deferred.promise);
+    const runOnResponseCallbacks = jest.fn(() => deferred.promise);
     return testWellFormedResponseHandling({
       runOnResponseCallbacks,
       assertLifecycleCall() {
@@ -382,7 +368,7 @@ describe("injectSendEdgeNetworkRequest", () => {
     });
   });
 
-  it("transfers cookies from response before lifecycle.onResponse", () => {
+  test("transfers cookies from response before lifecycle.onResponse", () => {
     return sendEdgeNetworkRequest({ payload, action }).then(() => {
       expect(cookieTransfer.responseToCookies).toHaveBeenCalledWith(response);
       assertFunctionCallOrder([
@@ -392,43 +378,45 @@ describe("injectSendEdgeNetworkRequest", () => {
     });
   });
 
-  it("processes warnings and errors", () => {
+  test("processes warnings and errors", () => {
     return sendEdgeNetworkRequest({ payload, action }).then(() => {
       expect(processWarningsAndErrors).toHaveBeenCalled();
     });
   });
 
-  it("rejects the promise if error is thrown while processing warnings and errors", () => {
-    processWarningsAndErrors.and.throwError(new Error("Invalid XDM"));
-    return expectAsync(
-      sendEdgeNetworkRequest({ payload, action })
-    ).toBeRejectedWithError("Invalid XDM");
+  test("rejects the promise if error is thrown while processing warnings and errors", () => {
+    processWarningsAndErrors.mockImplementation(() => {
+      throw new Error(new Error("Invalid XDM"));
+    });
+    return expect(sendEdgeNetworkRequest({ payload, action })).rejects.toThrow(
+      "Invalid XDM"
+    );
   });
 
-  it("returns the merged object from lifecycle::onResponse and runOnResponseCallbacks", () => {
-    const runOnResponseCallbacks = jasmine
-      .createSpy("runOnResponseCallbacks")
-      .and.returnValue(Promise.resolve([{ c: 2 }, { h: 9 }, undefined]));
+  test("returns the merged object from lifecycle::onResponse and runOnResponseCallbacks", () => {
+    const runOnResponseCallbacks = jest.fn(() =>
+      Promise.resolve([{ c: 2 }, { h: 9 }, undefined])
+    );
 
-    lifecycle.onResponse.and.returnValue(
+    lifecycle.onResponse.mockReturnValue(
       Promise.resolve([{ a: 2 }, { b: 8 }, undefined])
     );
 
-    return expectAsync(
+    return expect(
       sendEdgeNetworkRequest({ payload, action, runOnResponseCallbacks })
-    ).toBeResolvedTo({ c: 2, h: 9, a: 2, b: 8 });
+    ).resolves.toEqual({ c: 2, h: 9, a: 2, b: 8 });
   });
 
-  it("returns the merged object from lifecycle::onBeforeRequest & lifecycle::onResponse", () => {
-    lifecycle.onBeforeRequest.and.callFake(({ onResponse }) => {
+  test("returns the merged object from lifecycle::onBeforeRequest & lifecycle::onResponse", () => {
+    lifecycle.onBeforeRequest.mockImplementation(({ onResponse }) => {
       onResponse(() => ({ a: 1 }));
       onResponse(() => ({ b: 1 }));
       onResponse(() => undefined);
       return Promise.resolve();
     });
-    lifecycle.onResponse.and.returnValue(Promise.resolve([{ c: 2 }]));
-    return expectAsync(
-      sendEdgeNetworkRequest({ payload, action })
-    ).toBeResolvedTo({ a: 1, b: 1, c: 2 });
+    lifecycle.onResponse.mockReturnValue(Promise.resolve([{ c: 2 }]));
+    return expect(sendEdgeNetworkRequest({ payload, action })).resolves.toEqual(
+      { a: 1, b: 1, c: 2 }
+    );
   });
 });

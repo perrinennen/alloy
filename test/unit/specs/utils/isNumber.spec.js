@@ -13,14 +13,14 @@ governing permissions and limitations under the License.
 import isNumber from "../../../../src/utils/isNumber";
 
 describe("isNumber", () => {
-  it("returns true if the value is a number", () => {
+  test("returns true if the value is a number", () => {
     [123, 123.45, -123, -123.45].forEach(value =>
       expect(isNumber(value)).toBe(true)
     );
   });
 
   // eslint-disable-next-line no-restricted-globals
-  it("returns false if the value is not a number", () => {
+  test("returns false if the value is not a number", () => {
     [null, undefined, NaN, "abc", "123"].forEach(value =>
       expect(isNumber(value)).toBe(false)
     );

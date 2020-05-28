@@ -13,19 +13,23 @@ describe("Identity::createIdentityManager", () => {
   let consentDeferred;
   let consent;
   beforeEach(() => {
-    payload = jasmine.createSpyObj("payload", ["addIdentity"]);
+    payload = {
+      addIdentity: jest.fn()
+    };
     event = { type: "event" };
-    logger = jasmine.createSpyObj("logger", ["warn"]);
-    eventManager = jasmine.createSpyObj("eventManager", {
-      createEvent: event,
-      sendEvent: Promise.resolve()
-    });
+    logger = {
+      warn: jest.fn()
+    };
+    eventManager = {
+      createEvent: jest.fn(() => event),
+      sendEvent: jest.fn(() => Promise.resolve())
+    };
     consentDeferred = defer();
-    consent = jasmine.createSpyObj("consent", {
-      awaitConsent: consentDeferred.promise
-    });
+    consent = {
+      awaitConsent: jest.fn(() => consentDeferred.promise)
+    };
   });
-  it("has addToPayload and sync methods", () => {
+  test("has addToPayload and sync methods", () => {
     const identityManager = createIdentityManager({
       eventManager,
       consent,
@@ -36,7 +40,7 @@ describe("Identity::createIdentityManager", () => {
     expect(identityManager.sync).toBeDefined();
   });
 
-  it("waits for consent before sending an event", () => {
+  test("waits for consent before sending an event", () => {
     const identityManager = createIdentityManager({
       eventManager,
       consent,
@@ -61,10 +65,8 @@ describe("Identity::createIdentityManager", () => {
       });
   });
 
-  it("logs a warning when browser doesn't support hashing", () => {
-    const sha256Buffer = jasmine
-      .createSpy("sha256Buffer")
-      .and.returnValue(false);
+  test("logs a warning when browser doesn't support hashing", () => {
+    const sha256Buffer = jest.fn(() => false);
     const identityManager = createIdentityManager({
       eventManager,
       consent,
@@ -97,10 +99,8 @@ describe("Identity::createIdentityManager", () => {
       });
   });
 
-  it("should not send an event when hashing failed on all identities", () => {
-    const sha256Buffer = jasmine
-      .createSpy("sha256Buffer")
-      .and.returnValue(false);
+  test("should not send an event when hashing failed on all identities", () => {
+    const sha256Buffer = jest.fn(() => false);
     const identityManager = createIdentityManager({
       eventManager,
       consent,
@@ -138,7 +138,7 @@ describe("Identity::createIdentityManager", () => {
       });
   });
 
-  it("rejects returned promise when sending an event if consent denied", () => {
+  test("rejects returned promise when sending an event if consent denied", () => {
     const identityManager = createIdentityManager({
       eventManager,
       consent,
@@ -150,17 +150,17 @@ describe("Identity::createIdentityManager", () => {
     // We can't use a hashEnabled identity in this test case due to the
     // async nature of convertStringToSha256Buffer unless we were to mock
     // convertStringToSha256Buffer.
-    return expectAsync(
+    return expect(
       identityManager.sync({
         crm: {
           id: "1234",
           authState: "ambiguous"
         }
       })
-    ).toBeRejectedWithError("Consent rejected.");
+    ).rejects.toThrow("Consent rejected.");
   });
 
-  it("does not return values", () => {
+  test("does not return values", () => {
     consentDeferred.resolve();
     const identityManager = createIdentityManager({
       eventManager,
@@ -168,17 +168,17 @@ describe("Identity::createIdentityManager", () => {
       logger
     });
 
-    return expectAsync(
+    return expect(
       identityManager.sync({
         crm: {
           id: "1234",
           authState: "ambiguous"
         }
       })
-    ).toBeResolvedTo(undefined);
+    ).resolves.toBeUndefined();
   });
 
-  it("hashes identities as necessary and adds them to a payload when requested", () => {
+  test("hashes identities as necessary and adds them to a payload when requested", () => {
     const identities = {
       Email_LC_SHA256: {
         id: "me@gmail.com",
@@ -200,7 +200,7 @@ describe("Identity::createIdentityManager", () => {
     return identityManager.sync(identities).then(() => {
       identityManager.addToPayload(payload);
 
-      expect(payload.addIdentity.calls.count()).toBe(2);
+      expect(payload.addIdentity.mock.calls.length).toBe(2);
       expect(payload.addIdentity).toHaveBeenCalledWith("Email_LC_SHA256", {
         id: "81d1a7135b9722577fb4f094a2004296d6230512d37b68e64b73f050b919f7c4",
         authenticatedState: "ambiguous"

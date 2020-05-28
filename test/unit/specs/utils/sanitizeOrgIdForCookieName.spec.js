@@ -13,7 +13,7 @@ governing permissions and limitations under the License.
 import sanitizeOrgIdForCookieName from "../../../../src/utils/sanitizeOrgIdForCookieName";
 
 describe("sanitizeOrgIdForCookieName", () => {
-  it("replaces @ with _", () => {
+  test("replaces @ with _", () => {
     const result = sanitizeOrgIdForCookieName("ABC@CustomOrg");
     expect(result).toBe("ABC_CustomOrg");
   });

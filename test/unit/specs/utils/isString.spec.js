@@ -15,11 +15,11 @@ import isString from "../../../../src/utils/isString";
 const nonStrings = [{}, [], new Date(), /abc/, true, false, 123];
 
 describe("isString", () => {
-  it("returns true if the value is a string", () => {
+  test("returns true if the value is a string", () => {
     expect(isString("123")).toBe(true);
   });
 
-  it("returns false if the value is not a string", () => {
+  test("returns false if the value is not a string", () => {
     nonStrings.forEach(str => {
       expect(isString(str)).toBe(false);
     });

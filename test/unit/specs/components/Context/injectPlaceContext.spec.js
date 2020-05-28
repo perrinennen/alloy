@@ -22,8 +22,8 @@ describe("Context::injectPlaceContext", () => {
     };
   });
 
-  it("adds placeContext", () => {
-    spyOn(date, "getTimezoneOffset").and.returnValue(7 * 60);
+  test("adds placeContext", () => {
+    jest.spyOn(date, "getTimezoneOffset").mockReturnValue(7 * 60);
     const xdm = {};
     injectPlaceContext(dateProvider)(xdm);
     expect(xdm).toEqual({

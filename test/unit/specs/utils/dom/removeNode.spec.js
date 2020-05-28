@@ -20,7 +20,7 @@ describe("DOM::removeNode", () => {
     selectNodes("div").forEach(removeNode);
   });
 
-  it("should remove a node from head tag", () => {
+  test("should remove a node from head tag", () => {
     const node = createNode("div", { id: "remove" });
 
     removeNode(appendNode(document.head, node));

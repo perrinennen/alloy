@@ -15,7 +15,7 @@ import createFragment from "../../../../../../../src/components/Personalization/
 import getFirstChild from "../../../../../../../src/components/Personalization/dom-actions/dom/getFirstChild";
 
 describe("Personalization::helper::dom::getNextSibling", () => {
-  it("returns the element next sibling", () => {
+  test("returns the element next sibling", () => {
     const element = createFragment(
       `<div id="foo">foo</div><h1>hello there</h1>`
     );
@@ -25,7 +25,7 @@ describe("Personalization::helper::dom::getNextSibling", () => {
     expect(nextSibling.tagName).toEqual("H1");
   });
 
-  it("returns null if the element doesn't have a sibling node", () => {
+  test("returns null if the element doesn't have a sibling node", () => {
     const element = createFragment(`<div id="foo">foo</div>`);
     const firstElement = getFirstChild(element);
     const nextSibling = getNextSibling(firstElement);

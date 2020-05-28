@@ -11,7 +11,7 @@ describe("Personalization::actions::resize", () => {
     cleanUpDomChanges("resize");
   });
 
-  it("should resize personalized content", () => {
+  test("should resize personalized content", () => {
     const modules = initDomActionsModules();
     const { resize } = modules;
     const element = createNode("div", { id: "resize" });

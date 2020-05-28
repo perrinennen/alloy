@@ -13,15 +13,15 @@ governing permissions and limitations under the License.
 import isNil from "../../../../src/utils/isNil";
 
 describe("isNil", () => {
-  it("returns true when null", () => {
+  test("returns true when null", () => {
     expect(isNil(null)).toBe(true);
   });
 
-  it("returns true when undefined", () => {
+  test("returns true when undefined", () => {
     expect(isNil(undefined)).toBe(true);
   });
 
-  it("returns false when value", () => {
+  test("returns false when value", () => {
     expect(isNil(1)).toBe(false);
     expect(isNil({})).toBe(false);
     expect(isNil("aaa")).toBe(false);

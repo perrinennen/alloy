@@ -13,19 +13,17 @@ governing permissions and limitations under the License.
 import injectHandleResponseForIdSyncs from "../../../../../src/components/Identity/injectHandleResponseForIdSyncs";
 
 describe("Identity::injectHandleResponseForIdSyncs", () => {
-  it("processes ID syncs", () => {
+  test("processes ID syncs", () => {
     const processIdSyncsPromise = Promise.resolve();
-    const processIdSyncs = jasmine
-      .createSpy("processIdSyncs")
-      .and.returnValue(processIdSyncsPromise);
+    const processIdSyncs = jest.fn(() => processIdSyncsPromise);
     const idSyncPayloads = [
       {
         type: "idSync"
       }
     ];
-    const response = jasmine.createSpyObj("response", {
-      getPayloadsByType: idSyncPayloads
-    });
+    const response = {
+      getPayloadsByType: jest.fn(() => idSyncPayloads)
+    };
     const handleResponseForIdSyncs = injectHandleResponseForIdSyncs({
       processIdSyncs
     });

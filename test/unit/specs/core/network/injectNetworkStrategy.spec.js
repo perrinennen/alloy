@@ -84,7 +84,7 @@ describe("injectNetworkStrategy", () => {
   });
 
   const whenMockServerIsRunningIt = (name, testFunc) => {
-    it(name, () => {
+    test(name, () => {
       if (mockServerRunning) {
         return testFunc();
       }

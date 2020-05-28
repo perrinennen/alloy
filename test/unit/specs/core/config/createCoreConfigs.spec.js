@@ -18,19 +18,19 @@ describe("createCoreConfigs", () => {
   const baseConfig = { edgeConfigId: "1234", orgId: "org1" };
 
   describe("debugEnabled", () => {
-    it("validates debugEnabled=undefined", () => {
+    test("validates debugEnabled=undefined", () => {
       const config = objectOf(createCoreConfigs())(baseConfig);
       expect(config.debugEnabled).toBe(false);
     });
 
-    it("validates debugEnabled=true", () => {
+    test("validates debugEnabled=true", () => {
       const config = objectOf(createCoreConfigs())({
         debugEnabled: true,
         ...baseConfig
       });
       expect(config.debugEnabled).toBe(true);
     });
-    it("validates debugEnabled=false", () => {
+    test("validates debugEnabled=false", () => {
       const config = objectOf(createCoreConfigs())({
         debugEnabled: false,
         ...baseConfig
@@ -38,7 +38,7 @@ describe("createCoreConfigs", () => {
       expect(config.debugEnabled).toBe(false);
     });
 
-    it("validates debugEnabled=123", () => {
+    test("validates debugEnabled=123", () => {
       expect(() => {
         objectOf(createCoreConfigs())({ debugEnabled: 123, ...baseConfig });
       }).toThrowError();
@@ -46,11 +46,11 @@ describe("createCoreConfigs", () => {
   });
 
   describe("defaultConsent", () => {
-    it("validates defaultConsent=undefined", () => {
+    test("validates defaultConsent=undefined", () => {
       const config = objectOf(createCoreConfigs())(baseConfig);
       expect(config.defaultConsent).toEqual(IN);
     });
-    it("validates defaultConsent={}", () => {
+    test("validates defaultConsent={}", () => {
       expect(() => {
         objectOf(createCoreConfigs())({
           defaultConsent: {},
@@ -58,26 +58,26 @@ describe("createCoreConfigs", () => {
         });
       }).toThrowError();
     });
-    it("validates defaultConsent='in'", () => {
+    test("validates defaultConsent='in'", () => {
       const config = objectOf(createCoreConfigs())({
         defaultConsent: IN,
         ...baseConfig
       });
       expect(config.defaultConsent).toEqual(IN);
     });
-    it("validates defaultConsent='pending'", () => {
+    test("validates defaultConsent='pending'", () => {
       const config = objectOf(createCoreConfigs())({
         defaultConsent: PENDING,
         ...baseConfig
       });
       expect(config.defaultConsent).toEqual(PENDING);
     });
-    it("validates defaultConsent=123", () => {
+    test("validates defaultConsent=123", () => {
       expect(() => {
         objectOf(createCoreConfigs())({ defaultConsent: 123, ...baseConfig });
       }).toThrowError();
     });
-    it("validates defaultConsent='out'", () => {
+    test("validates defaultConsent='out'", () => {
       expect(() => {
         objectOf(createCoreConfigs())({
           defaultConsent: OUT,
@@ -109,7 +109,7 @@ describe("createCoreConfigs", () => {
       orgId: "53A16ACB5CC1D3760A495C99@AdobeOrg"
     }
   ].forEach((cfg, i) => {
-    it(`validates configuration (${i})`, () => {
+    test(`validates configuration (${i})`, () => {
       objectOf(createCoreConfigs())(cfg);
     });
   });
@@ -128,12 +128,12 @@ describe("createCoreConfigs", () => {
       edgeBasePath: 123
     }
   ].forEach((cfg, i) => {
-    it(`invalidates configuration (${i})`, () => {
+    test(`invalidates configuration (${i})`, () => {
       expect(() => objectOf(createCoreConfigs())(cfg)).toThrowError();
     });
   });
 
-  it("invalidates duplicate configIds", () => {
+  test("invalidates duplicate configIds", () => {
     const validator = objectOf(createCoreConfigs());
     const config1 = { edgeConfigId: "property1", orgId: "ims1" };
     const config2 = { edgeConfigId: "property2", orgId: "ims2" };
@@ -144,7 +144,7 @@ describe("createCoreConfigs", () => {
     expect(() => validator("", config3)).toThrowError();
   });
 
-  it("invalidates duplicate orgIds", () => {
+  test("invalidates duplicate orgIds", () => {
     const validator = objectOf(createCoreConfigs());
     const config1 = { edgeConfigId: "a", orgId: "a" };
     const config2 = { edgeConfigId: "b", orgId: "b" };

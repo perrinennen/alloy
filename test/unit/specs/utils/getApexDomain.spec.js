@@ -21,7 +21,7 @@ const mockWindowWithHostname = hostname => {
 };
 
 describe("getTld", () => {
-  it("returns an empty string when only one host part exists", () => {
+  test("returns an empty string when only one host part exists", () => {
     const window = mockWindowWithHostname("localhost");
     const cookieJar = {
       get() {},
@@ -31,7 +31,7 @@ describe("getTld", () => {
     expect(getApexDomain(window, cookieJar)).toBe("");
   });
 
-  it("returns the first host that allows a cookie to be set", () => {
+  test("returns the first host that allows a cookie to be set", () => {
     const window = mockWindowWithHostname("a.b.c.co.uk");
     let storedValue;
     const cookieJar = {
@@ -43,14 +43,14 @@ describe("getTld", () => {
           storedValue = value;
         }
       },
-      remove: jasmine.createSpy()
+      remove: jest.fn()
     };
 
     expect(getApexDomain(window, cookieJar)).toBe("c.co.uk");
     expect(cookieJar.remove).toHaveBeenCalled();
   });
 
-  it("tries all segments of the hostname if necessary", () => {
+  test("tries all segments of the hostname if necessary", () => {
     const window = mockWindowWithHostname("10.30.34.68");
     let storedValue;
     const cookieJar = {
@@ -62,7 +62,7 @@ describe("getTld", () => {
           storedValue = value;
         }
       },
-      remove: jasmine.createSpy()
+      remove: jest.fn()
     };
 
     expect(getApexDomain(window, cookieJar)).toBe("10.30.34.68");

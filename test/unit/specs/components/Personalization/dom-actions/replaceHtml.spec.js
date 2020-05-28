@@ -15,7 +15,7 @@ describe("Personalization::actions::replaceHtml", () => {
     cleanUpDomChanges("replaceHtml");
   });
 
-  it("should replace element with personalized content", () => {
+  test("should replace element with personalized content", () => {
     const modules = initDomActionsModules();
     const { replaceHtml } = modules;
     const child = createNode(

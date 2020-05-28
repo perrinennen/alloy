@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 import validateUserEventOptions from "../../../../../src/components/DataCollector/validateUserEventOptions";
 
 describe("DataCollector::validateUserEventOptions", () => {
-  it("throws error for invalid options", () => {
+  test("throws error for invalid options", () => {
     [
       undefined,
       { xdm: [] },
@@ -25,17 +25,17 @@ describe("DataCollector::validateUserEventOptions", () => {
       }).toThrowError();
     });
   });
-  it("logs warning when event type is required and missing", () => {
+  test("logs warning when event type is required and missing", () => {
     const options = { xdm: { test: "" } };
     const logger = {
-      warn: jasmine.createSpy()
+      warn: jest.fn()
     };
     validateUserEventOptions({ options, logger });
     expect(logger.warn).toHaveBeenCalledWith(
       "No type or xdm.eventType specified."
     );
   });
-  it("does not throw errors when event options are valid", () => {
+  test("does not throw errors when event options are valid", () => {
     [
       {},
       { xdm: { eventType: "test" } },

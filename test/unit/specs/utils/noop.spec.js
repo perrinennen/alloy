@@ -13,7 +13,7 @@ governing permissions and limitations under the License.
 import noop from "../../../../src/utils/noop";
 
 describe("noop", () => {
-  it("accepts any arguments and returns undefined", () => {
+  test("accepts any arguments and returns undefined", () => {
     expect(noop("foo")).toBeUndefined();
   });
 });

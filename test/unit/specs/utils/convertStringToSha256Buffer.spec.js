@@ -2,13 +2,13 @@ import convertStringToSha256Buffer from "../../../../src/utils/convertStringToSh
 import convertBufferToHex from "../../../../src/utils/convertBufferToHex";
 
 describe("convertStringToSha256Buffer", () => {
-  it("should return 0 if the string is empty", () => {
+  test("should return 0 if the string is empty", () => {
     const stringToHash = "";
     convertStringToSha256Buffer(stringToHash).then(val =>
       expect(convertBufferToHex(val).toBe(0))
     );
   });
-  it("should generate same hash for same string", () => {
+  test("should generate same hash for same string", () => {
     const stringOneToHash = "12345sadnksdc";
     const stringTwoToHash = "12345sadnksdc";
     convertStringToSha256Buffer(stringOneToHash).then(result => {
@@ -22,7 +22,7 @@ describe("convertStringToSha256Buffer", () => {
       );
     });
   });
-  it("should generate different hash for strings with same chars in different order", () => {
+  test("should generate different hash for strings with same chars in different order", () => {
     const stringOneToHash = "qwertyuhj|kj";
     const stringTwoToHash = "qwertyuhj|jk";
     Promise.all(

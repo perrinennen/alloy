@@ -13,11 +13,11 @@ governing permissions and limitations under the License.
 import isNonEmptyString from "../../../../src/utils/isNonEmptyString";
 
 describe("isNonEmptyString", () => {
-  it("returns true when string", () => {
+  test("returns true when string", () => {
     expect(isNonEmptyString("1234")).toBe(true);
   });
 
-  it("returns false when empty string", () => {
+  test("returns false when empty string", () => {
     expect(isNonEmptyString("")).toBe(false);
   });
 });

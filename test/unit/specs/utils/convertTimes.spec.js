@@ -22,7 +22,7 @@ import convertTimes, {
 } from "../../../../src/utils/convertTimes";
 
 describe("convertTimes", () => {
-  it("exposes unit values", () => {
+  test("exposes unit values", () => {
     expect(MILLISECOND).toBe(1);
     expect(SECOND).toBe(1000);
     expect(MINUTE).toBe(60000);
@@ -33,11 +33,11 @@ describe("convertTimes", () => {
     expect(YEAR).toBe(31536000000);
   });
 
-  it("converts from a unit to a larger unit", () => {
+  test("converts from a unit to a larger unit", () => {
     expect(convertTimes(SECOND, MONTH, 3888000)).toBe(1.5);
   });
 
-  it("converts from a unit to a smaller unit", () => {
+  test("converts from a unit to a smaller unit", () => {
     expect(convertTimes(MONTH, SECOND, 1.5)).toBe(3888000);
   });
 });

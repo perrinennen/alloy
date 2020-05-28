@@ -26,15 +26,13 @@ describe("awaitVisitorOptIn", () => {
   });
 
   describe("No legacy opt in object is present", () => {
-    it("should return promise resolved with undefined", () => {
-      return expectAsync(awaitVisitorOptIn({ logger })).toBeResolvedTo(
-        undefined
-      );
+    test("should return promise resolved with undefined", () => {
+      return expect(awaitVisitorOptIn({ logger })).resolves.toBeUndefined();
     });
   });
 
   describe("Legacy opt in object is present and gives approval", () => {
-    it("should return promise resolved with undefined", () => {
+    test("should return promise resolved with undefined", () => {
       window.adobe = {
         optIn: {
           fetchPermissions(callback) {
@@ -49,14 +47,12 @@ describe("awaitVisitorOptIn", () => {
         }
       };
 
-      return expectAsync(awaitVisitorOptIn({ logger })).toBeResolvedTo(
-        undefined
-      );
+      return expect(awaitVisitorOptIn({ logger })).resolves.toBeUndefined();
     });
   });
 
   describe("Legacy opt in object is present and gives denial", () => {
-    it('should return promise rejected with new Error("Legacy opt-in was declined.")', () => {
+    test('should return promise rejected with new Error("Legacy opt-in was declined.")', () => {
       window.adobe = {
         optIn: {
           fetchPermissions(callback) {
@@ -71,7 +67,7 @@ describe("awaitVisitorOptIn", () => {
         }
       };
 
-      return expectAsync(awaitVisitorOptIn({ logger })).toBeRejectedWithError(
+      return expect(awaitVisitorOptIn({ logger })).rejects.toThrow(
         "Legacy opt-in was declined."
       );
     });

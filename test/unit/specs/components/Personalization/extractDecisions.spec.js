@@ -22,11 +22,13 @@ describe("Personalization::extractDecisions", () => {
   let response;
 
   beforeEach(() => {
-    response = jasmine.createSpyObj("response", ["getPayloadsByType"]);
+    response = {
+      getPayloadsByType: jest.fn()
+    };
   });
 
-  it("extracts dom action decisions and rest of decisions", () => {
-    response.getPayloadsByType.and.returnValue(
+  test("extracts dom action decisions and rest of decisions", () => {
+    response.getPayloadsByType.mockReturnValue(
       PAGE_WIDE_SCOPE_DECISIONS.concat(SCOPES_FOO1_FOO2_DECISIONS)
     );
 

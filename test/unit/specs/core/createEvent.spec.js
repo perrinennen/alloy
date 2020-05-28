@@ -19,7 +19,7 @@ describe("createEvent", () => {
     event = createEvent();
   });
 
-  it("deeply merges XDM with user-provided XDM merged last", () => {
+  test("deeply merges XDM with user-provided XDM merged last", () => {
     event.setUserXdm({
       fruit: {
         type: "apple"
@@ -62,7 +62,7 @@ describe("createEvent", () => {
     });
   });
 
-  it("does not modify the original user XDM object", () => {
+  test("does not modify the original user XDM object", () => {
     const dataLayer = {
       fruit: {
         type: "apple"
@@ -90,7 +90,7 @@ describe("createEvent", () => {
     });
   });
 
-  it("handles undefined user XDM", () => {
+  test("handles undefined user XDM", () => {
     event.setUserXdm(undefined);
     event.mergeXdm({
       fruit: "apple"
@@ -102,7 +102,7 @@ describe("createEvent", () => {
     });
   });
 
-  it("sets user data", () => {
+  test("sets user data", () => {
     event.setUserData({ fruit: "apple" });
     event.setUserData({ veggie: "carrot" });
     expect(event.toJSON()).toEqual({
@@ -112,12 +112,12 @@ describe("createEvent", () => {
     });
   });
 
-  it("handles undefined user data", () => {
+  test("handles undefined user data", () => {
     event.setUserData(undefined);
     expect(event.toJSON()).toEqual({});
   });
 
-  it("deeply merges meta", () => {
+  test("deeply merges meta", () => {
     event.mergeMeta({
       fruit: {
         type: "strawberry"
@@ -149,7 +149,7 @@ describe("createEvent", () => {
     });
   });
 
-  it("deeply merges query", () => {
+  test("deeply merges query", () => {
     event.mergeQuery({
       fruit: {
         type: "strawberry"
@@ -181,20 +181,20 @@ describe("createEvent", () => {
     });
   });
 
-  it("sets documentUnloading", () => {
-    expect(event.getDocumentMayUnload()).toBeFalse();
+  test("sets documentUnloading", () => {
+    expect(event.getDocumentMayUnload()).toBe(false);
     event.documentMayUnload();
-    expect(event.getDocumentMayUnload()).toBeTrue();
+    expect(event.getDocumentMayUnload()).toBe(true);
   });
 
-  it("reports whether the event is empty", () => {
-    expect(event.isEmpty()).toBeTrue();
+  test("reports whether the event is empty", () => {
+    expect(event.isEmpty()).toBe(true);
     event.setUserData({ foo: "bar" });
-    expect(event.isEmpty()).toBeFalse();
+    expect(event.isEmpty()).toBe(false);
   });
 
   describe("applyCallback", () => {
-    it("can add fields to empty xdm", () => {
+    test("can add fields to empty xdm", () => {
       const callback = ({ xdm, data }) => {
         xdm.a = "1";
         data.b = "2";
@@ -204,7 +204,7 @@ describe("createEvent", () => {
       expect(subject.toJSON()).toEqual({ xdm: { a: "1" }, data: { b: "2" } });
     });
 
-    it("can add fields to an existing xdm", () => {
+    test("can add fields to an existing xdm", () => {
       const callback = ({ xdm, data }) => {
         xdm.b = "2";
         data.b = "2";
@@ -219,7 +219,7 @@ describe("createEvent", () => {
       });
     });
 
-    it("can remove fields", () => {
+    test("can remove fields", () => {
       const callback = ({ xdm, data }) => {
         delete xdm.a;
         delete data.a;
@@ -231,7 +231,7 @@ describe("createEvent", () => {
       expect(subject.toJSON()).toEqual({ xdm: { b: "2" }, data: { b: "2" } });
     });
 
-    it("doesn't merge when there is an exception", () => {
+    test("doesn't merge when there is an exception", () => {
       const callback = ({ xdm, data }) => {
         delete xdm.a;
         xdm.c = "3";

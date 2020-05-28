@@ -19,10 +19,8 @@ describe("Identity::injectAddLegacyEcidToPayload", () => {
   let addLegacyEcidToPayload;
 
   beforeEach(() => {
-    getLegacyEcid = jasmine
-      .createSpy("getEcidFromLegacy")
-      .and.returnValue(Promise.resolve("legacy@adobe"));
-    addEcidToPayload = jasmine.createSpy("addEcidToPayload");
+    getLegacyEcid = jest.fn(() => Promise.resolve("legacy@adobe"));
+    addEcidToPayload = jest.fn();
     addLegacyEcidToPayload = injectAddLegacyEcidToPayload({
       getLegacyEcid,
       addEcidToPayload
@@ -32,14 +30,14 @@ describe("Identity::injectAddLegacyEcidToPayload", () => {
     };
   });
 
-  it("does not add legacy ECID to payload if legacy ECID does not exist", () => {
-    getLegacyEcid.and.returnValue(Promise.resolve());
+  test("does not add legacy ECID to payload if legacy ECID does not exist", () => {
+    getLegacyEcid.mockReturnValue(Promise.resolve());
     return addLegacyEcidToPayload(payload).then(() => {
       expect(addEcidToPayload).not.toHaveBeenCalled();
     });
   });
 
-  it("adds legacy ECID to payload if legacy ECID exists", () => {
+  test("adds legacy ECID to payload if legacy ECID exists", () => {
     return addLegacyEcidToPayload(payload).then(() => {
       expect(addEcidToPayload).toHaveBeenCalledWith(payload, "legacy@adobe");
     });

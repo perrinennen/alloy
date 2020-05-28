@@ -24,12 +24,12 @@ describe("validateCommandOptions", () => {
     };
   });
 
-  it("supports commands not implementing command options validation.", () => {
+  test("supports commands not implementing command options validation.", () => {
     expect(() => {
       validateCommandOptions({ command, options });
     }).not.toThrowError();
   });
-  it("should throw exception if command options validator throws exception.", () => {
+  test("should throw exception if command options validator throws exception.", () => {
     command.optionsValidator = () => {
       throw new Error("Invalid Options");
     };
@@ -37,7 +37,7 @@ describe("validateCommandOptions", () => {
       validateCommandOptions({ command, options });
     }).toThrowError();
   });
-  it("should include custom documentation URI in error message if provided by command options validator.", () => {
+  test("should include custom documentation URI in error message if provided by command options validator.", () => {
     command.optionsValidator = () => {
       throw new Error("Invalid Options");
     };

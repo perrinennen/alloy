@@ -14,13 +14,13 @@ export default (description, validator, specObjects) => {
   describe(description, () => {
     specObjects.forEach(({ value, expected = value, error }) => {
       if (error) {
-        it(`rejects ${JSON.stringify(value)}`, () => {
-          expect(() => validator(value, "mykey")).toThrowMatching(e => {
-            return /'mykey[^']*'(:| is)/.test(e.message);
-          });
+        test(`rejects ${JSON.stringify(value)}`, () => {
+          expect(() => validator(value, "mykey")).toThrow(
+            /'mykey[^']*'(:| is)/
+          );
         });
       } else {
-        it(`transforms \`${JSON.stringify(value)}\` to \`${JSON.stringify(
+        test(`transforms \`${JSON.stringify(value)}\` to \`${JSON.stringify(
           expected
         )}\``, () => {
           expect(validator(value, "mykey")).toEqual(expected);

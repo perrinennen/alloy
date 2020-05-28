@@ -13,7 +13,7 @@ governing permissions and limitations under the License.
 import clone from "../../../../src/utils/clone";
 
 describe("clone", () => {
-  it("clones the object using JSON serialization/deserialization", () => {
+  test("clones the object using JSON serialization/deserialization", () => {
     const obj = {
       toJSON() {
         return { foo: "bar" };

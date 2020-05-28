@@ -15,11 +15,11 @@ import isEmptyObject from "../../../../src/utils/isEmptyObject";
 const nonEmptyObjects = ["abc", { a: 123 }];
 
 describe("isEmptyObject", () => {
-  it("returns true if the value is an empty object", () => {
+  test("returns true if the value is an empty object", () => {
     expect(isEmptyObject({})).toBe(true);
   });
 
-  it("returns false if the value is not an empty object", () => {
+  test("returns false if the value is not an empty object", () => {
     nonEmptyObjects.forEach(obj => {
       expect(isEmptyObject(obj)).toBe(false);
     });

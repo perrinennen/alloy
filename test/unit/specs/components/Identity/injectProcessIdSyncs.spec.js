@@ -6,24 +6,25 @@ describe("Identity::injectProcessIdSyncs", () => {
   let processIdSyncs;
 
   beforeEach(() => {
-    fireReferrerHideableImage = jasmine
-      .createSpy()
-      .and.returnValue(Promise.resolve());
-    logger = jasmine.createSpyObj("logger", ["log", "error"]);
+    fireReferrerHideableImage = jest.fn(() => Promise.resolve());
+    logger = {
+      log: jest.fn(),
+      error: jest.fn()
+    };
     processIdSyncs = injectProcessIdSyncs({
       fireReferrerHideableImage,
       logger
     });
   });
 
-  it("handles no ID syncs", () => {
+  test("handles no ID syncs", () => {
     return processIdSyncs([]).then(() => {
       expect(fireReferrerHideableImage).not.toHaveBeenCalled();
     });
   });
 
-  it("calls fireReferrerHideableImage for all ID syncs of type URL, and logs results", () => {
-    fireReferrerHideableImage.and.callFake(({ url }) => {
+  test("calls fireReferrerHideableImage for all ID syncs of type URL, and logs results", () => {
+    fireReferrerHideableImage.mockImplementation(({ url }) => {
       return url === "http://test.zyx" ? Promise.resolve() : Promise.reject();
     });
 

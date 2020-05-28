@@ -23,7 +23,7 @@ describe("Personalization::tracking::clicks", () => {
     selectNodes(".eq").forEach(removeNode);
   });
 
-  it("should collect clicks", () => {
+  test("should collect clicks", () => {
     const content = `
       <div class="b">
         <div id="one" class="c">first</div>

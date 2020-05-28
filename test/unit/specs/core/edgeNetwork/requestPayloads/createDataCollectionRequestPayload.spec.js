@@ -28,27 +28,27 @@ describe("createDataCollectionRequestPayload", () => {
     });
   });
 
-  it("should not use ID third-party domain when useIdThirdPartyDomain is not called", () => {
+  test("should not use ID third-party domain when useIdThirdPartyDomain is not called", () => {
     const payload = createDataCollectionRequestPayload();
-    expect(payload.getUseIdThirdPartyDomain()).toBeFalse();
+    expect(payload.getUseIdThirdPartyDomain()).toBe(false);
   });
 
-  it("should use ID third-party domain when useIdThirdPartyDomain is called", () => {
+  test("should use ID third-party domain when useIdThirdPartyDomain is called", () => {
     const payload = createDataCollectionRequestPayload();
     payload.useIdThirdPartyDomain();
-    expect(payload.getUseIdThirdPartyDomain()).toBeTrue();
+    expect(payload.getUseIdThirdPartyDomain()).toBe(true);
   });
 
-  it("calls toJSON on the event when it is added to the payload", () => {
+  test("calls toJSON on the event when it is added to the payload", () => {
     const payload = createDataCollectionRequestPayload();
     const event = {
-      toJSON: jasmine.createSpy()
+      toJSON: jest.fn()
     };
     payload.addEvent(event);
     expect(event.toJSON).toHaveBeenCalled();
   });
 
-  it("serializes properly", () => {
+  test("serializes properly", () => {
     const payload = createDataCollectionRequestPayload();
     payload.mergeConfigOverrides({
       testOverride: "testOverrideValue"

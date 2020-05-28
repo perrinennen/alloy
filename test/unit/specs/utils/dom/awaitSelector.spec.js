@@ -49,18 +49,18 @@ describe("DOM::awaitSelector", () => {
       });
   };
 
-  it("await via MutationObserver", done => {
+  test("await via MutationObserver", done => {
     awaitSelectorAndAssert("abc", window, document, done);
   });
 
-  it("await via requestAnimationFrame", done => {
+  test("await via requestAnimationFrame", done => {
     const win = { requestAnimationFrame: window.requestAnimationFrame };
     const doc = { visibilityState: "visible" };
 
     awaitSelectorAndAssert("def", win, doc, done);
   });
 
-  it("await via timer", done => {
+  test("await via timer", done => {
     const win = {};
     const doc = {};
 

@@ -14,12 +14,10 @@ import createInstance from "../../../../src/core/createInstance";
 import flushPromiseChains from "../../helpers/flushPromiseChains";
 
 describe("createInstance", () => {
-  it("successfully executes command", () => {
-    const executeCommand = jasmine
-      .createSpy()
-      .and.returnValue(Promise.resolve("commandresult"));
-    const resolve = jasmine.createSpy();
-    const reject = jasmine.createSpy();
+  test("successfully executes command", () => {
+    const executeCommand = jest.fn(() => Promise.resolve("commandresult"));
+    const resolve = jest.fn();
+    const reject = jest.fn();
     const instance = createInstance(executeCommand);
 
     instance([resolve, reject, ["event", { foo: "bar" }]]);
@@ -32,12 +30,12 @@ describe("createInstance", () => {
     });
   });
 
-  it("unsuccessfully execute command", () => {
-    const executeCommand = jasmine
-      .createSpy()
-      .and.returnValue(Promise.reject(new Error("error occurred")));
-    const resolve = jasmine.createSpy();
-    const reject = jasmine.createSpy();
+  test("unsuccessfully execute command", () => {
+    const executeCommand = jest.fn(() =>
+      Promise.reject(new Error("error occurred"))
+    );
+    const resolve = jest.fn();
+    const reject = jest.fn();
     const instance = createInstance(executeCommand);
 
     instance([resolve, reject, ["event", { foo: "bar" }]]);
@@ -46,7 +44,7 @@ describe("createInstance", () => {
 
     return flushPromiseChains().then(() => {
       expect(resolve).not.toHaveBeenCalled();
-      expect(reject).toHaveBeenCalledWith(jasmine.any(Error));
+      expect(reject).toHaveBeenCalledWith(expect.any(Error));
     });
   });
 });

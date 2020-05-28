@@ -23,7 +23,7 @@ describe("Personalization::DOM::setAttribute", () => {
     selectNodes("#fooId").forEach(removeNode);
   });
 
-  it("should set the attribute for the element", () => {
+  test("should set the attribute for the element", () => {
     const element = createNode("div", { id: "fooId" });
     setAttribute(element, "foo-data", "dummyValue");
 

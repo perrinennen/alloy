@@ -35,12 +35,12 @@ describe("ActivityCollector::createLinkClick", () => {
     href: "index.html"
   };
   const linkClick = createLinkClick(mockWindow, config);
-  it("Extends event XDM data with link information for supported anchor elements", () => {
+  test("Extends event XDM data with link information for supported anchor elements", () => {
     const event = createEvent();
     linkClick(event, supportedLinkElement);
     expect(event.isEmpty()).toBe(false);
   });
-  it("Does not extend event XDM data with link information for unsupported anchor elements", () => {
+  test("Does not extend event XDM data with link information for unsupported anchor elements", () => {
     const event = createEvent();
     linkClick(event, unsupportedLinkElement);
     expect(event.isEmpty()).toBe(true);

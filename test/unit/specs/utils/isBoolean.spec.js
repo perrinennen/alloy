@@ -15,12 +15,12 @@ import isBoolean from "../../../../src/utils/isBoolean";
 const nonBooleans = [{}, [], new Date(), /abc/, "foo", 123];
 
 describe("isString", () => {
-  it("returns true if the value is boolean", () => {
+  test("returns true if the value is boolean", () => {
     expect(isBoolean(true)).toBe(true);
     expect(isBoolean(false)).toBe(true);
   });
 
-  it("returns false if the value is not a boolean", () => {
+  test("returns false if the value is not a boolean", () => {
     nonBooleans.forEach(value => {
       expect(isBoolean(value)).toBe(false);
     });

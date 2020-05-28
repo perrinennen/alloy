@@ -33,19 +33,19 @@ describe("Identity::injectAwaitIdentityCookie", () => {
     });
   });
 
-  it("resolves promise if identity cookie exists after response", () => {
+  test("resolves promise if identity cookie exists after response", () => {
     const promise = awaitIdentityCookie(onResponse);
     runOnResponseCallbacks();
     return promise;
   });
 
-  it("rejects promise if identity cookie does not exist after response", () => {
+  test("rejects promise if identity cookie does not exist after response", () => {
     identityCookieExists = false;
     const promise = awaitIdentityCookie(onResponse);
     const errorRegex = /verify that the org ID org@adobe configured/;
     expect(() => {
       runOnResponseCallbacks();
     }).toThrowError(errorRegex);
-    return expectAsync(promise).toBeRejectedWithError(errorRegex);
+    return expect(promise).rejects.toThrow(errorRegex);
   });
 });

@@ -13,11 +13,11 @@ governing permissions and limitations under the License.
 import nullSafeChain from "../../../../../src/utils/validation/nullSafeChain";
 
 describe("validation::nullSafeChain", () => {
-  it("doesn't call the underlying validators when null is passed in", () => {
-    const validator1 = jasmine.createSpy();
-    const validator2 = jasmine.createSpy();
-    const validator3 = jasmine.createSpy();
-    validator1.and.returnValue(null);
+  test("doesn't call the underlying validators when null is passed in", () => {
+    const validator1 = jest.fn();
+    const validator2 = jest.fn();
+    const validator3 = jest.fn();
+    validator1.mockReturnValue(null);
     const subject = nullSafeChain(
       nullSafeChain(validator1, validator2),
       validator3

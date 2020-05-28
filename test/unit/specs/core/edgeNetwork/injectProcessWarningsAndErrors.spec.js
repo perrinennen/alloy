@@ -26,11 +26,13 @@ describe("processWarningsAndErrors", () => {
         return [];
       }
     };
-    logger = jasmine.createSpyObj("logger", ["warn"]);
+    logger = {
+      warn: jest.fn()
+    };
     processWarningsAndErrors = injectProcessWarningsAndErrors({ logger });
   });
 
-  it("logs warnings", () => {
+  test("logs warnings", () => {
     response.getWarnings = () => [
       {
         code: "general:100",
@@ -52,7 +54,7 @@ describe("processWarningsAndErrors", () => {
     );
   });
 
-  it("throws errors", () => {
+  test("throws errors", () => {
     response.getErrors = () => [
       {
         code: "general:100",

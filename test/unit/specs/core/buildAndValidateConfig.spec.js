@@ -34,12 +34,12 @@ describe("buildAndValidateConfig", () => {
     };
     logger = {
       enabled: false,
-      log: jasmine.createSpy()
+      log: jest.fn()
     };
-    setDebugEnabled = jasmine.createSpy();
+    setDebugEnabled = jest.fn();
   });
 
-  it("adds validators and validates options", () => {
+  test("adds validators and validates options", () => {
     expect(() => {
       buildAndValidateConfig({
         options: { idSyncEnabled: "invalid value" },
@@ -52,7 +52,7 @@ describe("buildAndValidateConfig", () => {
     }).toThrowError();
   });
 
-  it("sets debug enabled based on config", () => {
+  test("sets debug enabled based on config", () => {
     options.debugEnabled = true;
     buildAndValidateConfig({
       options,
@@ -65,7 +65,7 @@ describe("buildAndValidateConfig", () => {
     expect(setDebugEnabled).toHaveBeenCalledWith(true, { fromConfig: true });
   });
 
-  it("logs and returns computed configuration", () => {
+  test("logs and returns computed configuration", () => {
     logger.enabled = true;
     buildAndValidateConfig({
       options,
@@ -81,7 +81,7 @@ describe("buildAndValidateConfig", () => {
     });
   });
 
-  it("throws an error for unknown fields", () => {
+  test("throws an error for unknown fields", () => {
     logger.enabled = true;
     options.foo = "bar";
     expect(() =>
@@ -96,7 +96,7 @@ describe("buildAndValidateConfig", () => {
     ).toThrowError();
   });
 
-  it("returns config", () => {
+  test("returns config", () => {
     const result = buildAndValidateConfig({
       options,
       componentCreators,

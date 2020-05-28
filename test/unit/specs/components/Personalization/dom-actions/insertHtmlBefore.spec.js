@@ -15,7 +15,7 @@ describe("Personalization::actions::insertBefore", () => {
     cleanUpDomChanges("insertBefore");
   });
 
-  it("should insert before personalized content", () => {
+  test("should insert before personalized content", () => {
     const modules = initDomActionsModules();
     const { insertBefore } = modules;
     const child = createNode(

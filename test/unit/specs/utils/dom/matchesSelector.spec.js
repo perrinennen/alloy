@@ -13,11 +13,11 @@ governing permissions and limitations under the License.
 import matchesSelector from "../../../../../src/utils/dom/matchesSelector";
 
 describe("DOM::matchesSelector", () => {
-  it("should match selector for existing element", () => {
+  test("should match selector for existing element", () => {
     expect(matchesSelector("BODY", document.body)).toEqual(true);
   });
 
-  it("should not match selector for non-existing element", () => {
+  test("should not match selector for non-existing element", () => {
     expect(matchesSelector("#bla-bla", document.body)).toEqual(false);
   });
 });

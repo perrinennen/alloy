@@ -15,7 +15,7 @@ import injectImplementationDetails from "../../../../../src/components/Context/i
 describe("Context::implementationDetails", () => {
   const version = "1.2.3";
 
-  it("works", () => {
+  test("works", () => {
     const xdm = {};
     injectImplementationDetails(version)(xdm);
     expect(xdm).toEqual({

@@ -18,20 +18,20 @@ export default ({
   defaultValues
 }) => {
   validConfigurations.forEach((cfg, i) => {
-    it(`validates configuration (${i})`, () => {
+    test(`validates configuration (${i})`, () => {
       objectOf(configValidators)(cfg);
     });
   });
 
   invalidConfigurations.forEach((cfg, i) => {
-    it(`invalidates configuration (${i})`, () => {
+    test(`invalidates configuration (${i})`, () => {
       expect(() => {
         objectOf(configValidators)(cfg);
       }).toThrowError();
     });
   });
 
-  it("provides default values", () => {
+  test("provides default values", () => {
     const config = objectOf(configValidators)({});
     Object.keys(defaultValues).forEach(key => {
       expect(config[key]).toBe(defaultValues[key]);

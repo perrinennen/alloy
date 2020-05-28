@@ -1,7 +1,7 @@
 import getIdentityOptionsValidator from "../../../../../../src/components/Identity/getIdentity/getIdentityOptionsValidator";
 
 describe("Identity::getIdentityOptionsValidator", () => {
-  it("should throw an error when invalid options are passed", () => {
+  test("should throw an error when invalid options are passed", () => {
     expect(() => {
       getIdentityOptionsValidator({ key: ["item1", "item2"] });
     }).toThrow(new Error("'key': Unknown field."));
@@ -24,7 +24,7 @@ describe("Identity::getIdentityOptionsValidator", () => {
     }).toThrow(new Error("'namespaces[0]': Expected ECID, but got 'ACD'."));
   });
 
-  it("should return valid options when no options are passed", () => {
+  test("should return valid options when no options are passed", () => {
     expect(() => {
       getIdentityOptionsValidator();
     }).not.toThrow();
@@ -32,7 +32,7 @@ describe("Identity::getIdentityOptionsValidator", () => {
     expect(validatedIdentityOptions).toEqual({ namespaces: ["ECID"] });
   });
 
-  it("should not throw when supported namespace options are passed", () => {
+  test("should not throw when supported namespace options are passed", () => {
     const ECID = "ECID";
     expect(() => {
       getIdentityOptionsValidator({ namespaces: [ECID] });

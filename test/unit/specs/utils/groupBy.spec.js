@@ -13,12 +13,12 @@ governing permissions and limitations under the License.
 import groupBy from "../../../../src/utils/groupBy";
 
 describe("groupBy", () => {
-  it("expects empty obj if array is empty", () => {
+  test("expects empty obj if array is empty", () => {
     const array = [];
     expect(groupBy(array, null)).toEqual({});
   });
 
-  it("expects to group by key getter provided", () => {
+  test("expects to group by key getter provided", () => {
     const array = [
       { id: 1, name: "Foo" },
       { id: 2, name: "Foo2" },
@@ -33,7 +33,7 @@ describe("groupBy", () => {
     expect(groupBy(array, item => item.id || "default")).toEqual(map);
   });
 
-  it("expects to group by key getter provided or to the default key", () => {
+  test("expects to group by key getter provided or to the default key", () => {
     const array = [
       { id: 1, name: "Foo" },
       { id: 2, name: "Foo2" },

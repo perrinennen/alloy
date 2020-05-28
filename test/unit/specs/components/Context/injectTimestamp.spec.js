@@ -22,7 +22,7 @@ describe("Context::injectTimestamp", () => {
     };
   });
 
-  it("adds timestamp", () => {
+  test("adds timestamp", () => {
     const xdm = {};
     injectTimestamp(dateProvider)(xdm);
     expect(xdm).toEqual({

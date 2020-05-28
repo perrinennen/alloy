@@ -20,12 +20,12 @@ describe("sendXhrRequest", () => {
   let body;
 
   beforeEach(() => {
-    request = jasmine.createSpyObj("xhrInstance", [
-      "open",
-      "setRequestHeader",
-      "send",
-      "onloadstart"
-    ]);
+    request = {
+      open: jest.fn(),
+      setRequestHeader: jest.fn(),
+      send: jest.fn(),
+      onloadstart: jest.fn()
+    };
     XMLHttpRequest = () => {
       return request;
     };
@@ -33,19 +33,19 @@ describe("sendXhrRequest", () => {
     body = { a: "b" };
   });
 
-  it("sets the response type during onloadstart", () => {
+  test("sets the response type during onloadstart", () => {
     sendXhrRequest(url, body);
     expect(request.responseType).toBeUndefined();
     request.onloadstart();
     expect(request.responseType).toBe("text");
   });
 
-  it("opens a POST", () => {
+  test("opens a POST", () => {
     sendXhrRequest(url, body);
     expect(request.open).toHaveBeenCalledWith("POST", url, true);
   });
 
-  it("sets content type", () => {
+  test("sets content type", () => {
     sendXhrRequest(url, body);
     expect(request.setRequestHeader).toHaveBeenCalledWith(
       "Content-Type",
@@ -53,12 +53,12 @@ describe("sendXhrRequest", () => {
     );
   });
 
-  it("disables credentials", () => {
+  test("disables credentials", () => {
     sendXhrRequest(url, body);
     expect(request.withCredentials).toBe(true);
   });
 
-  it("rejects promise upon error", () => {
+  test("rejects promise upon error", () => {
     const xhrPromise = sendXhrRequest(url, body);
     request.onerror(new Error("bad thing happened"));
     return xhrPromise.then(fail).catch(error => {
@@ -66,7 +66,7 @@ describe("sendXhrRequest", () => {
     });
   });
 
-  it("rejects promise upon abort", () => {
+  test("rejects promise upon abort", () => {
     const xhrPromise = sendXhrRequest(url, body);
     request.onabort(new Error("bad thing happened"));
     return xhrPromise.then(fail).catch(error => {
@@ -74,12 +74,12 @@ describe("sendXhrRequest", () => {
     });
   });
 
-  it("sends body", () => {
+  test("sends body", () => {
     sendXhrRequest(url, body);
     expect(request.send).toHaveBeenCalledWith(body);
   });
 
-  it("resolves returned promise upon network success", () => {
+  test("resolves returned promise upon network success", () => {
     const xhrPromise = sendXhrRequest("https://example.com/endpoint", body);
     request.readyState = 4;
     request.responseText = "response text";

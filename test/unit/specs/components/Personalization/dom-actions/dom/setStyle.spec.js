@@ -23,7 +23,7 @@ describe("Personalization::DOM::setStyle", () => {
     selectNodes("#fooDivId").forEach(removeNode);
   });
 
-  it("sets style with priority to the element", () => {
+  test("sets style with priority to the element", () => {
     const element = createNode("div", { id: "fooDivId" });
     setStyle(element, "padding", "15px", "important");
 
@@ -32,7 +32,7 @@ describe("Personalization::DOM::setStyle", () => {
     expect(style).toEqual("padding: 15px !important;");
   });
 
-  it("sets style to the element, without priority", () => {
+  test("sets style to the element, without priority", () => {
     const element = createNode("div", { id: "fooDivId" });
     setStyle(element, "padding", "15px");
 

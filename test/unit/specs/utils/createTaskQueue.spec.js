@@ -15,31 +15,25 @@ import { defer } from "../../../../src/utils";
 import flushPromiseChains from "../../helpers/flushPromiseChains";
 
 describe("createTaskQueue", () => {
-  it("executes a single task once even when it throws an error", () => {
+  test("executes a single task once even when it throws an error", () => {
     const queue = createTaskQueue();
-    const task1 = jasmine
-      .createSpy("task1")
-      .and.returnValue(Promise.reject(Error("myerror")));
+    const task1 = jest.fn(() => Promise.reject(Error("myerror")));
     return queue.addTask(task1).then(fail, e => {
       expect(e.message).toEqual("myerror");
       expect(task1).toHaveBeenCalledTimes(1);
     });
   });
 
-  it("executes tasks in sequence when first task succeeds", () => {
+  test("executes tasks in sequence when first task succeeds", () => {
     const queue = createTaskQueue();
     const task1Deferred = defer();
-    const task1 = jasmine
-      .createSpy("task1")
-      .and.returnValue(task1Deferred.promise);
+    const task1 = jest.fn(() => task1Deferred.promise);
     const task2Deferred = defer();
-    const task2 = jasmine
-      .createSpy("task2")
-      .and.returnValue(task2Deferred.promise);
+    const task2 = jest.fn(() => task2Deferred.promise);
 
-    const task1OnFulfilled = jasmine.createSpy("task1OnFulfilled");
+    const task1OnFulfilled = jest.fn();
     queue.addTask(task1).then(task1OnFulfilled);
-    const task2OnFulfilled = jasmine.createSpy("task2OnFulfilled");
+    const task2OnFulfilled = jest.fn();
     queue.addTask(task2).then(task2OnFulfilled);
 
     return flushPromiseChains()
@@ -63,20 +57,16 @@ describe("createTaskQueue", () => {
       });
   });
 
-  it("executes tasks in sequence when first task rejects promise", () => {
+  test("executes tasks in sequence when first task rejects promise", () => {
     const queue = createTaskQueue();
     const task1Deferred = defer();
-    const task1 = jasmine
-      .createSpy("task1")
-      .and.returnValue(task1Deferred.promise);
+    const task1 = jest.fn(() => task1Deferred.promise);
     const task2Deferred = defer();
-    const task2 = jasmine
-      .createSpy("task2")
-      .and.returnValue(task2Deferred.promise);
+    const task2 = jest.fn(() => task2Deferred.promise);
 
-    const task1OnRejected = jasmine.createSpy("task1OnRejected");
+    const task1OnRejected = jest.fn();
     queue.addTask(task1).catch(task1OnRejected);
-    const task2OnFulfilled = jasmine.createSpy("task2OnFulfilled");
+    const task2OnFulfilled = jest.fn();
     queue.addTask(task2).then(task2OnFulfilled);
 
     return flushPromiseChains()
@@ -100,19 +90,17 @@ describe("createTaskQueue", () => {
       });
   });
 
-  it("executes tasks in sequence when first task throws error", () => {
+  test("executes tasks in sequence when first task throws error", () => {
     const queue = createTaskQueue();
-    const task1 = jasmine
-      .createSpy("task1")
-      .and.throwError(new Error("task1Error"));
+    const task1 = jest.fn(() => {
+      throw new Error("task1Error");
+    });
     const task2Deferred = defer();
-    const task2 = jasmine
-      .createSpy("task2")
-      .and.returnValue(task2Deferred.promise);
+    const task2 = jest.fn(() => task2Deferred.promise);
 
-    const task1OnRejected = jasmine.createSpy("task1OnRejected");
+    const task1OnRejected = jest.fn();
     queue.addTask(task1).catch(task1OnRejected);
-    const task2OnFulfilled = jasmine.createSpy("task2OnFulfilled");
+    const task2OnFulfilled = jest.fn();
     queue.addTask(task2).then(task2OnFulfilled);
 
     return flushPromiseChains()
@@ -129,7 +117,7 @@ describe("createTaskQueue", () => {
       });
   });
 
-  it("accurately reports the size of the queue", () => {
+  test("accurately reports the size of the queue", () => {
     const queue = createTaskQueue();
     const task1Deferred = defer();
     const task2Deferred = defer();

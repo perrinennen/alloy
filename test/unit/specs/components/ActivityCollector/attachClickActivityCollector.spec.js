@@ -29,64 +29,66 @@ describe("ActivityCollector::attachClickActivityCollector", () => {
         return Promise.resolve();
       }
     };
-    lifecycle = jasmine.createSpyObj("lifecycle", {
-      onClick: Promise.resolve()
-    });
+    lifecycle = {
+      onClick: jest.fn(() => Promise.resolve())
+    };
     // eslint-disable-next-line no-unused-vars
-    spyOn(document, "addEventListener").and.callFake((name, handler, type) => {
-      clickHandler = handler;
-    });
+    jest
+      .spyOn(document, "addEventListener")
+      .mockImplementation((name, handler, type) => {
+        clickHandler = handler;
+      });
   });
 
-  it("Attaches click handler if clickCollectionEnabled is set to true", () => {
+  test("Attaches click handler if clickCollectionEnabled is set to true", () => {
     attachClickActivityCollector(cfg, eventManager, lifecycle);
     expect(document.addEventListener).toHaveBeenCalled();
   });
 
-  it("Does not attach click handler if clickCollectionEnabled is set to false", () => {
+  test("Does not attach click handler if clickCollectionEnabled is set to false", () => {
     cfg.clickCollectionEnabled = false;
     attachClickActivityCollector(cfg, eventManager, lifecycle);
     expect(document.addEventListener).not.toHaveBeenCalled();
   });
 
-  it("Publishes onClick lifecycle events at clicks when clickCollectionEnabled is set to true", () => {
+  test("Publishes onClick lifecycle events at clicks when clickCollectionEnabled is set to true", () => {
     attachClickActivityCollector(cfg, eventManager, lifecycle);
     clickHandler({});
     expect(lifecycle.onClick).toHaveBeenCalled();
   });
 
-  it("Augments error that occurs inside onClick lifecycle", () => {
-    lifecycle.onClick.and.returnValue(
+  test("Augments error that occurs inside onClick lifecycle", () => {
+    lifecycle.onClick.mockReturnValueOnce(
       Promise.reject(new Error("Bad thing happened."))
     );
     attachClickActivityCollector(cfg, eventManager, lifecycle);
-    expectAsync(clickHandler({})).toBeRejectedWithError(
+    return expect(clickHandler({})).rejects.toThrow(
       "Failed to track click\nCaused by: Bad thing happened."
     );
   });
 
-  it("Sends populated events", () => {
+  test("Sends populated events", () => {
     eventManager.createEvent = () => {
       return {
         isEmpty: () => false
       };
     };
-    spyOn(eventManager, "sendEvent").and.callThrough();
+    jest.spyOn(eventManager, "sendEvent");
     attachClickActivityCollector(cfg, eventManager, lifecycle);
     return clickHandler({}).then(() => {
       expect(eventManager.sendEvent).toHaveBeenCalled();
     });
   });
 
-  it("Does not send empty events", () => {
-    spyOn(eventManager, "sendEvent").and.callThrough();
+  test("Does not send empty events", () => {
+    jest.spyOn(eventManager, "sendEvent");
     attachClickActivityCollector(cfg, eventManager, lifecycle);
     return clickHandler({}).then(() => {
       expect(eventManager.sendEvent).not.toHaveBeenCalled();
     });
   });
 
-  it("returns undefined", () => {
+  test("returns undefined", () => {
     eventManager.createEvent = () => {
       return {
         isEmpty: () => false

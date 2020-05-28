@@ -23,7 +23,7 @@ describe("Personalization::DOM::matchesSelectorWithEq", () => {
     selectNodes(".eq").forEach(removeNode);
   });
 
-  it("should match when no eq", () => {
+  test("should match when no eq", () => {
     const node = createNode("DIV", { id: "noEq", class: "eq" });
 
     appendNode(document.body, node);
@@ -35,7 +35,7 @@ describe("Personalization::DOM::matchesSelectorWithEq", () => {
     expect(result).toEqual(true);
   });
 
-  it("should match when eq and just one element", () => {
+  test("should match when eq and just one element", () => {
     const content = `
       <div class="b">
         <div id="one" class="c">first</div>
@@ -62,7 +62,7 @@ describe("Personalization::DOM::matchesSelectorWithEq", () => {
     expect(result).toEqual(true);
   });
 
-  it("should match when eq and multiple elements", () => {
+  test("should match when eq and multiple elements", () => {
     const content = `
       <div class="b">
         <div id="one" class="c">first</div>

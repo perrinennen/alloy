@@ -15,7 +15,7 @@ describe("Personalization::actions::rearrange", () => {
     cleanUpDomChanges("rearrange");
   });
 
-  it("should rearrange elements when from < to", () => {
+  test("should rearrange elements when from < to", () => {
     const modules = initDomActionsModules();
     const { rearrange } = modules;
     const content = `
@@ -48,7 +48,7 @@ describe("Personalization::actions::rearrange", () => {
     });
   });
 
-  it("should rearrange elements when from > to", () => {
+  test("should rearrange elements when from > to", () => {
     const modules = initDomActionsModules();
     const { rearrange } = modules;
     const content = `

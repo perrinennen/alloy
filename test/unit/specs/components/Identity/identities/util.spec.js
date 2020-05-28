@@ -9,7 +9,7 @@ import {
 
 describe("Identity::identityUtil", () => {
   describe("validateIdentities", () => {
-    it("should throw an error when input is not an object", () => {
+    test("should throw an error when input is not an object", () => {
       const idToTest = "email=qwerty@asdf.com";
       expect(() => {
         validateIdentities(idToTest);
@@ -19,7 +19,7 @@ describe("Identity::identityUtil", () => {
         )
       );
     });
-    it("should throw an error when each key is not an object", () => {
+    test("should throw an error when each key is not an object", () => {
       const objToTest = {
         email: "qwerty@asdf.com",
         authState: 0
@@ -33,7 +33,7 @@ describe("Identity::identityUtil", () => {
       );
     });
 
-    it("should throw an error when any of the namespace doesn't have an id parameter", () => {
+    test("should throw an error when any of the namespace doesn't have an id parameter", () => {
       const objToTest = {
         email: {
           name: "tester"
@@ -51,7 +51,7 @@ describe("Identity::identityUtil", () => {
       );
     });
 
-    it("should not throw when a valid object is given", () => {
+    test("should not throw when a valid object is given", () => {
       const objToTest = {
         email: {
           id: "tester"
@@ -65,7 +65,7 @@ describe("Identity::identityUtil", () => {
       }).not.toThrow();
     });
 
-    it("should throw an error when primary is not a boolean", () => {
+    test("should throw an error when primary is not a boolean", () => {
       const objToTest = {
         email: {
           id: "tester",
@@ -77,7 +77,7 @@ describe("Identity::identityUtil", () => {
       }).toThrow();
     });
 
-    it("should not throw an error when primary is a boolean", () => {
+    test("should not throw an error when primary is a boolean", () => {
       const objToTest = {
         email: {
           id: "tester",
@@ -91,7 +91,7 @@ describe("Identity::identityUtil", () => {
   });
 
   describe("normalizeIdentities", () => {
-    it("should add an authenticatedState if missing", () => {
+    test("should add an authenticatedState if missing", () => {
       const objToTest = {
         email: {
           id: "tester"
@@ -113,7 +113,7 @@ describe("Identity::identityUtil", () => {
       expect(normalizeIdentities(objToTest)).toEqual(normalizedObj);
     });
 
-    it("should add a valid authState if invalid authState is given", () => {
+    test("should add a valid authState if invalid authState is given", () => {
       const objToTest = {
         email: {
           id: "tester",
@@ -137,7 +137,7 @@ describe("Identity::identityUtil", () => {
       expect(normalizeIdentities(objToTest)).toEqual(normalizedObj);
     });
 
-    it("should pass through the primary prop", () => {
+    test("should pass through the primary prop", () => {
       const objToTest = {
         email: {
           id: "tester",

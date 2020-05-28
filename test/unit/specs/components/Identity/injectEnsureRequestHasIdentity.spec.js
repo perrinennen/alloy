@@ -25,21 +25,15 @@ describe("Identity::injectEnsureRequestHasIdentity", () => {
   let ensureRequestHasIdentity;
 
   beforeEach(() => {
-    doesIdentityCookieExist = jasmine
-      .createSpy("doesIdentityCookieExist")
-      .and.returnValue(false);
-    setDomainForInitialIdentityPayload = jasmine.createSpy(
-      "setDomainForInitialIdentityPayload"
-    );
+    doesIdentityCookieExist = jest.fn(() => false);
+    setDomainForInitialIdentityPayload = jest.fn();
     addLegacyEcidToPayloadPromise = Promise.resolve();
-    addLegacyEcidToPayload = jasmine
-      .createSpy("addLegacyEcidToPayload")
-      .and.returnValue(addLegacyEcidToPayloadPromise);
+    addLegacyEcidToPayload = jest.fn(() => addLegacyEcidToPayloadPromise);
     awaitIdentityCookieDeferred = defer();
-    awaitIdentityCookie = jasmine
-      .createSpy("awaitIdentityCookie")
-      .and.returnValue(awaitIdentityCookieDeferred.promise);
-    logger = jasmine.createSpyObj("logger", ["log"]);
+    awaitIdentityCookie = jest.fn(() => awaitIdentityCookieDeferred.promise);
+    logger = {
+      log: jest.fn()
+    };
     ensureRequestHasIdentity = injectEnsureRequestHasIdentity({
       doesIdentityCookieExist,
       setDomainForInitialIdentityPayload,
@@ -49,12 +43,12 @@ describe("Identity::injectEnsureRequestHasIdentity", () => {
     });
   });
 
-  it("returns resolved promise if identity cookie exists", () => {
-    doesIdentityCookieExist.and.returnValue(true);
-    return expectAsync(ensureRequestHasIdentity({})).toBeResolved();
+  test("returns resolved promise if identity cookie exists", () => {
+    doesIdentityCookieExist.mockReturnValue(true);
+    return expect(ensureRequestHasIdentity({})).resolves.toBeUndefined();
   });
 
-  it("allows first request to proceed and pauses subsequent requests until identity cookie exists", () => {
+  test("allows first request to proceed and pauses subsequent requests until identity cookie exists", () => {
     const payload1 = { type: "payload1" };
     const onResponse1 = () => {};
     const payload2 = { type: "payload2" };
@@ -69,7 +63,7 @@ describe("Identity::injectEnsureRequestHasIdentity", () => {
       expect(setDomainForInitialIdentityPayload).toHaveBeenCalledWith(payload1);
       expect(addLegacyEcidToPayload).toHaveBeenCalledWith(payload1);
 
-      const completeHandler = jasmine.createSpy("completeHandler");
+      const completeHandler = jest.fn();
       ensureRequestHasIdentity({
         payload: payload2,
         onResponse: onResponse2

@@ -15,12 +15,12 @@ import includes from "../../../../src/utils/includes";
 const items = ["a", "b", "c"];
 
 describe("includes", () => {
-  it("returns true if item is found", () => {
+  test("returns true if item is found", () => {
     const result = includes(items, "b");
     expect(result).toBe(true);
   });
 
-  it("returns false if item is not found", () => {
+  test("returns false if item is not found", () => {
     const result = includes(items, "z");
     expect(result).toBe(false);
   });

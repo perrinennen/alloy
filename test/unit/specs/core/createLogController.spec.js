@@ -27,20 +27,20 @@ describe("createLogController", () => {
     console = { log() {} };
     locationSearch = "";
     logger = { log() {} };
-    createLogger = jasmine.createSpy().and.callFake((_, _getDebugEnabled) => {
+    createLogger = jest.fn((_, _getDebugEnabled) => {
       getDebugEnabled = _getDebugEnabled;
       return logger;
     });
     sessionStorage = {
-      getItem: jasmine.createSpy().and.returnValue(null),
-      setItem: jasmine.createSpy()
+      getItem: jest.fn(() => null),
+      setItem: jest.fn()
     };
-    createNamespacedStorage = jasmine.createSpy().and.returnValue({
+    createNamespacedStorage = jest.fn(() => ({
       session: sessionStorage
-    });
+    }));
   });
 
-  it("creates a namespaced storage", () => {
+  test("creates a namespaced storage", () => {
     createLogController({
       console,
       locationSearch,
@@ -51,7 +51,7 @@ describe("createLogController", () => {
     expect(createNamespacedStorage).toHaveBeenCalledWith("instance.alloy123.");
   });
 
-  it("returns false for getDebugEnabled if storage item is not found", () => {
+  test("returns false for getDebugEnabled if storage item is not found", () => {
     createLogController({
       console,
       locationSearch,
@@ -62,7 +62,7 @@ describe("createLogController", () => {
     expect(getDebugEnabled()).toBe(false);
   });
 
-  it("returns false for getDebugEnabled if storage item is false", () => {
+  test("returns false for getDebugEnabled if storage item is false", () => {
     sessionStorage.getItem = () => "false";
     createLogController({
       console,
@@ -74,7 +74,7 @@ describe("createLogController", () => {
     expect(getDebugEnabled()).toBe(false);
   });
 
-  it("returns true for getDebugEnabled if storage item is true", () => {
+  test("returns true for getDebugEnabled if storage item is true", () => {
     sessionStorage.getItem = () => "true";
     createLogController({
       console,
@@ -86,7 +86,7 @@ describe("createLogController", () => {
     expect(getDebugEnabled()).toBe(true);
   });
 
-  it("persists changes to debugEnabled if not set from config", () => {
+  test("persists changes to debugEnabled if not set from config", () => {
     const logController = createLogController({
       console,
       locationSearch,
@@ -100,7 +100,7 @@ describe("createLogController", () => {
     expect(getDebugEnabled()).toBe(true);
   });
 
-  it("does not persist changes to debugEnabled if set from config", () => {
+  test("does not persist changes to debugEnabled if set from config", () => {
     const logController = createLogController({
       console,
       locationSearch,
@@ -114,7 +114,7 @@ describe("createLogController", () => {
     expect(getDebugEnabled()).toBe(true);
   });
 
-  it("does not change debugEnabled from config if previously changed from something other than config on same page load", () => {
+  test("does not change debugEnabled from config if previously changed from something other than config on same page load", () => {
     const logController = createLogController({
       console,
       locationSearch,
@@ -130,7 +130,7 @@ describe("createLogController", () => {
     expect(getDebugEnabled()).toBe(true);
   });
 
-  it("does not change debugEnabled from config if previously changed from something other than config on previous page load", () => {
+  test("does not change debugEnabled from config if previously changed from something other than config on previous page load", () => {
     sessionStorage.getItem = () => "true";
     const logController = createLogController({
       console,
@@ -145,7 +145,7 @@ describe("createLogController", () => {
     expect(getDebugEnabled()).toBe(true);
   });
 
-  it("sets debugEnabled to true if query string parameter set to true", () => {
+  test("sets debugEnabled to true if query string parameter set to true", () => {
     locationSearch = "?alloy_debug=true";
     const logController = createLogController({
       console,
@@ -158,11 +158,11 @@ describe("createLogController", () => {
     // Make sure setting debugEnabled from config can't override it.
     logController.setDebugEnabled(false, { fromConfig: true });
     expect(sessionStorage.setItem).toHaveBeenCalledWith("debug", "true");
-    expect(sessionStorage.setItem.calls.count()).toBe(1);
+    expect(sessionStorage.setItem.mock.calls.length).toBe(1);
     expect(getDebugEnabled()).toBe(true);
   });
 
-  it("sets debugEnabled to false if query string parameter set to false", () => {
+  test("sets debugEnabled to false if query string parameter set to false", () => {
     locationSearch = "?alloy_debug=false";
     const logController = createLogController({
       console,
@@ -175,11 +175,11 @@ describe("createLogController", () => {
     // Make sure setting debugEnabled from config can't override it.
     logController.setDebugEnabled(true, { fromConfig: true });
     expect(sessionStorage.setItem).toHaveBeenCalledWith("debug", "false");
-    expect(sessionStorage.setItem.calls.count()).toBe(1);
+    expect(sessionStorage.setItem.mock.calls.length).toBe(1);
     expect(getDebugEnabled()).toBe(false);
   });
 
-  it("creates a logger", () => {
+  test("creates a logger", () => {
     const logController = createLogController({
       console,
       locationSearch,
@@ -190,13 +190,13 @@ describe("createLogController", () => {
 
     expect(createLogger).toHaveBeenCalledWith(
       console,
-      jasmine.any(Function),
+      expect.any(Function),
       "[alloy123]"
     );
     expect(logController.logger).toBe(logger);
   });
 
-  it("creates a component logger", () => {
+  test("creates a component logger", () => {
     const logController = createLogController({
       console,
       locationSearch,
@@ -205,7 +205,7 @@ describe("createLogController", () => {
       createNamespacedStorage
     });
     const componentLogger = {};
-    createLogger.and.returnValue(componentLogger);
+    createLogger.mockReturnValue(componentLogger);
     const result = logController.createComponentLogger("Personalization");
 
     expect(createLogger).toHaveBeenCalledWith(

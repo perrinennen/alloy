@@ -13,19 +13,19 @@ governing permissions and limitations under the License.
 import isNamespacedCookieName from "../../../../src/utils/isNamespacedCookieName";
 
 describe("isNamespacedCookieName", () => {
-  it("returns true if it's a namespaced cookie name", () => {
+  test("returns true if it's a namespaced cookie name", () => {
     const result = isNamespacedCookieName(
       "ABC@CustomOrg",
       "kndctr_ABC_CustomOrg_foo"
     );
-    expect(result).toBeTrue();
+    expect(result).toBe(true);
   });
 
-  it("returns false if it's not a namespaced cookie name", () => {
+  test("returns false if it's not a namespaced cookie name", () => {
     const result = isNamespacedCookieName(
       "kndctr_DEF_CustomOrg_foo",
       "ABC@CustomOrg"
     );
-    expect(result).toBeFalse();
+    expect(result).toBe(false);
   });
 });

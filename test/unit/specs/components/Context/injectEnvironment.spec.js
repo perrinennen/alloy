@@ -7,7 +7,7 @@ describe("Context::injectEnvironment", () => {
     innerHeight: 1004
   };
 
-  it("works", () => {
+  test("works", () => {
     const date = new Date(1553550978123);
     const dateProvider = () => {
       return date;

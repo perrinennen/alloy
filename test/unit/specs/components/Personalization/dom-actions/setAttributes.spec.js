@@ -11,7 +11,7 @@ describe("Personalization::actions::setAttribute", () => {
     cleanUpDomChanges("setAttribute");
   });
 
-  it("should set element attribute", () => {
+  test("should set element attribute", () => {
     const modules = initDomActionsModules();
     const { setAttribute } = modules;
     const element = createNode("div", { id: "setAttribute" });

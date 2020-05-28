@@ -13,19 +13,19 @@ governing permissions and limitations under the License.
 import stackError from "../../../../src/utils/stackError";
 
 describe("stackError", () => {
-  it("stacks message onto error instance", () => {
+  test("stacks message onto error instance", () => {
     const error = new Error("Conundrum encountered.");
     const result = stackError("Predicament discovered.", error);
-    expect(result).toEqual(jasmine.any(Error));
+    expect(result).toEqual(expect.any(Error));
     expect(result.message).toBe(
       "Predicament discovered.\nCaused by: Conundrum encountered."
     );
   });
 
-  it("stacks message onto non-error instance", () => {
+  test("stacks message onto non-error instance", () => {
     const error = "Conundrum encountered.";
     const result = stackError("Predicament discovered.", error);
-    expect(result).toEqual(jasmine.any(Error));
+    expect(result).toEqual(expect.any(Error));
     expect(result.message).toBe(
       "Predicament discovered.\nCaused by: Conundrum encountered."
     );

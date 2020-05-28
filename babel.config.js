@@ -1,11 +1,10 @@
-{
-  "presets": [
+module.exports = {
+  presets: [
     [
       "@babel/preset-env",
       {
-        "modules": false,
-        "targets": {
-          "browsers": [
+        targets: {
+          browsers: [
             "last 2 Chrome versions",
             "last 2 Firefox versions",
             "last 2 Safari versions",
@@ -15,9 +14,12 @@
       }
     ]
   ],
-  "plugins": [
-    ["@babel/plugin-transform-template-literals", {
-      "loose": true
-    }]
+  plugins: [
+    [
+      "@babel/plugin-transform-template-literals",
+      {
+        loose: true
+      }
+    ]
   ]
-}
+};

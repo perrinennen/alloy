@@ -14,7 +14,7 @@ import getChildNodes from "../../../../../../../src/components/Personalization/d
 import createFragment from "../../../../../../../src/components/Personalization/dom-actions/dom/createFragment";
 
 describe("Personalization::helper::dom::getChildNodes", () => {
-  it("returns an array of child nodes", () => {
+  test("returns an array of child nodes", () => {
     const element = createFragment(
       `<div id="foo">foo</div><h1>hello there</h1><div id="div2"></div>`
     );
@@ -26,7 +26,7 @@ describe("Personalization::helper::dom::getChildNodes", () => {
     expect(result[2].id).toEqual("div2");
   });
 
-  it("returns undefined when there are no children", () => {
+  test("returns undefined when there are no children", () => {
     const element = createFragment();
     const result = getChildNodes(element);
 

@@ -22,20 +22,23 @@ describe("createLogger", () => {
   let logger;
 
   beforeEach(() => {
-    console = jasmine.createSpyObj("console", logMethods);
+    console = logMethods.reduce((memo, methodName) => {
+      memo[methodName] = jest.fn();
+      return memo;
+    }, {});
     const getLogEnabled = () => logEnabled;
     logger = createLogger(console, getLogEnabled, prefix);
   });
 
   logMethods.forEach(logMethod => {
-    it(`logs message if debugging is enabled and ${logMethod} is called`, () => {
+    test(`logs message if debugging is enabled and ${logMethod} is called`, () => {
       logEnabled = true;
       logger[logMethod](message);
 
       expect(console[logMethod]).toHaveBeenCalledWith(prefix, message);
     });
 
-    it(`does not log a message if debugging is disabled and ${logMethod} is called`, () => {
+    test(`does not log a message if debugging is disabled and ${logMethod} is called`, () => {
       logEnabled = false;
       logger[logMethod](message);
 

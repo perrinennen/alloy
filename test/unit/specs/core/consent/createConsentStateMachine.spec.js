@@ -22,9 +22,9 @@ describe("createConsentStateMachine", () => {
     subject = createConsentStateMachine();
   });
 
-  it("does not resolve promise if consent is pending", () => {
+  test("does not resolve promise if consent is pending", () => {
     subject.pending();
-    const onFulfilled = jasmine.createSpy("onFulfilled");
+    const onFulfilled = jest.fn();
     subject.awaitConsent().then(onFulfilled);
 
     return flushPromiseChains().then(() => {
@@ -32,9 +32,9 @@ describe("createConsentStateMachine", () => {
     });
   });
 
-  it("resolves promise if user consented to all purposes", () => {
+  test("resolves promise if user consented to all purposes", () => {
     subject.in();
-    const onFulfilled = jasmine.createSpy("onFulfilled");
+    const onFulfilled = jest.fn();
     subject.awaitConsent().then(onFulfilled);
 
     return flushPromiseChains().then(() => {
@@ -42,20 +42,20 @@ describe("createConsentStateMachine", () => {
     });
   });
 
-  it("rejects promise if user consented to no purposes", () => {
+  test("rejects promise if user consented to no purposes", () => {
     subject.out();
-    const onRejected = jasmine.createSpy("onRejected");
+    const onRejected = jest.fn();
     subject.awaitConsent().catch(onRejected);
 
     return flushPromiseChains().then(() => {
-      const error = onRejected.calls.argsFor(0)[0];
+      const error = onRejected.mock.calls[0][0];
       expect(error.code).toBe(DECLINED_CONSENT_ERROR_CODE);
     });
   });
 
-  it("resolves queued promises when consent set to in", () => {
+  test("resolves queued promises when consent set to in", () => {
     subject.pending();
-    const onFulfilled = jasmine.createSpy("onFulfilled");
+    const onFulfilled = jest.fn();
     subject.awaitConsent().then(onFulfilled);
 
     return flushPromiseChains()
@@ -69,9 +69,9 @@ describe("createConsentStateMachine", () => {
       });
   });
 
-  it("rejects queued promises when consent set to out", () => {
+  test("rejects queued promises when consent set to out", () => {
     subject.pending();
-    const onRejected = jasmine.createSpy("onRejected");
+    const onRejected = jest.fn();
     subject.awaitConsent().catch(onRejected);
 
     return flushPromiseChains()
@@ -81,7 +81,7 @@ describe("createConsentStateMachine", () => {
         return flushPromiseChains();
       })
       .then(() => {
-        const error = onRejected.calls.argsFor(0)[0];
+        const error = onRejected.mock.calls[0][0];
         expect(error.code).toBe(DECLINED_CONSENT_ERROR_CODE);
       });
   });

@@ -15,7 +15,7 @@ describe("Personalization::actions::remove", () => {
     cleanUpDomChanges("remove");
   });
 
-  it("should remove element", () => {
+  test("should remove element", () => {
     const modules = initDomActionsModules();
     const { remove } = modules;
     const content = `<div id="child"></div>`;

@@ -13,7 +13,7 @@ governing permissions and limitations under the License.
 import parseConsentCookie from "../../../../../src/components/Privacy/parseConsentCookie";
 
 describe("parseConsentCookie", () => {
-  it("returns preferences by purpose", () => {
+  test("returns preferences by purpose", () => {
     expect(parseConsentCookie("foo=in;bar=out")).toEqual({
       foo: "in",
       bar: "out"

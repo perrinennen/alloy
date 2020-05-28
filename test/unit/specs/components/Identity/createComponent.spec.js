@@ -29,23 +29,21 @@ describe("Identity::createComponent", () => {
   let validateSyncIdentityOptions;
 
   beforeEach(() => {
-    addEcidQueryToEvent = jasmine.createSpy("addEcidQueryToEvent");
-    identityManager = jasmine.createSpyObj("identityManager", {
-      addToPayload: undefined,
-      sync: Promise.resolve()
-    });
-    ensureRequestHasIdentity = jasmine.createSpy("ensureRequestHasIdentity");
-    setLegacyEcid = jasmine.createSpy("setLegacyEcid");
-    handleResponseForIdSyncs = jasmine.createSpy("handleResponseForIdSyncs");
-    getEcidFromResponse = jasmine.createSpy("getEcidFromResponse");
+    addEcidQueryToEvent = jest.fn();
+    identityManager = {
+      addToPayload: jest.fn(() => undefined),
+      sync: jest.fn(() => Promise.resolve())
+    };
+    ensureRequestHasIdentity = jest.fn();
+    setLegacyEcid = jest.fn();
+    handleResponseForIdSyncs = jest.fn();
+    getEcidFromResponse = jest.fn();
     getIdentityDeferred = defer();
     consentDeferred = defer();
-    consent = jasmine.createSpyObj("consent", {
-      awaitConsent: consentDeferred.promise
-    });
-    getIdentity = jasmine
-      .createSpy("getIdentity")
-      .and.returnValue(getIdentityDeferred.promise);
+    consent = {
+      awaitConsent: jest.fn(() => consentDeferred.promise)
+    };
+    getIdentity = jest.fn(() => getIdentityDeferred.promise);
     validateSyncIdentityOptions = () => {};
     component = createComponent({
       addEcidQueryToEvent,
@@ -60,24 +58,24 @@ describe("Identity::createComponent", () => {
     });
   });
 
-  it("adds ECID query to event", () => {
+  test("adds ECID query to event", () => {
     const event = { type: "event" };
     component.lifecycle.onBeforeEvent({ event });
     expect(addEcidQueryToEvent).toHaveBeenCalledWith(event);
   });
 
-  it("adds identities to request payload", () => {
+  test("adds identities to request payload", () => {
     const payload = { type: "payload" };
-    const onResponse = jasmine.createSpy("onResponse");
+    const onResponse = jest.fn();
     component.lifecycle.onBeforeRequest({ payload, onResponse });
     expect(identityManager.addToPayload).toHaveBeenCalledWith(payload);
   });
 
-  it("ensures request has identity", () => {
+  test("ensures request has identity", () => {
     const payload = { type: "payload" };
-    const onResponse = jasmine.createSpy("onResponse");
+    const onResponse = jest.fn();
     const ensureRequestHasIdentityPromise = Promise.resolve();
-    ensureRequestHasIdentity.and.returnValue(ensureRequestHasIdentityPromise);
+    ensureRequestHasIdentity.mockReturnValue(ensureRequestHasIdentityPromise);
     const result = component.lifecycle.onBeforeRequest({ payload, onResponse });
     expect(ensureRequestHasIdentity).toHaveBeenCalledWith({
       payload,
@@ -86,19 +84,19 @@ describe("Identity::createComponent", () => {
     expect(result).toBe(ensureRequestHasIdentityPromise);
   });
 
-  it("does not create legacy identity cookie if response does not contain ECID", () => {
+  test("does not create legacy identity cookie if response does not contain ECID", () => {
     const idSyncsPromise = Promise.resolve();
-    handleResponseForIdSyncs.and.returnValue(idSyncsPromise);
+    handleResponseForIdSyncs.mockReturnValue(idSyncsPromise);
     const response = { type: "response" };
     component.lifecycle.onResponse({ response });
     expect(getEcidFromResponse).toHaveBeenCalledWith(response);
     expect(setLegacyEcid).not.toHaveBeenCalled();
   });
 
-  it("creates legacy identity cookie if response contains ECID", () => {
+  test("creates legacy identity cookie if response contains ECID", () => {
     const idSyncsPromise = Promise.resolve();
-    handleResponseForIdSyncs.and.returnValue(idSyncsPromise);
-    getEcidFromResponse.and.returnValue("user@adobe");
+    handleResponseForIdSyncs.mockReturnValue(idSyncsPromise);
+    getEcidFromResponse.mockReturnValue("user@adobe");
     const response = { type: "response" };
     component.lifecycle.onResponse({ response });
     expect(getEcidFromResponse).toHaveBeenCalledWith(response);
@@ -109,22 +107,22 @@ describe("Identity::createComponent", () => {
     expect(setLegacyEcid).toHaveBeenCalledTimes(1);
   });
 
-  it("handles ID syncs", () => {
+  test("handles ID syncs", () => {
     const idSyncsPromise = Promise.resolve();
-    handleResponseForIdSyncs.and.returnValue(idSyncsPromise);
+    handleResponseForIdSyncs.mockReturnValue(idSyncsPromise);
     const response = { type: "response" };
     const result = component.lifecycle.onResponse({ response });
     expect(handleResponseForIdSyncs).toHaveBeenCalledWith(response);
-    return expectAsync(result).toBeResolvedTo(undefined);
+    return expect(result).resolves.toBeUndefined();
   });
 
-  it("exposes options validator for syncIdentity command", () => {
+  test("exposes options validator for syncIdentity command", () => {
     expect(component.commands.syncIdentity.optionsValidator).toBe(
       validateSyncIdentityOptions
     );
   });
 
-  it("syncIdentity syncs identities", () => {
+  test("syncIdentity syncs identities", () => {
     const identity = { type: "identity" };
     return component.commands.syncIdentity.run({ identity }).then(result => {
       expect(identityManager.sync).toHaveBeenCalledWith(identity);
@@ -132,10 +130,10 @@ describe("Identity::createComponent", () => {
     });
   });
 
-  it("getIdentity command should make a request when ecid is not available", () => {
+  test("getIdentity command should make a request when ecid is not available", () => {
     const idSyncsPromise = Promise.resolve();
-    handleResponseForIdSyncs.and.returnValue(idSyncsPromise);
-    const onResolved = jasmine.createSpy("onResolved");
+    handleResponseForIdSyncs.mockReturnValue(idSyncsPromise);
+    const onResolved = jest.fn();
     component.commands.getIdentity
       .run({ namespaces: ["ECID"] })
       .then(onResolved);
@@ -149,7 +147,7 @@ describe("Identity::createComponent", () => {
       })
       .then(() => {
         expect(getIdentity).toHaveBeenCalled();
-        getEcidFromResponse.and.returnValue("user@adobe");
+        getEcidFromResponse.mockReturnValue("user@adobe");
         const response = { type: "response" };
         component.lifecycle.onResponse({ response });
         getIdentityDeferred.resolve();
@@ -164,13 +162,13 @@ describe("Identity::createComponent", () => {
       });
   });
 
-  it("getIdentity command should not make a request when ecid is available", () => {
+  test("getIdentity command should not make a request when ecid is available", () => {
     const idSyncsPromise = Promise.resolve();
-    handleResponseForIdSyncs.and.returnValue(idSyncsPromise);
-    getEcidFromResponse.and.returnValue("user@adobe");
+    handleResponseForIdSyncs.mockReturnValue(idSyncsPromise);
+    getEcidFromResponse.mockReturnValue("user@adobe");
     const response = { type: "response" };
     component.lifecycle.onResponse({ response });
-    const onResolved = jasmine.createSpy("onResolved");
+    const onResolved = jest.fn();
     component.commands.getIdentity.run().then(onResolved);
     return flushPromiseChains()
       .then(() => {

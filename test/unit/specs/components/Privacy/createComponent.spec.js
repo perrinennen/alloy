@@ -38,14 +38,15 @@ describe("privacy:createComponent", () => {
   let component;
 
   beforeEach(() => {
-    readStoredConsent = jasmine.createSpy("readStoredConsent");
+    readStoredConsent = jest.fn();
     taskQueue = createTaskQueue();
     defaultConsent = "in";
-    consent = jasmine.createSpyObj("consent", ["setConsent", "suspend"]);
-    sendSetConsentRequest = jasmine.createSpy("sendSetConsentRequest");
-    validateSetConsentOptions = jasmine
-      .createSpy("validateSetConsentOptions")
-      .and.callFake(options => options);
+    consent = {
+      setConsent: jest.fn(),
+      suspend: jest.fn()
+    };
+    sendSetConsentRequest = jest.fn();
+    validateSetConsentOptions = jest.fn(options => options);
   });
 
   const build = () => {
@@ -59,25 +60,27 @@ describe("privacy:createComponent", () => {
     });
   };
 
-  it("uses the default consent", () => {
+  test("uses the default consent", () => {
     defaultConsent = "pending";
-    readStoredConsent.and.returnValue({});
+    readStoredConsent.mockReturnValue({});
     build();
     expect(consent.setConsent).toHaveBeenCalledWith({ general: "pending" });
   });
 
-  it("uses the stored consent", () => {
-    readStoredConsent.and.returnValue({ general: "out" });
+  test("uses the stored consent", () => {
+    readStoredConsent.mockReturnValue({ general: "out" });
     build();
     expect(consent.setConsent).toHaveBeenCalledWith({ general: "out" });
   });
 
-  it("handles the setConsent command", () => {
+  test("handles the setConsent command", () => {
     defaultConsent = "pending";
-    readStoredConsent.and.returnValues({}, { general: "in" });
+    readStoredConsent
+      .mockReturnValueOnce({})
+      .mockReturnValueOnce({ general: "in" });
     build();
-    sendSetConsentRequest.and.returnValue(Promise.resolve());
-    const onResolved = jasmine.createSpy("onResolved");
+    sendSetConsentRequest.mockReturnValue(Promise.resolve());
+    const onResolved = jest.fn();
     component.commands.setConsent.run(CONSENT_IN).then(onResolved);
     expect(consent.suspend).toHaveBeenCalled();
     return flushPromiseChains().then(() => {
@@ -87,23 +90,27 @@ describe("privacy:createComponent", () => {
     });
   });
 
-  it("updates the consent object even after a request failure", () => {
+  test("updates the consent object even after a request failure", () => {
     defaultConsent = "pending";
-    readStoredConsent.and.returnValues({}, { general: "in" });
+    readStoredConsent
+      .mockReturnValueOnce({})
+      .mockReturnValueOnce({ general: "in" });
     build();
-    sendSetConsentRequest.and.returnValue(Promise.reject());
+    sendSetConsentRequest.mockReturnValue(Promise.reject());
     component.commands.setConsent.run(CONSENT_IN);
     return flushPromiseChains().then(() => {
       expect(consent.setConsent).toHaveBeenCalledWith({ general: "in" });
     });
   });
 
-  it("only updates the consent object after the response returns", () => {
+  test("only updates the consent object after the response returns", () => {
     defaultConsent = "pending";
-    readStoredConsent.and.returnValues({}, { general: "in" });
+    readStoredConsent
+      .mockReturnValueOnce({})
+      .mockReturnValueOnce({ general: "in" });
     build();
     const deferredConsentRequest = defer();
-    sendSetConsentRequest.and.returnValue(deferredConsentRequest.promise);
+    sendSetConsentRequest.mockReturnValue(deferredConsentRequest.promise);
     component.commands.setConsent.run(CONSENT_IN);
     return flushPromiseChains()
       .then(() => {
@@ -117,16 +124,17 @@ describe("privacy:createComponent", () => {
       });
   });
 
-  it("only calls setConsent once with multiple consent requests", () => {
+  test("only calls setConsent once with multiple consent requests", () => {
     defaultConsent = "pending";
-    readStoredConsent.and.returnValues({}, { general: "out" });
+    readStoredConsent
+      .mockReturnValueOnce({})
+      .mockReturnValueOnce({ general: "out" });
     build();
     const deferredConsentRequest1 = defer();
     const deferredConsentRequest2 = defer();
-    sendSetConsentRequest.and.returnValues(
-      deferredConsentRequest1.promise,
-      deferredConsentRequest2.promise
-    );
+    sendSetConsentRequest
+      .mockReturnValueOnce(deferredConsentRequest1.promise)
+      .mockReturnValueOnce(deferredConsentRequest2.promise);
     component.commands.setConsent.run(CONSENT_IN);
     return flushPromiseChains()
       .then(() => {
@@ -148,15 +156,19 @@ describe("privacy:createComponent", () => {
       });
   });
 
-  it("checks the cookie after an event", () => {
-    readStoredConsent.and.returnValues({}, { general: "out" });
+  test("checks the cookie after an event", () => {
+    readStoredConsent
+      .mockReturnValueOnce({})
+      .mockReturnValueOnce({ general: "out" });
     build();
     component.lifecycle.onResponse();
     expect(consent.setConsent).toHaveBeenCalledWith({ general: "out" });
   });
 
-  it("checks the cookie after an error response", () => {
-    readStoredConsent.and.returnValues({}, { general: "out" });
+  test("checks the cookie after an error response", () => {
+    readStoredConsent
+      .mockReturnValueOnce({})
+      .mockReturnValueOnce({ general: "out" });
     build();
     component.lifecycle.onRequestFailure();
     expect(consent.setConsent).toHaveBeenCalledWith({ general: "out" });

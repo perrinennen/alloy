@@ -11,7 +11,7 @@ describe("Personalization::actions::move", () => {
     cleanUpDomChanges("move");
   });
 
-  it("should move personalized content", () => {
+  test("should move personalized content", () => {
     const modules = initDomActionsModules();
     const { move } = modules;
     const element = createNode("div", { id: "move" });

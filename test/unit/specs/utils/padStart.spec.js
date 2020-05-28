@@ -25,7 +25,7 @@ describe("padStart", () => {
     ["foo", 10, "bar", "barbarbfoo"],
     ["a", 2, "", "a"]
   ].forEach(([input, size, padString, expected]) => {
-    it(`padStart(${input}, ${size}, "${padString}") === '${expected}'`, () => {
+    test(`padStart(${input}, ${size}, "${padString}") === '${expected}'`, () => {
       expect(padStart(input, size, padString)).toEqual(expected);
     });
   });

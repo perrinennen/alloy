@@ -13,7 +13,7 @@ governing permissions and limitations under the License.
 import createLifecycle from "../../../../src/core/createLifecycle";
 
 describe("createLifecycle", () => {
-  it("exposes all lifecycle methods and they return promises", () => {
+  test("exposes all lifecycle methods and they return promises", () => {
     const componentRegistry = {
       getLifecycleCallbacks() {
         return [];
@@ -29,20 +29,16 @@ describe("createLifecycle", () => {
       "onRequestFailure",
       "onClick"
     ].forEach(methodName => {
-      expect(lifecycle[methodName]()).toEqual(jasmine.any(Promise));
+      expect(lifecycle[methodName]()).toEqual(expect.any(Promise));
     });
   });
 
-  it("calls all callbacks for a given lifecycle method", () => {
+  test("calls all callbacks for a given lifecycle method", () => {
     const callbacks = [
-      jasmine
-        .createSpy()
-        .and.returnValue({ returnValue1: "valueFromCallback1" }),
-      jasmine
-        .createSpy()
-        .and.returnValue(
-          Promise.resolve({ returnValue2: "valueFromCallback2" })
-        )
+      jest.fn(() => ({
+        returnValue1: "valueFromCallback1"
+      })),
+      jest.fn(() => Promise.resolve({ returnValue2: "valueFromCallback2" }))
     ];
     const componentRegistry = {
       getLifecycleCallbacks(hookName) {
@@ -60,16 +56,16 @@ describe("createLifecycle", () => {
     });
   });
 
-  it("ensures all callbacks for one method are called before any callbacks from a different method", () => {
+  test("ensures all callbacks for one method are called before any callbacks from a different method", () => {
     let lifecycle;
     const callbacksByHookName = {
       onComponentsRegistered: [
-        jasmine.createSpy().and.callFake(() => {
+        jest.fn(() => {
           lifecycle.onBeforeEvent();
         }),
-        jasmine.createSpy()
+        jest.fn()
       ],
-      onBeforeEvent: [jasmine.createSpy()]
+      onBeforeEvent: [jest.fn()]
     };
     const componentRegistry = {
       getLifecycleCallbacks(hookName) {

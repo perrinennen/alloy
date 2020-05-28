@@ -13,11 +13,11 @@ governing permissions and limitations under the License.
 import selectNodes from "../../../../../src/utils/dom/selectNodes";
 
 describe("DOM::selectNodes", () => {
-  it("should return array when nodes are present", () => {
+  test("should return array when nodes are present", () => {
     expect(selectNodes("HEAD").length).toEqual(1);
   });
 
-  it("should return array when nodes are NOT present", () => {
+  test("should return array when nodes are NOT present", () => {
     expect(selectNodes("FOO").length).toEqual(0);
   });
 });

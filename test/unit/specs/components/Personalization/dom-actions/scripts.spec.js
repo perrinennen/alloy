@@ -29,7 +29,7 @@ describe("Personalization::helper::scripts", () => {
     cleanUpDomChanges("fooDiv");
   });
 
-  it("should get an inline script", () => {
+  test("should get an inline script", () => {
     const fragmentHTML =
       "<script>console.log('test');</script><script src='http://foo.com' ></script>";
     const fragment = createFragment(fragmentHTML);
@@ -38,7 +38,7 @@ describe("Personalization::helper::scripts", () => {
     expect(inlineScripts.length).toEqual(1);
   });
 
-  it("should return null if inlineScript doesn't have text code", () => {
+  test("should return null if inlineScript doesn't have text code", () => {
     const fragmentHTML =
       "<script></script><script src='http://foo.com' ></script>";
     const fragment = createFragment(fragmentHTML);
@@ -47,7 +47,7 @@ describe("Personalization::helper::scripts", () => {
     expect(inlineScripts.length).toEqual(0);
   });
 
-  it("should get a remote script", () => {
+  test("should get a remote script", () => {
     const fragmentHTML =
       "<div id='fooDiv'><script src='http://foo.com' ></script><script>console.log('test');</script></div>";
     const fragment = createFragment(fragmentHTML);
@@ -57,7 +57,7 @@ describe("Personalization::helper::scripts", () => {
     expect(remoteScripts[0]).toEqual("http://foo.com");
   });
 
-  it("should get a empty array if remote script doesn't have url attr", () => {
+  test("should get a empty array if remote script doesn't have url attr", () => {
     const fragmentHTML =
       "<div id='fooDiv'><script src='' ></script><script>console.log('test');</script></div>";
     const fragment = createFragment(fragmentHTML);
@@ -66,12 +66,12 @@ describe("Personalization::helper::scripts", () => {
     expect(remoteScripts.length).toEqual(0);
   });
 
-  it("should execute inline script", () => {
+  test("should execute inline script", () => {
     const fragmentHTML =
       "<script>console.log('test');</script><script src='http://foo.com' ></script>";
     const fragment = createFragment(fragmentHTML);
     const inlineScripts = getInlineScripts(fragment);
-    const func = jasmine.createSpy();
+    const func = jest.fn();
     const container = createNode(DIV);
 
     executeInlineScripts(container, inlineScripts, func);

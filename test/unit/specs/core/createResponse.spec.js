@@ -58,25 +58,25 @@ describe("createResponse", () => {
   const response = createResponse(responseContent);
 
   describe("getPayloadsByType", () => {
-    it("handles undefined content", () => {
+    test("handles undefined content", () => {
       const emptyResponse = createResponse();
       expect(emptyResponse.getPayloadsByType("type1")).toEqual([]);
     });
 
-    it("handles content without handle key", () => {
+    test("handles content without handle key", () => {
       const emptyResponse = createResponse({});
       expect(emptyResponse.getPayloadsByType("type1")).toEqual([]);
     });
 
-    it("returns empty array when there are no matching payloads", () => {
+    test("returns empty array when there are no matching payloads", () => {
       expect(response.getPayloadsByType("type3")).toEqual([]);
     });
 
-    it("returns one matching payload as an array", () => {
+    test("returns one matching payload as an array", () => {
       expect(response.getPayloadsByType("type2")).toEqual(["payload2a"]);
     });
 
-    it("returns three matching payloads", () => {
+    test("returns three matching payloads", () => {
       expect(response.getPayloadsByType("type1")).toEqual([
         "payload1a",
         "payload1b",
@@ -86,39 +86,39 @@ describe("createResponse", () => {
   });
 
   describe("getErrors", () => {
-    it("handles undefined content", () => {
+    test("handles undefined content", () => {
       const emptyResponse = createResponse();
       expect(emptyResponse.getErrors()).toEqual([]);
     });
 
-    it("handles content without errors key", () => {
+    test("handles content without errors key", () => {
       const emptyResponse = createResponse({});
       expect(emptyResponse.getErrors()).toEqual([]);
     });
 
-    it("returns errors", () => {
+    test("returns errors", () => {
       expect(response.getErrors()).toBe(responseContent.errors);
     });
   });
 
   describe("getWarnings", () => {
-    it("handles undefined content", () => {
+    test("handles undefined content", () => {
       const emptyResponse = createResponse();
       expect(emptyResponse.getWarnings()).toEqual([]);
     });
 
-    it("handles content without warnings key", () => {
+    test("handles content without warnings key", () => {
       const emptyResponse = createResponse({});
       expect(emptyResponse.getWarnings()).toEqual([]);
     });
 
-    it("returns warnings", () => {
+    test("returns warnings", () => {
       expect(response.getWarnings()).toBe(responseContent.warnings);
     });
   });
 
   describe("toJSON", () => {
-    it("returns underlying content object", () => {
+    test("returns underlying content object", () => {
       expect(response.toJSON()).toBe(responseContent);
     });
   });

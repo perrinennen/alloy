@@ -17,7 +17,7 @@ describe("Personalization::actions::customCode", () => {
     delete window.someEvar123;
   });
 
-  it("should set content in container that has children", () => {
+  test("should set content in container that has children", () => {
     const modules = initDomActionsModules();
     const { customCode } = modules;
     const element = createNode("div", { class: "customCode" });
@@ -42,7 +42,7 @@ describe("Personalization::actions::customCode", () => {
     });
   });
 
-  it("should set content in container that has NO children", () => {
+  test("should set content in container that has NO children", () => {
     const modules = initDomActionsModules();
     const { customCode } = modules;
     const element = createNode("div", { class: "customCode" });

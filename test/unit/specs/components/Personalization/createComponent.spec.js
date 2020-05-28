@@ -48,26 +48,28 @@ describe("Personalization", () => {
   };
 
   beforeEach(() => {
-    event = jasmine.createSpyObj("event", ["mergeQuery"]);
+    event = {
+      mergeQuery: jest.fn()
+    };
 
     logger = {
-      info: jasmine.createSpy(),
-      warn: jasmine.createSpy()
+      info: jest.fn(),
+      warn: jest.fn()
     };
-    isAuthoringModeEnabled = jasmine.createSpy().and.returnValue(false);
-    config = jasmine.createSpy();
-    onResponseHandler = jasmine.createSpy();
-    onClickHandler = jasmine.createSpy();
-    hideContainers = jasmine.createSpy();
-    showContainers = jasmine.createSpy();
-    hasScopes = jasmine.createSpy();
-    getDecisionScopes = jasmine.createSpy();
-    mergeQuery = jasmine.createSpy();
-    createQueryDetails = jasmine.createSpy();
+    isAuthoringModeEnabled = jest.fn(() => false);
+    config = jest.fn();
+    onResponseHandler = jest.fn();
+    onClickHandler = jest.fn();
+    hideContainers = jest.fn();
+    showContainers = jest.fn();
+    hasScopes = jest.fn();
+    getDecisionScopes = jest.fn();
+    mergeQuery = jest.fn();
+    createQueryDetails = jest.fn();
   });
 
-  it("shouldn't do anything since authoringMode is enabled", () => {
-    isAuthoringModeEnabled.and.returnValue(true);
+  test("shouldn't do anything since authoringMode is enabled", () => {
+    isAuthoringModeEnabled.mockReturnValue(true);
     build();
     const renderDecisions = true;
     const decisionScopes = ["foo"];
@@ -92,9 +94,9 @@ describe("Personalization", () => {
     expect(createQueryDetails).not.toHaveBeenCalled();
   });
 
-  it("shouldn't do anything since personalization is disabled", () => {
+  test("shouldn't do anything since personalization is disabled", () => {
     build();
-    hasScopes.and.returnValue(false);
+    hasScopes.mockReturnValue(false);
     const renderDecisions = false;
     const decisionScopes = [];
     personalizationComponent.lifecycle.onBeforeEvent({
@@ -115,7 +117,7 @@ describe("Personalization", () => {
     expect(createQueryDetails).not.toHaveBeenCalled();
   });
 
-  it("should only merge the query data", () => {
+  test("should only merge the query data", () => {
     const renderDecisions = false;
     const decisionScopes = ["foo"];
     const eventQueryDetails = {
@@ -123,9 +125,9 @@ describe("Personalization", () => {
       decisionScopes
     };
     build();
-    hasScopes.and.returnValue(true);
-    getDecisionScopes.and.returnValue("foo");
-    createQueryDetails.and.returnValue(eventQueryDetails);
+    hasScopes.mockReturnValue(true);
+    getDecisionScopes.mockReturnValue("foo");
+    createQueryDetails.mockReturnValue(eventQueryDetails);
 
     personalizationComponent.lifecycle.onBeforeEvent({
       event,
@@ -145,7 +147,7 @@ describe("Personalization", () => {
     expect(showContainers).not.toHaveBeenCalled();
   });
 
-  it("should merge the query data and hide containers", () => {
+  test("should merge the query data and hide containers", () => {
     const renderDecisions = true;
     const decisionScopes = ["foo"];
     const eventQueryDetails = {
@@ -153,9 +155,9 @@ describe("Personalization", () => {
       decisionScopes
     };
     build();
-    hasScopes.and.returnValue(true);
-    getDecisionScopes.and.returnValue("foo");
-    createQueryDetails.and.returnValue(eventQueryDetails);
+    hasScopes.mockReturnValue(true);
+    getDecisionScopes.mockReturnValue("foo");
+    createQueryDetails.mockReturnValue(eventQueryDetails);
 
     personalizationComponent.lifecycle.onBeforeEvent({
       event,
@@ -175,7 +177,7 @@ describe("Personalization", () => {
     expect(showContainers).not.toHaveBeenCalled();
   });
 
-  it("should merge the query data, hide containers and trigger onResponseHandler", () => {
+  test("should merge the query data, hide containers and trigger onResponseHandler", () => {
     const renderDecisions = true;
     const decisionScopes = ["foo"];
     const eventQueryDetails = {
@@ -183,9 +185,9 @@ describe("Personalization", () => {
       decisionScopes
     };
     build();
-    hasScopes.and.returnValue(true);
-    getDecisionScopes.and.returnValue("foo");
-    createQueryDetails.and.returnValue(eventQueryDetails);
+    hasScopes.mockReturnValue(true);
+    getDecisionScopes.mockReturnValue("foo");
+    createQueryDetails.mockReturnValue(eventQueryDetails);
 
     const onResponse = func => {
       func({});

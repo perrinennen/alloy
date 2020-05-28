@@ -21,24 +21,18 @@ describe("initializeComponents", () => {
 
   beforeEach(() => {
     lifecycle = {
-      onComponentsRegistered: jasmine
-        .createSpy()
-        .and.returnValue(Promise.resolve())
+      onComponentsRegistered: jest.fn(() => Promise.resolve())
     };
     componentRegistry = {
-      register: jasmine.createSpy()
+      register: jest.fn()
     };
     componentByNamespace = {
       Comp1: {},
       Comp2: {}
     };
-    const componentCreator1 = jasmine
-      .createSpy()
-      .and.returnValue(componentByNamespace.Comp1);
+    const componentCreator1 = jest.fn(() => componentByNamespace.Comp1);
     componentCreator1.namespace = "Comp1";
-    const componentCreator2 = jasmine
-      .createSpy()
-      .and.returnValue(componentByNamespace.Comp2);
+    const componentCreator2 = jest.fn(() => componentByNamespace.Comp2);
     componentCreator2.namespace = "Comp2";
     componentCreators = [componentCreator1, componentCreator2];
 
@@ -56,7 +50,7 @@ describe("initializeComponents", () => {
     };
   });
 
-  it("creates and registers components", () => {
+  test("creates and registers components", () => {
     const initializeComponentsPromise = initializeComponents({
       componentCreators,
       lifecycle,
@@ -90,8 +84,10 @@ describe("initializeComponents", () => {
     });
   });
 
-  it("throws error if component throws error during creation", () => {
-    componentCreators[1].and.throwError("thrownError");
+  test("throws error if component throws error during creation", () => {
+    componentCreators[1].mockImplementation(() => {
+      throw new Error("thrownError");
+    });
 
     expect(() => {
       initializeComponents({

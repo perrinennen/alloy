@@ -20,7 +20,7 @@ describe("DOM::appendNode", () => {
     selectNodes("div").forEach(removeNode);
   });
 
-  it("should append a node to head tag", () => {
+  test("should append a node to head tag", () => {
     const elem = createNode("div", { id: "append" });
 
     appendNode(document.head, elem);

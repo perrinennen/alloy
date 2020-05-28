@@ -15,8 +15,8 @@ describe("Personalization::createOnClickHandler", () => {
   let mergeMeta;
   let collectClicks;
   const event = {
-    mergeXdm: jasmine.createSpy("mergeXdm"),
-    mergeMeta: jasmine.createSpy("mergeMeta")
+    mergeXdm: jest.fn(),
+    mergeMeta: jest.fn()
   };
   const clickStorage = [];
   const metas = [
@@ -26,11 +26,11 @@ describe("Personalization::createOnClickHandler", () => {
     }
   ];
   beforeEach(() => {
-    mergeMeta = jasmine.createSpy("mergeMeta");
-    collectClicks = jasmine.createSpy("collectClicks").and.returnValue(metas);
+    mergeMeta = jest.fn();
+    collectClicks = jest.fn(() => metas);
   });
 
-  it("collects clicks", () => {
+  test("collects clicks", () => {
     const handleOnClick = createOnClickHandler({
       mergeMeta,
       collectClicks,

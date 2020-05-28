@@ -17,18 +17,18 @@ import { cookieJar } from "../../../../../src/utils";
 describe("Identity::injectDoesIdentityCookieExist", () => {
   afterEach(removeAllCookies);
 
-  it("returns false if cookie does not exist", () => {
+  test("returns false if cookie does not exist", () => {
     const doesIdentityCookieExist = injectDoesIdentityCookieExist({
       orgId: "org@adobe"
     });
-    expect(doesIdentityCookieExist()).toBeFalse();
+    expect(doesIdentityCookieExist()).toBe(false);
   });
 
-  it("returns true if cookie exists", () => {
+  test("returns true if cookie exists", () => {
     cookieJar.set("kndctr_org_adobe_identity", "user@adobe");
     const doesIdentityCookieExist = injectDoesIdentityCookieExist({
       orgId: "org@adobe"
     });
-    expect(doesIdentityCookieExist()).toBeTrue();
+    expect(doesIdentityCookieExist()).toBe(true);
   });
 });

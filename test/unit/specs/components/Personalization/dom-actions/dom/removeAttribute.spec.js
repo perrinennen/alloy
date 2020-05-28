@@ -26,7 +26,7 @@ describe("Personalization::DOM::removeAttribute", () => {
     selectNodes("#fooId").forEach(removeNode);
   });
 
-  it("should remove the element's attribute", () => {
+  test("should remove the element's attribute", () => {
     const element = createNode("div", { id: "fooId" });
     setAttribute(element, "data-foo", "dummyValue");
 

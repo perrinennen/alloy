@@ -17,9 +17,7 @@ import removeAllCookies from "../../../helpers/removeAllCookies";
 describe("Identity::createLegacyIdentity", () => {
   let idMigrationEnabled;
   let legacyIdentity;
-  const getEcidFromVisitor = jasmine
-    .createSpy()
-    .and.returnValue(Promise.resolve());
+  const getEcidFromVisitor = jest.fn(() => Promise.resolve());
   const orgId = "TEST_ORG";
 
   const build = () => {
@@ -39,15 +37,15 @@ describe("Identity::createLegacyIdentity", () => {
   afterEach(removeAllCookies);
 
   describe("getEcid", () => {
-    it("should return a promise resolved with undefined if ID migration disabled", () => {
+    test("should return a promise resolved with undefined if ID migration disabled", () => {
       idMigrationEnabled = false;
       build();
-      return expectAsync(legacyIdentity.getEcid()).toBeResolvedTo(undefined);
+      return expect(legacyIdentity.getEcid()).resolves.toBeUndefined();
     });
 
-    it("should return promise resolved with undefined if no AMCV cookie or s_ecid cookie is present", () => {
+    test("should return promise resolved with undefined if no AMCV cookie or s_ecid cookie is present", () => {
       build();
-      return expectAsync(legacyIdentity.getEcid()).toBeResolvedTo(undefined);
+      return expect(legacyIdentity.getEcid()).resolves.toBeUndefined();
     });
 
     [
@@ -56,34 +54,34 @@ describe("Identity::createLegacyIdentity", () => {
       "random|random|MCMID|1234",
       "MCMID|1234"
     ].forEach(cookieValue => {
-      it(`should return promise resolved with ECID if AMCV cookie is ${cookieValue}`, () => {
+      test(`should return promise resolved with ECID if AMCV cookie is ${cookieValue}`, () => {
         cookieJar.set("AMCV_TEST_ORG", cookieValue);
         build();
-        return expectAsync(legacyIdentity.getEcid()).toBeResolvedTo("1234");
+        return expect(legacyIdentity.getEcid()).resolves.toBe("1234");
       });
 
-      it(`should return promise resolved with ECID if s_ecid cookie is ${cookieValue}`, () => {
+      test(`should return promise resolved with ECID if s_ecid cookie is ${cookieValue}`, () => {
         cookieJar.set("s_ecid", cookieValue);
         build();
-        return expectAsync(legacyIdentity.getEcid()).toBeResolvedTo("1234");
+        return expect(legacyIdentity.getEcid()).resolves.toBe("1234");
       });
     });
 
-    it("should return promise resolved with undefined if AMCV does not contain MCMID", () => {
+    test("should return promise resolved with undefined if AMCV does not contain MCMID", () => {
       const cookieValue = "version|0.0.4";
       cookieJar.set("AMCV_NO_MID", cookieValue);
       build();
-      return expectAsync(legacyIdentity.getEcid()).toBeResolvedTo(undefined);
+      return expect(legacyIdentity.getEcid()).resolves.toBeUndefined();
     });
 
-    it("should return promise resolved with undefined if s_ecid does not contain MCMID", () => {
+    test("should return promise resolved with undefined if s_ecid does not contain MCMID", () => {
       const cookieValue = "version|0.0.4";
       cookieJar.set("s_ecid", cookieValue);
       build();
-      return expectAsync(legacyIdentity.getEcid()).toBeResolvedTo(undefined);
+      return expect(legacyIdentity.getEcid()).resolves.toBeUndefined();
     });
 
-    it("should request ECID from visitor ID Service if legacy ECID cookies are missing", () => {
+    test("should request ECID from visitor ID Service if legacy ECID cookies are missing", () => {
       build();
       legacyIdentity.getEcid().then(() => {
         return expect(getEcidFromVisitor).toHaveBeenCalled();
@@ -92,13 +90,13 @@ describe("Identity::createLegacyIdentity", () => {
   });
 
   describe("setEcid", () => {
-    it("should not write AMCV cookie if ID migration disabled", () => {
+    test("should not write AMCV cookie if ID migration disabled", () => {
       idMigrationEnabled = false;
       build();
       legacyIdentity.setEcid("1234");
       expect(cookieJar.get("AMCV_TEST_ORG")).toBeUndefined();
     });
-    it("should not write AMCV cookie if already present", () => {
+    test("should not write AMCV cookie if already present", () => {
       build();
       const cookieValue = "existing value";
       cookieJar.set("AMCV_TEST_ORG", cookieValue);

@@ -15,7 +15,7 @@ import injectHandleError from "../../../../src/core/injectHandleError";
 const expectedMessage = "[testinstanceNamespace] Bad thing happened.";
 
 describe("injectHandleError", () => {
-  it("converts non-error to error and throws", () => {
+  test("converts non-error to error and throws", () => {
     const handleError = injectHandleError({
       instanceNamespace: "testinstanceNamespace"
     });
@@ -25,7 +25,7 @@ describe("injectHandleError", () => {
     }).toThrowError(expectedMessage);
   });
 
-  it("rethrows error with instanceNamespace prepended", () => {
+  test("rethrows error with instanceNamespace prepended", () => {
     const handleError = injectHandleError({
       instanceNamespace: "testinstanceNamespace"
     });
@@ -35,8 +35,10 @@ describe("injectHandleError", () => {
     }).toThrowError(expectedMessage);
   });
 
-  it("logs an error and returns empty object if error is due to declined consent", () => {
-    const logger = jasmine.createSpyObj("logger", ["warn"]);
+  test("logs an error and returns empty object if error is due to declined consent", () => {
+    const logger = {
+      warn: jest.fn()
+    };
     const handleError = injectHandleError({
       instanceNamespace: "testinstanceNamespace",
       logger

@@ -27,26 +27,26 @@ describe("createConfig", () => {
       }
     };
   });
-  it("supports being instantiated with a config", () => {
+  test("supports being instantiated with a config", () => {
     const cfg = createConfig(testConfig);
     expect(cfg.a).toEqual(123);
   });
-  it("supports getting a value assigned to a key", () => {
+  test("supports getting a value assigned to a key", () => {
     const cfg = createConfig(testConfig);
     expect(cfg.a).toEqual(123);
   });
-  it("returns undefined when a missing key is requested", () => {
+  test("returns undefined when a missing key is requested", () => {
     const cfg = createConfig(testConfig);
     expect(cfg.missing).toBe(undefined);
   });
-  it("supports adding a key value mapping", () => {
+  test("supports adding a key value mapping", () => {
     const cfg = createConfig(testConfig);
     cfg.d = "ABC";
     expect(cfg.d).toEqual("ABC");
   });
 
   describe("changing config", () => {
-    it("does not change the provided options", () => {
+    test("does not change the provided options", () => {
       const cfg = createConfig(testConfig);
       cfg.d = "NEW VALUE";
       expect(testConfig.d).toBe(undefined);
@@ -54,7 +54,7 @@ describe("createConfig", () => {
   });
 
   describe("changing provided options", () => {
-    it("does not change the config", () => {
+    test("does not change the config", () => {
       const cfg = createConfig(testConfig);
       testConfig.a = 456;
       expect(cfg.a).toBe(123);

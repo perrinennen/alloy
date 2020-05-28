@@ -8,13 +8,11 @@ describe("Identity::createGetIdentity", () => {
   };
 
   beforeEach(() => {
-    sendEdgeNetworkRequest = jasmine.createSpy("sendEdgeNetworkRequest");
-    createIdentityPayload = jasmine
-      .createSpy("createIdentityPayload")
-      .and.returnValue(samplePayload);
+    sendEdgeNetworkRequest = jest.fn();
+    createIdentityPayload = jest.fn(() => samplePayload);
   });
 
-  it("should return a function which calls sendEdgeNetworkRequest", () => {
+  test("should return a function which calls sendEdgeNetworkRequest", () => {
     const getIdentity = createGetIdentity({
       sendEdgeNetworkRequest,
       createIdentityPayload
@@ -26,10 +24,12 @@ describe("Identity::createGetIdentity", () => {
     });
   });
 
-  it("each getIdentity call should create a new payload object", () => {
+  test("each getIdentity call should create a new payload object", () => {
     const payload1 = { type: "payload1" };
     const payload2 = { type: "payload2" };
-    createIdentityPayload.and.returnValues(payload1, payload2);
+    createIdentityPayload
+      .mockReturnValueOnce(payload1)
+      .mockReturnValueOnce(payload2);
     const getIdentity = createGetIdentity({
       sendEdgeNetworkRequest,
       createIdentityPayload

@@ -13,12 +13,12 @@ governing permissions and limitations under the License.
 import intersection from "../../../../src/utils/intersection";
 
 describe("intersection", () => {
-  it("returns items that are found within both arrays", () => {
+  test("returns items that are found within both arrays", () => {
     const result = intersection(["a", "b", "c", "d"], ["z", "b", "d"]);
     expect(result).toEqual(["b", "d"]);
   });
 
-  it("returns an empty array if there are no matches", () => {
+  test("returns an empty array if there are no matches", () => {
     const result = intersection(["a", "b", "c", "d"], ["e"]);
     expect(result).toEqual([]);
   });

@@ -605,14 +605,14 @@ const crc32Sample = {
 };
 
 describe("crc32", () => {
-  it("should hash a string and return a number ", () => {
+  test("should hash a string and return a number ", () => {
     const str = "hello";
     const result = crc32(str);
     expect(typeof result).toBe("number");
     expect(result).toEqual(907060870);
   });
 
-  it("should create same hash every time", () => {
+  test("should create same hash every time", () => {
     const idsTohash = {
       email: {
         id: "me@me.com",
@@ -626,7 +626,7 @@ describe("crc32", () => {
     expect(resultTwo).toBe(3158443042);
   });
 
-  it("should always return a positive number", () => {
+  test("should always return a positive number", () => {
     const idOneTohash = "x+x";
     const idTwoTohash = "a*b/100-220";
     const resultOne = crc32(JSON.stringify(idOneTohash));
@@ -637,13 +637,13 @@ describe("crc32", () => {
     expect(resultTwo).toBeGreaterThan(0);
   });
 
-  it("should hash strings with special characters", () => {
+  test("should hash strings with special characters", () => {
     const stringToHash = "hello@#&^hq10";
     const result = crc32(stringToHash);
     expect(result).toBe(864118309);
   });
 
-  it("should create different hash for identical strings", () => {
+  test("should create different hash for identical strings", () => {
     const stringOneToHash = "hello@#&^hq10";
     const stringTwoToHash = "hello@#&h^q10";
     const resultOne = crc32(stringOneToHash);
@@ -656,7 +656,7 @@ describe("crc32", () => {
   describe("hashing of various of unicode chars", () => {
     Object.keys(crc32Sample).forEach(lang => {
       const sample = crc32Sample[lang];
-      it(`should create right hash of a ${lang} string`, () => {
+      test(`should create right hash of a ${lang} string`, () => {
         expect(crc32(sample.str)).toBe(sample.crc32Hash);
       });
     });

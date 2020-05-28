@@ -15,11 +15,11 @@ import getLastArrayItems from "../../../../src/utils/getLastArrayItems";
 describe("getLastArrayItems", () => {
   const letters = ["a", "b", "c"];
 
-  it("returns last items from array larger than count", () => {
+  test("returns last items from array larger than count", () => {
     expect(getLastArrayItems(letters, 2)).toEqual(["b", "c"]);
   });
 
-  it("returns all items from array smaller than or equal to count", () => {
+  test("returns all items from array smaller than or equal to count", () => {
     expect(getLastArrayItems(letters, 10)).toEqual(["a", "b", "c"]);
     expect(getLastArrayItems(letters, 3)).toEqual(["a", "b", "c"]);
   });

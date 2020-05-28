@@ -14,7 +14,7 @@ import deepAssign from "../../../../src/utils/deepAssign";
 import assign from "../../../../src/utils/assign";
 
 describe("deepAssign", () => {
-  it("should throw when target is null or undefined", () => {
+  test("should throw when target is null or undefined", () => {
     expect(() => {
       deepAssign(null, { a: 1 });
     }).toThrow();
@@ -24,49 +24,49 @@ describe("deepAssign", () => {
     }).toThrow();
   });
 
-  it("should assign when target is string", () => {
+  test("should assign when target is string", () => {
     const result1 = deepAssign("foo", { a: 1 });
     const result2 = assign("foo", { a: 1 });
 
     expect(result1).toEqual(result2);
   });
 
-  it("should assign when target is number", () => {
+  test("should assign when target is number", () => {
     const result1 = deepAssign(1, { a: 1 });
     const result2 = assign(1, { a: 1 });
 
     expect(result1).toEqual(result2);
   });
 
-  it("should assign when target is array", () => {
+  test("should assign when target is array", () => {
     const result1 = deepAssign([1], { a: 1 });
     const result2 = assign([1], { a: 1 });
 
     expect(result1).toEqual(result2);
   });
 
-  it("should assign when target is object and source is string", () => {
+  test("should assign when target is object and source is string", () => {
     const result1 = deepAssign({}, "foo");
     const result2 = assign({}, "foo");
 
     expect(result1).toEqual(result2);
   });
 
-  it("should assign when target is object and source is number", () => {
+  test("should assign when target is object and source is number", () => {
     const result1 = deepAssign({}, 1);
     const result2 = assign({}, 1);
 
     expect(result1).toEqual(result2);
   });
 
-  it("should assign when target is object and source is array", () => {
+  test("should assign when target is object and source is array", () => {
     const result1 = deepAssign({}, [1]);
     const result2 = assign({}, [1]);
 
     expect(result1).toEqual(result2);
   });
 
-  it("should assign values recursively", () => {
+  test("should assign values recursively", () => {
     const result = deepAssign(
       {},
       { a: { c: 1 } },

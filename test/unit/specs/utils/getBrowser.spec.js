@@ -57,7 +57,7 @@ describe("getBrowser", () => {
   Object.keys(userAgentsByBrowser).forEach(browser => {
     const userAgents = userAgentsByBrowser[browser];
     userAgents.forEach(userAgent => {
-      it(`reports ${browser} for ${userAgent}`, () => {
+      test(`reports ${browser} for ${userAgent}`, () => {
         const window = {
           navigator: {
             userAgent

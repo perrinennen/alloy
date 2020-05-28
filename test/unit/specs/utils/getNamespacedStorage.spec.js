@@ -16,11 +16,11 @@ const getNamespacedStorage = injectStorage(window);
 const storage = getNamespacedStorage("namespace");
 
 describe("getNamespacedStorage", () => {
-  it("is able to write and read from session storage", () => {
+  test("is able to write and read from session storage", () => {
     storage.session.setItem("test", "session-storage");
     expect(storage.session.getItem("test")).toBe("session-storage");
   });
-  it("is able to write and read from persistent storage", () => {
+  test("is able to write and read from persistent storage", () => {
     storage.persistent.setItem("test", "persistent-storage");
     expect(storage.persistent.getItem("test")).toBe("persistent-storage");
   });

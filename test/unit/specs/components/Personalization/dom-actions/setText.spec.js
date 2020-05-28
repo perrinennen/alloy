@@ -11,7 +11,7 @@ describe("Personalization::actions::setText", () => {
     cleanUpDomChanges("setText");
   });
 
-  it("should set personalized text", () => {
+  test("should set personalized text", () => {
     const modules = initDomActionsModules();
     const { setText } = modules;
     const element = createNode("div", { id: "setText" });

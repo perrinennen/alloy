@@ -13,8 +13,10 @@ governing permissions and limitations under the License.
 import addEcidQueryToEvent from "../../../../../src/components/Identity/addEcidQueryToEvent";
 
 describe("Identity::addEcidQueryToEvent", () => {
-  it("adds an ECID query to the event", () => {
-    const event = jasmine.createSpyObj("event", ["mergeQuery"]);
+  test("adds an ECID query to the event", () => {
+    const event = {
+      mergeQuery: jest.fn()
+    };
     addEcidQueryToEvent(event);
     expect(event.mergeQuery).toHaveBeenCalledWith({
       identity: {

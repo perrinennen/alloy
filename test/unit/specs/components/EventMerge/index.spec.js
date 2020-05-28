@@ -20,7 +20,7 @@ describe("EventMerge", () => {
   let reactorRegisterCreateEventMergeId;
 
   beforeAll(() => {
-    reactorRegisterCreateEventMergeId = jasmine.createSpy();
+    reactorRegisterCreateEventMergeId = jest.fn();
     eventMerge = createEventMerge({
       config: createConfig({
         reactorRegisterCreateEventMergeId
@@ -30,7 +30,7 @@ describe("EventMerge", () => {
 
   describe("commands", () => {
     describe("createEventMergeId", () => {
-      it("returns a UUID v4-compliant Id", () => {
+      test("returns a UUID v4-compliant Id", () => {
         expect(
           uuidv4Regex.test(
             eventMerge.commands.createEventMergeId.run().eventMergeId
@@ -41,9 +41,8 @@ describe("EventMerge", () => {
   });
 
   describe("reactor-specific functionality", () => {
-    it("registers a function for creating an event merge ID", () => {
-      const createEventMergeId = reactorRegisterCreateEventMergeId.calls.first()
-        .args[0];
+    test("registers a function for creating an event merge ID", () => {
+      const createEventMergeId = reactorRegisterCreateEventMergeId.calls.first()[0];
       expect(uuidv4Regex.test(createEventMergeId().eventMergeId)).toBe(true);
     });
   });

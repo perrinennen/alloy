@@ -15,7 +15,7 @@ describe("Personalization::actions::insertAfter", () => {
     cleanUpDomChanges("insertAfter");
   });
 
-  it("should insert after personalized content", () => {
+  test("should insert after personalized content", () => {
     const modules = initDomActionsModules();
     const { insertAfter } = modules;
     const child = createNode(

@@ -13,7 +13,7 @@ import { string } from "../../../../../src/utils/validation";
 
 describe("validation::createUnique", () => {
   [["a"], ["a", "b", "c"]].forEach(values => {
-    it(`should accept ${JSON.stringify(values)}`, () => {
+    test(`should accept ${JSON.stringify(values)}`, () => {
       const validator = string().unique();
       values.forEach(value => {
         expect(validator(value, "mykey")).toEqual(value);
@@ -22,7 +22,7 @@ describe("validation::createUnique", () => {
   });
 
   [["a", "a"], ["a", "b", "a"], ["a", "b", "b"]].forEach(values => {
-    it(`should reject ${JSON.stringify(values)}`, () => {
+    test(`should reject ${JSON.stringify(values)}`, () => {
       const validator = string().unique();
       values.forEach((value, i) => {
         if (i + 1 === values.length) {
@@ -35,7 +35,7 @@ describe("validation::createUnique", () => {
   });
 
   [null, undefined].forEach(value => {
-    it(`complains about required when ${JSON.stringify(value)}`, () => {
+    test(`complains about required when ${JSON.stringify(value)}`, () => {
       const validator = string()
         .unique()
         .required();

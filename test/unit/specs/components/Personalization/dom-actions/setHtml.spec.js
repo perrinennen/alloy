@@ -13,7 +13,7 @@ describe("Personalization::actions::setHtml", () => {
     delete window.someEvar123;
   });
 
-  it("should set personalized content", () => {
+  test("should set personalized content", () => {
     const modules = initDomActionsModules();
     const { setHtml } = modules;
     const element = createNode("div", { id: "setHtml" });
@@ -36,7 +36,7 @@ describe("Personalization::actions::setHtml", () => {
     });
   });
 
-  it("should execute inline JavaScript", () => {
+  test("should execute inline JavaScript", () => {
     const modules = initDomActionsModules();
     const { setHtml } = modules;
     const element = createNode("div", { id: "setHtml" });

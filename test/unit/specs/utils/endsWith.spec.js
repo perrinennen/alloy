@@ -16,14 +16,14 @@ const str = "The quick brown fox.";
 
 describe("endsWith", () => {
   ["The quick brown fox.", "fox."].forEach(suffix => {
-    it(`returns true when suffix is ${suffix}`, () => {
-      expect(endsWith(str, suffix)).toBeTrue();
+    test(`returns true when suffix is ${suffix}`, () => {
+      expect(endsWith(str, suffix)).toBe(true);
     });
   });
 
   ["Extra The quick brown fox.", "bogus."].forEach(suffix => {
-    it(`returns false when suffix is ${suffix}`, () => {
-      expect(endsWith(str, suffix)).toBeFalse();
+    test(`returns false when suffix is ${suffix}`, () => {
+      expect(endsWith(str, suffix)).toBe(false);
     });
   });
 });

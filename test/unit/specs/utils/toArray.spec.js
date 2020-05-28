@@ -13,20 +13,20 @@ governing permissions and limitations under the License.
 import toArray from "../../../../src/utils/toArray";
 
 describe("toArray", () => {
-  it("does not convert value if already an array", () => {
+  test("does not convert value if already an array", () => {
     const value = [];
     expect(toArray(value)).toBe(value);
   });
 
-  it("converts undefined to empty array", () => {
+  test("converts undefined to empty array", () => {
     expect(toArray()).toEqual([]);
   });
 
-  it("converts null to empty array", () => {
+  test("converts null to empty array", () => {
     expect(toArray(null)).toEqual([]);
   });
 
-  it("converts array-like value to array", () => {
+  test("converts array-like value to array", () => {
     const result = toArray(document.querySelectorAll("body"));
     expect(Array.isArray(result)).toBe(true);
     expect(result.length).toBe(1);

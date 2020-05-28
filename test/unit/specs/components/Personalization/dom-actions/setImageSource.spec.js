@@ -11,7 +11,7 @@ describe("Personalization::actions::setImageSource", () => {
     cleanUpDomChanges("setImageSource");
   });
 
-  it("should swap image", () => {
+  test("should swap image", () => {
     const url = "http://foo.com/a.png";
     const modules = initDomActionsModules();
     const { setImageSource } = modules;

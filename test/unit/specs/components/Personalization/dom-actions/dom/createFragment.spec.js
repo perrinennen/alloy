@@ -13,7 +13,7 @@ governing permissions and limitations under the License.
 import createFragment from "../../../../../../../src/components/Personalization/dom-actions/dom/createFragment";
 
 describe("Personalization::helper", () => {
-  it("createFragmentTest", () => {
+  test("createFragmentTest", () => {
     const result = createFragment(`<div id="foo">foo</div>`);
 
     expect(result.firstElementChild.id).toEqual("foo");

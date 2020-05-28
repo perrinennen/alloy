@@ -13,7 +13,7 @@ describe("Personalization::flicker", () => {
     selectNodes("style").forEach(removeNode);
   });
 
-  it("should add prehiding style tags", () => {
+  test("should add prehiding style tags", () => {
     const prehidingSelector = ".add";
 
     hideElements(prehidingSelector);
@@ -29,7 +29,7 @@ describe("Personalization::flicker", () => {
     );
   });
 
-  it("should remove prehiding style tags", () => {
+  test("should remove prehiding style tags", () => {
     const prehidingSelector = ".remove";
 
     hideElements(prehidingSelector);

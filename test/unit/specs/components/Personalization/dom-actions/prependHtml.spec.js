@@ -15,7 +15,7 @@ describe("Personalization::actions::prependHtml", () => {
     cleanUpDomChanges("prependHtml");
   });
 
-  it("should prepend personalized content", () => {
+  test("should prepend personalized content", () => {
     const modules = initDomActionsModules();
     const { prependHtml } = modules;
     const content = `<li>3</li>`;

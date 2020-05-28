@@ -13,8 +13,8 @@ governing permissions and limitations under the License.
 import injectFetch from "../../../../../src/core/network/injectFetch";
 
 describe("injectFetch", () => {
-  it("resolves returned promise upon network success", () => {
-    const nativeFetch = jasmine.createSpy().and.returnValue(
+  test("resolves returned promise upon network success", () => {
+    const nativeFetch = jest.fn(() =>
       Promise.resolve({
         status: 999,
         text() {
@@ -31,10 +31,10 @@ describe("injectFetch", () => {
     });
   });
 
-  it("rejects returned promise upon network failure", () => {
-    const nativeFetch = jasmine
-      .createSpy()
-      .and.returnValue(Promise.reject(new Error("No connection")));
+  test("rejects returned promise upon network failure", () => {
+    const nativeFetch = jest.fn(() =>
+      Promise.reject(new Error("No connection"))
+    );
     const fetch = injectFetch(nativeFetch);
     return fetch("http://example.com/endpoint", { a: "b" })
       .then(fail)

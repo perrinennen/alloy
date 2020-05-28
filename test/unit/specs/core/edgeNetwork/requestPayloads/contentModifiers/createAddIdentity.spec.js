@@ -1,7 +1,7 @@
 import createAddIdentity from "../../../../../../../src/core/edgeNetwork/requestPayloads/contentModifiers/createAddIdentity";
 
 describe("createAddIdentity", () => {
-  it("should return a function to add identity", () => {
+  test("should return a function to add identity", () => {
     const content = {};
     const addIdentity = createAddIdentity(content);
     expect(typeof addIdentity).toBe("function");
@@ -20,7 +20,7 @@ describe("createAddIdentity", () => {
       }
     });
   });
-  it("should append identity map if called more than once", () => {
+  test("should append identity map if called more than once", () => {
     const content = {};
     const addIdentity = createAddIdentity(content);
     addIdentity("IDNS", {

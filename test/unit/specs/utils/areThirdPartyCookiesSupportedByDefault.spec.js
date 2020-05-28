@@ -26,14 +26,14 @@ const browsersWithoutSupport = [FIREFOX, SAFARI];
 
 describe("areThirdPartyCookiesSupportedByDefault", () => {
   browsersWithSupport.forEach(browser => {
-    it(`reports true for ${browser}`, () => {
-      expect(areThirdPartyCookiesSupportedByDefault(browser)).toBeTrue();
+    test(`reports true for ${browser}`, () => {
+      expect(areThirdPartyCookiesSupportedByDefault(browser)).toBe(true);
     });
   });
 
   browsersWithoutSupport.forEach(browser => {
-    it(`reports false for ${browser}`, () => {
-      expect(areThirdPartyCookiesSupportedByDefault(browser)).toBeFalse();
+    test(`reports false for ${browser}`, () => {
+      expect(areThirdPartyCookiesSupportedByDefault(browser)).toBe(false);
     });
   });
 });

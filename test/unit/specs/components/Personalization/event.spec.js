@@ -17,7 +17,7 @@ import { values } from "../../../../../src/utils";
 const schemas = values(SCHEMA);
 
 describe("Personalization::event", () => {
-  it("create query details", () => {
+  test("create query details", () => {
     const decisionScopes = ["__view__", "foo"];
     const result = createQueryDetails(decisionScopes);
 

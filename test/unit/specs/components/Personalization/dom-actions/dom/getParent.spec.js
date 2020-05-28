@@ -25,7 +25,7 @@ describe("Personalization::DOM::getParent", () => {
     selectNodes("#childId").forEach(removeNode);
   });
 
-  it("returns the parent node if exists", () => {
+  test("returns the parent node if exists", () => {
     const parentNode = createNode("div", { id: "parentId" });
     const childNode = createNode("div", { id: "childId" });
 

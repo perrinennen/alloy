@@ -18,26 +18,24 @@ describe("Event Command", () => {
   let eventManager;
   let sendEventCommand;
   beforeEach(() => {
-    event = jasmine.createSpyObj("event", [
-      "documentMayUnload",
-      "setUserData",
-      "setUserXdm",
-      "mergeXdm"
-    ]);
-    logger = jasmine.createSpyObj("logger", {
-      warn: undefined
-    });
+    event = {
+      documentMayUnload: jest.fn(),
+      setUserData: jest.fn(),
+      setUserXdm: jest.fn(),
+      mergeXdm: jest.fn()
+    };
+    logger = {
+      warn: jest.fn(() => undefined)
+    };
 
     eventManager = {
       createEvent() {
         return event;
       },
-      sendEvent: jasmine
-        .createSpy()
-        .and.callFake((_event, { applyUserProvidedData = noop }) => {
-          applyUserProvidedData();
-          return Promise.resolve("sendEventResult");
-        })
+      sendEvent: jest.fn((_event, { applyUserProvidedData = noop }) => {
+        applyUserProvidedData();
+        return Promise.resolve("sendEventResult");
+      })
     };
 
     const dataCollector = createDataCollector({
@@ -47,7 +45,7 @@ describe("Event Command", () => {
     sendEventCommand = dataCollector.commands.sendEvent;
   });
 
-  it("sends event", () => {
+  test("sends event", () => {
     const xdm = { a: "b" };
     const data = { c: "d" };
     const options = {
@@ -70,7 +68,7 @@ describe("Event Command", () => {
     });
   });
 
-  it("sends event with decisionScopes parameter when decisionScopes is not empty", () => {
+  test("sends event with decisionScopes parameter when decisionScopes is not empty", () => {
     const options = {
       renderDecisions: true,
       decisionScopes: ["Foo1", "Foo2"]
@@ -85,13 +83,13 @@ describe("Event Command", () => {
     });
   });
 
-  it("does not call documentMayUnload if documentUnloading is not defined", () => {
+  test("does not call documentMayUnload if documentUnloading is not defined", () => {
     return sendEventCommand.run({}).then(() => {
       expect(event.documentMayUnload).not.toHaveBeenCalled();
     });
   });
 
-  it("sets renderDecisions to false if renderDecisions is not defined", () => {
+  test("sets renderDecisions to false if renderDecisions is not defined", () => {
     return sendEventCommand.run({}).then(() => {
       expect(eventManager.sendEvent).toHaveBeenCalledWith(event, {
         renderDecisions: false,
@@ -100,7 +98,7 @@ describe("Event Command", () => {
     });
   });
 
-  it("merges eventType", () => {
+  test("merges eventType", () => {
     return sendEventCommand
       .run({
         type: "mytype"
@@ -112,7 +110,7 @@ describe("Event Command", () => {
       });
   });
 
-  it("merges eventMergeID", () => {
+  test("merges eventMergeID", () => {
     return sendEventCommand
       .run({
         mergeId: "mymergeid"

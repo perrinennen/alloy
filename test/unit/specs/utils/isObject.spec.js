@@ -15,11 +15,11 @@ import isObject from "../../../../src/utils/isObject";
 const nonObjects = [[], true, false, 123];
 
 describe("isObject", () => {
-  it("returns true if the value is an object", () => {
+  test("returns true if the value is an object", () => {
     expect(isObject({})).toBe(true);
   });
 
-  it("returns false if the value is not an object", () => {
+  test("returns false if the value is not an object", () => {
     nonObjects.forEach(obj => {
       expect(isObject(obj)).toBe(false);
     });

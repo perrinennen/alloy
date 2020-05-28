@@ -5,7 +5,7 @@ const getUint8Array = str => {
   return new Uint8Array(cleanString.split("").map(char => char.charCodeAt(0)));
 };
 describe("convertBufferToHex", () => {
-  it("should return a string if an Uint8Array buffer is supplied", () => {
+  test("should return a string if an Uint8Array buffer is supplied", () => {
     const bufferOne = getUint8Array("Hello Wrorld!");
     expect(convertBufferToHex(bufferOne)).toEqual("48656c6c6f2057726f726c6421");
     const bufferTwo = getUint8Array(

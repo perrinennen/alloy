@@ -29,17 +29,20 @@ describe("createEventManager", () => {
   beforeEach(() => {
     config = createConfig({
       orgId: "ABC123",
-      onBeforeEventSend: jasmine.createSpy(),
+      onBeforeEventSend: jest.fn(),
       debugEnabled: true
     });
-    logger = jasmine.createSpyObj("logger", ["error", "warn"]);
-    lifecycle = jasmine.createSpyObj("lifecycle", {
-      onBeforeEvent: Promise.resolve(),
-      onBeforeDataCollectionRequest: Promise.resolve()
-    });
-    consent = jasmine.createSpyObj("consent", {
-      awaitConsent: Promise.resolve()
-    });
+    logger = {
+      error: jest.fn(),
+      warn: jest.fn()
+    };
+    lifecycle = {
+      onBeforeEvent: jest.fn(() => Promise.resolve()),
+      onBeforeDataCollectionRequest: jest.fn(() => Promise.resolve())
+    };
+    consent = {
+      awaitConsent: jest.fn(() => Promise.resolve())
+    };
     event = realCreateEvent();
     spyOnAllFunctions(event);
     const createEvent = () => {
@@ -50,9 +53,7 @@ describe("createEventManager", () => {
     const createDataCollectionRequestPayload = () => {
       return requestPayload;
     };
-    sendEdgeNetworkRequest = jasmine
-      .createSpy("sendEdgeNetworkRequest")
-      .and.returnValue(Promise.resolve());
+    sendEdgeNetworkRequest = jest.fn(() => Promise.resolve());
     eventManager = createEventManager({
       config,
       logger,
@@ -65,24 +66,24 @@ describe("createEventManager", () => {
   });
 
   describe("createEvent", () => {
-    it("creates an event object", () => {
+    test("creates an event object", () => {
       expect(eventManager.createEvent()).toBe(event);
     });
   });
 
   describe("sendEvent", () => {
-    it("creates the payload and adds event and meta", () => {
+    test("creates the payload and adds event and meta", () => {
       return eventManager.sendEvent(event).then(() => {
         expect(requestPayload.addEvent).toHaveBeenCalledWith(event);
       });
     });
 
-    it("allows other components to access event and pause the lifecycle", () => {
+    test("allows other components to access event and pause the lifecycle", () => {
       const deferred = defer();
       const options = {
         renderDecisions: true
       };
-      lifecycle.onBeforeEvent.and.returnValue(deferred.promise);
+      lifecycle.onBeforeEvent.mockReturnValue(deferred.promise);
       eventManager.sendEvent(event, options);
       return flushPromiseChains()
         .then(() => {
@@ -91,8 +92,8 @@ describe("createEventManager", () => {
             renderDecisions: true,
             decisionScopes: undefined,
             payload: requestPayload,
-            onResponse: jasmine.any(Function),
-            onRequestFailure: jasmine.any(Function)
+            onResponse: expect.any(Function),
+            onRequestFailure: expect.any(Function)
           });
           expect(consent.awaitConsent).not.toHaveBeenCalled();
           deferred.resolve();
@@ -103,9 +104,9 @@ describe("createEventManager", () => {
         });
     });
 
-    it("sets the lastChanceCallback, which wraps config.onBeforeEventSend, on the event", () => {
+    test("sets the lastChanceCallback, which wraps config.onBeforeEventSend, on the event", () => {
       let wrappedLastChanceCallback;
-      event.setLastChanceCallback.and.callFake(callback => {
+      event.setLastChanceCallback.mockImplementation(callback => {
         wrappedLastChanceCallback = callback;
       });
       return eventManager.sendEvent(event, {}).then(() => {
@@ -114,12 +115,14 @@ describe("createEventManager", () => {
       });
     });
 
-    it("logs errors in the config.onBeforeEventSend callback", () => {
+    test("logs errors in the config.onBeforeEventSend callback", () => {
       const error = new Error("onBeforeEventSend error");
-      config.onBeforeEventSend.and.throwError(error);
+      config.onBeforeEventSendmockImplementation(() => {
+        throw new Error(error);
+      });
 
       let wrappedLastChanceCallback;
-      event.setLastChanceCallback.and.callFake(callback => {
+      event.setLastChanceCallback.mockImplementation(callback => {
         wrappedLastChanceCallback = callback;
       });
 
@@ -131,7 +134,7 @@ describe("createEventManager", () => {
       });
     });
 
-    it("calls onBeforeEvent before consent and onBeforeDataCollectionRequest after", () => {
+    test("calls onBeforeEvent before consent and onBeforeDataCollectionRequest after", () => {
       const deferred = defer();
       consent.awaitConsent = () => deferred.promise;
       eventManager.sendEvent(event);
@@ -149,9 +152,9 @@ describe("createEventManager", () => {
         });
     });
 
-    it("allows other components to access payload and pause the lifecycle", () => {
+    test("allows other components to access payload and pause the lifecycle", () => {
       const deferred = defer();
-      lifecycle.onBeforeDataCollectionRequest.and.returnValue(deferred.promise);
+      lifecycle.onBeforeDataCollectionRequest.mockReturnValue(deferred.promise);
       eventManager.sendEvent(event);
       return flushPromiseChains()
         .then(() => {
@@ -165,26 +168,26 @@ describe("createEventManager", () => {
         });
     });
 
-    it("calls onResponse callbacks on response", () => {
-      const onResponseForOnBeforeEvent = jasmine.createSpy(
-        "onResponseForOnBeforeEvent"
-      );
-      const onResponseForOnBeforeDataCollection = jasmine.createSpy(
-        "onResponseForOnBeforeDataCollection"
-      );
-      lifecycle.onBeforeEvent.and.callFake(({ onResponse }) => {
+    test("calls onResponse callbacks on response", () => {
+      const onResponseForOnBeforeEvent = jest.fn();
+      const onResponseForOnBeforeDataCollection = jest.fn();
+      lifecycle.onBeforeEvent.mockImplementation(({ onResponse }) => {
         onResponse(onResponseForOnBeforeEvent);
         return Promise.resolve();
       });
-      lifecycle.onBeforeDataCollectionRequest.and.callFake(({ onResponse }) => {
-        onResponse(onResponseForOnBeforeDataCollection);
-        return Promise.resolve();
-      });
+      lifecycle.onBeforeDataCollectionRequest.mockImplementation(
+        ({ onResponse }) => {
+          onResponse(onResponseForOnBeforeDataCollection);
+          return Promise.resolve();
+        }
+      );
       const response = { type: "response" };
-      sendEdgeNetworkRequest.and.callFake(({ runOnResponseCallbacks }) => {
-        runOnResponseCallbacks({ response });
-        return Promise.resolve();
-      });
+      sendEdgeNetworkRequest.mockImplementation(
+        ({ runOnResponseCallbacks }) => {
+          runOnResponseCallbacks({ response });
+          return Promise.resolve();
+        }
+      );
       return eventManager.sendEvent(event).then(() => {
         expect(onResponseForOnBeforeEvent).toHaveBeenCalledWith({ response });
         expect(onResponseForOnBeforeDataCollection).toHaveBeenCalledWith({
@@ -193,24 +196,20 @@ describe("createEventManager", () => {
       });
     });
 
-    it("calls onRequestFailure callbacks on request failure", () => {
-      const onRequestFailureForOnBeforeEvent = jasmine.createSpy(
-        "onRequestFailureForOnBeforeEvent"
-      );
-      const onRequestFailureForOnBeforeDataCollection = jasmine.createSpy(
-        "onRequestFailureForOnBeforeDataCollection"
-      );
-      lifecycle.onBeforeEvent.and.callFake(({ onRequestFailure }) => {
+    test("calls onRequestFailure callbacks on request failure", () => {
+      const onRequestFailureForOnBeforeEvent = jest.fn();
+      const onRequestFailureForOnBeforeDataCollection = jest.fn();
+      lifecycle.onBeforeEvent.mockImplementation(({ onRequestFailure }) => {
         onRequestFailure(onRequestFailureForOnBeforeEvent);
         return Promise.resolve();
       });
-      lifecycle.onBeforeDataCollectionRequest.and.callFake(
+      lifecycle.onBeforeDataCollectionRequest.mockImplementation(
         ({ onRequestFailure }) => {
           onRequestFailure(onRequestFailureForOnBeforeDataCollection);
           return Promise.resolve();
         }
       );
-      sendEdgeNetworkRequest.and.callFake(
+      sendEdgeNetworkRequest.mockImplementation(
         ({ runOnRequestFailureCallbacks }) => {
           const error = new Error();
           runOnRequestFailureCallbacks({ error });
@@ -232,35 +231,35 @@ describe("createEventManager", () => {
         });
     });
 
-    it("sends request using interact endpoint if the document will not unload", () => {
-      event.getDocumentMayUnload.and.returnValue(false);
+    test("sends request using interact endpoint if the document will not unload", () => {
+      event.getDocumentMayUnload.mockReturnValue(false);
       return eventManager.sendEvent(event).then(() => {
         expect(sendEdgeNetworkRequest).toHaveBeenCalledWith({
           payload: requestPayload,
           action: "interact",
-          runOnResponseCallbacks: jasmine.any(Function),
-          runOnRequestFailureCallbacks: jasmine.any(Function)
+          runOnResponseCallbacks: expect.any(Function),
+          runOnRequestFailureCallbacks: expect.any(Function)
         });
       });
     });
 
-    it("sends request using collect endpoint if the document may unload", () => {
-      event.getDocumentMayUnload.and.returnValue(true);
+    test("sends request using collect endpoint if the document may unload", () => {
+      event.getDocumentMayUnload.mockReturnValue(true);
       return eventManager.sendEvent(event).then(() => {
         expect(sendEdgeNetworkRequest).toHaveBeenCalledWith({
           payload: requestPayload,
           action: "collect",
-          runOnResponseCallbacks: jasmine.any(Function),
-          runOnRequestFailureCallbacks: jasmine.any(Function)
+          runOnResponseCallbacks: expect.any(Function),
+          runOnRequestFailureCallbacks: expect.any(Function)
         });
       });
     });
 
-    it("fails returned promise if request fails", () => {
-      sendEdgeNetworkRequest.and.returnValue(
+    test.only("fails returned promise if request fails", () => {
+      sendEdgeNetworkRequest.mockReturnValue(
         Promise.reject(new Error("no connection"))
       );
-      return expectAsync(eventManager.sendEvent(event)).toBeRejectedWithError(
+      return expect(eventManager.sendEvent(event)).rejects.toThrow(
         "no connection"
       );
     });

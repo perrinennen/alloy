@@ -7,8 +7,10 @@ describe("Privacy:injectReadStoredConsent", () => {
   let readStoredConsent;
 
   beforeEach(() => {
-    parseConsentCookie = jasmine.createSpy("parseConsentCookie");
-    cookieJar = jasmine.createSpyObj("cookieJar", ["get"]);
+    parseConsentCookie = jest.fn();
+    cookieJar = {
+      get: jest.fn()
+    };
     readStoredConsent = injectReadStoredConsent({
       parseConsentCookie,
       orgId,
@@ -16,20 +18,20 @@ describe("Privacy:injectReadStoredConsent", () => {
     });
   });
 
-  it("gets the cookie", () => {
-    cookieJar.get.and.returnValue("cookieValue");
-    parseConsentCookie.and.returnValue("parsedConsentValue");
+  test("gets the cookie", () => {
+    cookieJar.get.mockReturnValue("cookieValue");
+    parseConsentCookie.mockReturnValue("parsedConsentValue");
     expect(readStoredConsent()).toEqual("parsedConsentValue");
     expect(parseConsentCookie).toHaveBeenCalledWith("cookieValue");
   });
 
-  it("returns undefined if the cookie is not there", () => {
-    cookieJar.get.and.returnValue(undefined);
+  test("returns undefined if the cookie is not there", () => {
+    cookieJar.get.mockReturnValue(undefined);
     expect(readStoredConsent()).toEqual(undefined);
     expect(parseConsentCookie).not.toHaveBeenCalled();
   });
 
-  it("uses the correct cookie name", () => {
+  test("uses the correct cookie name", () => {
     readStoredConsent();
     expect(cookieJar.get).toHaveBeenCalledWith(
       "kndctr_myorgid_mycompany_consent"

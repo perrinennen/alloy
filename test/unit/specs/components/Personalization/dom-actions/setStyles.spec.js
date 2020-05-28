@@ -11,7 +11,7 @@ describe("Personalization::actions::setStyle", () => {
     cleanUpDomChanges("setStyle");
   });
 
-  it("should set styles", () => {
+  test("should set styles", () => {
     const modules = initDomActionsModules();
     const { setStyle } = modules;
     const element = createNode("div", { id: "setStyle" });

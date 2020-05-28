@@ -14,14 +14,14 @@ import isRetryableHttpStatusCode from "../../../../../src/core/network/isRetryab
 
 describe("isRetryableHttpStatusCode", () => {
   [429, 500, 599].forEach(statusCode => {
-    it(`returns true for ${statusCode}`, () => {
-      expect(isRetryableHttpStatusCode(statusCode)).toBeTrue();
+    test(`returns true for ${statusCode}`, () => {
+      expect(isRetryableHttpStatusCode(statusCode)).toBe(true);
     });
   });
 
   [100, 199, 200, 299, 300, 399, 400, 499].forEach(statusCode => {
-    it(`returns false for ${statusCode}`, () => {
-      expect(isRetryableHttpStatusCode(statusCode)).toBeFalse();
+    test(`returns false for ${statusCode}`, () => {
+      expect(isRetryableHttpStatusCode(statusCode)).toBe(false);
     });
   });
 });
