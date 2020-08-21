@@ -13,19 +13,33 @@ import isNonEmptyArray from "../../utils/isNonEmptyArray";
 
 const DECISIONS_HANDLE = "personalization:decisions";
 
-export default ({ extractDecisions, executeDecisions, showContainers }) => {
+export default ({
+  storeView,
+  extractRenderableDecisions,
+  extractPageWideScopeDecisions,
+  executeDecisions,
+  showContainers
+}) => {
   return ({ renderDecisions, response }) => {
     const unprocessedDecisions = response.getPayloadsByType(DECISIONS_HANDLE);
     if (!isNonEmptyArray(unprocessedDecisions)) {
       showContainers();
       return { decisions: [] };
     }
-    const [renderableDecisions, decisions] = extractDecisions(
-      unprocessedDecisions
-    );
 
     if (renderDecisions) {
-      executeDecisions(renderableDecisions);
+      const [renderableDecisions, decisions] = extractRenderableDecisions(
+        unprocessedDecisions
+      );
+
+      if (isNonEmptyArray(renderableDecisions)) {
+        const pageWideScopeDecisions = extractPageWideScopeDecisions(
+          renderableDecisions,
+          storeView
+        );
+
+        executeDecisions(pageWideScopeDecisions);
+      }
       showContainers();
       return { decisions };
     }
